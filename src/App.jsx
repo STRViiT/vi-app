@@ -150,6 +150,7 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
   const [currentRoom, setCurrentRoom] = useState(null);
+  const [myRole, setMyRole] = useState("debater");
   const [rooms, setRooms] = useState([]);
 
   async function loadProfile(userId) {
@@ -161,7 +162,7 @@ export default function App() {
     const { data } = await supabase
       .from("rooms")
       .select("*")
-      .eq("status", "waiting")
+      .in("status", ["waiting", "active"])
       .order("created_at", { ascending: false })
       .limit(20);
     if (data) setRooms(data);
@@ -202,7 +203,8 @@ export default function App() {
       .single();
 
     if (existing) {
-      await supabase.from("room_members").upsert({ room_id: existing.id, user_id: user.id });
+      await supabase.from("room_members").upsert({ room_id: existing.id, user_id: user.id, role: "debater" });
+      setMyRole("debater");
       setCurrentRoom(existing);
       setScreen("room");
     } else {
@@ -221,16 +223,18 @@ export default function App() {
         .select()
         .single();
       if (newRoom) {
-        await supabase.from("room_members").insert({ room_id: newRoom.id, user_id: user.id });
+        await supabase.from("room_members").insert({ room_id: newRoom.id, user_id: user.id, role: "debater" });
+        setMyRole("debater");
         setCurrentRoom(newRoom);
         setScreen("room");
       }
     }
   }
 
-  async function joinRoom(room) {
+  async function joinRoom(room, role = "debater") {
     if (!user) { alert("Please sign in first!"); return; }
-    await supabase.from("room_members").upsert({ room_id: room.id, user_id: user.id });
+    await supabase.from("room_members").upsert({ room_id: room.id, user_id: user.id, role });
+    setMyRole(role);
     setCurrentRoom(room);
     setScreen("room");
   }
@@ -274,13 +278,11 @@ export default function App() {
         .dur-sel { background: #e63946 !important; color: #fff !important; border-color: #e63946 !important; }
         .lang-btn:hover { border-color: #555 !important; background: #1a1a1a !important; }
         .lang-sel { border-color: #e63946 !important; background: #1a0a0b !important; color: #e63946 !important; }
-        .connect-btn { transition: all 0.15s; }
         .connect-btn:hover { background: #e63946 !important; transform: translateY(-1px); }
         .nav-btn { transition: color 0.15s; }
         .nav-btn:hover { color: #fff !important; }
         .nav-sel { color: #fff !important; }
         .hashtag-add:hover { background: #e63946 !important; color: #fff !important; }
-        .final-btn { transition: all 0.15s; }
         .final-btn:hover { background: #e63946 !important; }
         .toggle-track { transition: background 0.2s; }
         .toggle-thumb { transition: left 0.2s; }
@@ -289,8 +291,9 @@ export default function App() {
         .profile-avatar { border-radius: 50%; width: 32px; height: 32px; object-fit: cover; border: 2px solid #333; }
         .room-card:hover { border-color: #333 !important; background: #161616 !important; }
         .join-btn:hover { background: #e63946 !important; color: #fff !important; border-color: #e63946 !important; }
+        .judge-btn:hover { background: #f5a623 !important; color: #000 !important; border-color: #f5a623 !important; }
         .send-btn:hover { background: #c0303a !important; }
-        .start-btn:hover { opacity: 0.85; }
+        .vote-btn:hover { opacity: 0.85; transform: scale(1.02); }
         .timer-urgent { color: #e63946 !important; animation: pulse 1s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
       `}</style>
@@ -299,7 +302,7 @@ export default function App() {
         <div style={S.logo}><span style={S.logoVi}>Vi</span></div>
         <nav style={S.nav}>
           {screen === "room" ? (
-            <button className="nav-btn" style={S.navBtn} onClick={() => { setScreen("home"); setCurrentRoom(null); loadRooms(); }}>← Back</button>
+            <button className="nav-btn" style={S.navBtn} onClick={() => { setScreen("home"); setCurrentRoom(null); setMyRole("debater"); loadRooms(); }}>← Back</button>
           ) : (
             ["home", "create", "settings"].map(s => (
               <button key={s} className={`nav-btn ${screen === s ? "nav-sel" : ""}`} style={S.navBtn} onClick={() => setScreen(s)}>
@@ -351,9 +354,9 @@ export default function App() {
           roomHashtags={roomHashtags}
           hashtagInput={hashtagInput} setHashtagInput={setHashtagInput}
           addHashtag={addHashtag} removeHashtag={removeHashtag}
-          user={user} onCreated={(room) => { setCurrentRoom(room); setScreen("room"); }}
+          user={user} onCreated={(room) => { setMyRole("debater"); setCurrentRoom(room); setScreen("room"); }}
         />}
-        {screen === "room" && currentRoom && <RoomScreen room={currentRoom} user={user} profile={profile} />}
+        {screen === "room" && currentRoom && <RoomScreen room={currentRoom} user={user} profile={profile} myRole={myRole} />}
       </main>
     </div>
   );
@@ -384,8 +387,257 @@ function Timer({ duration, startedAt }) {
 
   return (
     <span className={isUrgent ? "timer-urgent" : ""} style={{ fontFamily: "'Syne',sans-serif", fontSize: 18, fontWeight: 700, color: isUrgent ? "#e63946" : "#fff", minWidth: 60, textAlign: "center" }}>
-      {timeLeft === 0 ? "Time's up!" : label}
+      {timeLeft === 0 ? "⏱ Time's up!" : label}
     </span>
+  );
+}
+
+function RoomScreen({ room, user, profile, myRole }) {
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState("");
+  const [members, setMembers] = useState([]);
+  const [votes, setVotes] = useState([]);
+  const [myVote, setMyVote] = useState(null);
+  const [livekitToken, setLivekitToken] = useState(null);
+  const [livekitUrl, setLivekitUrl] = useState(null);
+  const [callActive, setCallActive] = useState(false);
+  const [timerStarted, setTimerStarted] = useState(room.started_at);
+  const bottomRef = useRef(null);
+
+  const debaters = members.filter(m => m.role === "debater");
+  const judges = members.filter(m => m.role === "judge");
+  const isJudge = myRole === "judge";
+
+  useEffect(() => {
+    loadMessages();
+    loadMembers();
+    loadVotes();
+
+    const channel = supabase
+      .channel(`room-${room.id}`)
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages", filter: `room_id=eq.${room.id}` },
+        (payload) => setMessages(prev => [...prev, payload.new])
+      )
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "rooms", filter: `id=eq.${room.id}` },
+        (payload) => { if (payload.new.started_at) setTimerStarted(payload.new.started_at); }
+      )
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "votes", filter: `room_id=eq.${room.id}` },
+        () => loadVotes()
+      )
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "room_members", filter: `room_id=eq.${room.id}` },
+        () => loadMembers()
+      )
+      .subscribe();
+
+    return () => supabase.removeChannel(channel);
+  }, [room.id]);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  async function loadMessages() {
+    const { data } = await supabase
+      .from("messages")
+      .select("*, profiles(username, avatar_url)")
+      .eq("room_id", room.id)
+      .order("created_at", { ascending: true });
+    if (data) setMessages(data);
+  }
+
+  async function loadMembers() {
+    const { data } = await supabase
+      .from("room_members")
+      .select("*, profiles(username, avatar_url)")
+      .eq("room_id", room.id);
+    if (data) setMembers(data);
+  }
+
+  async function loadVotes() {
+    const { data } = await supabase.from("votes").select("*, profiles(username, avatar_url)").eq("room_id", room.id);
+    if (data) {
+      setVotes(data);
+      const mine = data.find(v => v.judge_id === user?.id);
+      if (mine) setMyVote(mine.voted_for);
+    }
+  }
+
+  async function sendMessage() {
+    if (!input.trim() || !user || isJudge) return;
+    await supabase.from("messages").insert({ room_id: room.id, user_id: user.id, content: input.trim() });
+    setInput("");
+  }
+
+  async function castVote(debaterId) {
+    if (!user || !isJudge || myVote) return;
+    await supabase.from("votes").insert({ room_id: room.id, judge_id: user.id, voted_for: debaterId });
+    setMyVote(debaterId);
+  }
+
+  async function startCall() {
+    try {
+      const res = await fetch("/api/create-room", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          roomName: `vi-${room.id}`,
+          participantName: profile?.username || user?.email || "user",
+        }),
+      });
+      const data = await res.json();
+      setLivekitToken(data.token);
+      setLivekitUrl(data.url);
+      setCallActive(true);
+    } catch (e) {
+      console.error(e);
+      alert("Failed to start call.");
+    }
+  }
+
+  async function startTimer() {
+    const now = new Date().toISOString();
+    await supabase.from("rooms").update({ started_at: now, status: "active" }).eq("id", room.id);
+    setTimerStarted(now);
+  }
+
+  const showCall = room.mode === "voice" || room.mode === "video";
+  const durationLabel = DURATIONS.find(d => d.id === room.duration)?.label || "Standard";
+
+  // Count votes per debater
+  const voteCount = {};
+  votes.forEach(v => { voteCount[v.voted_for] = (voteCount[v.voted_for] || 0) + 1; });
+
+  return (
+    <div style={S.roomContainer}>
+      <div style={S.roomHeader}>
+        <div>
+          <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: 20, fontWeight: 700, color: "#fff" }}>
+            {room.title}
+            {isJudge && <span style={{ marginLeft: 10, fontSize: 12, background: "#f5a623", color: "#000", padding: "2px 8px", borderRadius: 20, fontFamily: "'Inter',sans-serif" }}>⚖️ Judge</span>}
+          </h2>
+          <p style={{ fontSize: 12, color: "#555", marginTop: 2 }}>
+            {room.mode} • {room.format} • {durationLabel} • {debaters.length} debaters • {judges.length} judges
+          </p>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          {timerStarted ? (
+            <Timer duration={room.duration} startedAt={timerStarted} />
+          ) : (
+            !isJudge && (
+              <button onClick={startTimer} style={{ padding: "6px 14px", background: "#1a1a1a", color: "#888", borderRadius: 8, fontSize: 12, fontWeight: 600, fontFamily: "'Inter',sans-serif", border: "1px solid #333", cursor: "pointer" }}>
+                ▶ Start Timer
+              </button>
+            )
+          )}
+          {showCall && !callActive && !isJudge && (
+            <button onClick={startCall} style={{ padding: "8px 16px", background: "#e63946", color: "#fff", borderRadius: 8, fontSize: 13, fontWeight: 600, fontFamily: "'Inter',sans-serif", cursor: "pointer" }}>
+              {room.mode === "video" ? "📹 Start Video" : "🎙️ Start Voice"}
+            </button>
+          )}
+          {showCall && !callActive && isJudge && (
+            <button onClick={startCall} style={{ padding: "8px 16px", background: "#333", color: "#888", borderRadius: 8, fontSize: 13, fontWeight: 600, fontFamily: "'Inter',sans-serif", cursor: "pointer" }}>
+              👁 Watch Live
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Judge voting panel */}
+      {isJudge && debaters.length > 0 && (
+        <div style={{ padding: "12px 20px", borderBottom: "1px solid #1a1a1a", background: "#0f0f00", display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+          <span style={{ fontSize: 12, color: "#f5a623", fontWeight: 600 }}>⚖️ Your vote:</span>
+          {debaters.map(m => (
+            <button
+              key={m.user_id}
+              className="vote-btn"
+              onClick={() => castVote(m.user_id)}
+              disabled={!!myVote}
+              style={{
+                padding: "6px 16px", borderRadius: 20, fontSize: 13, fontWeight: 600,
+                background: myVote === m.user_id ? "#f5a623" : myVote ? "#1a1a1a" : "#222",
+                color: myVote === m.user_id ? "#000" : myVote ? "#555" : "#fff",
+                border: `1px solid ${myVote === m.user_id ? "#f5a623" : "#333"}`,
+                cursor: myVote ? "default" : "pointer",
+                transition: "all 0.15s", display: "flex", alignItems: "center", gap: 6,
+              }}
+            >
+              {m.profiles?.avatar_url && <img src={m.profiles.avatar_url} style={{ width: 18, height: 18, borderRadius: "50%" }} alt="" />}
+              {m.profiles?.username || "Debater"}
+              <span style={{ fontSize: 11, opacity: 0.7 }}>({voteCount[m.user_id] || 0})</span>
+            </button>
+          ))}
+          {myVote && <span style={{ fontSize: 12, color: "#f5a623" }}>✓ Vote cast!</span>}
+        </div>
+      )}
+
+      {/* Vote results for debaters */}
+      {!isJudge && votes.length > 0 && (
+        <div style={{ padding: "8px 20px", borderBottom: "1px solid #1a1a1a", display: "flex", alignItems: "center", gap: 12 }}>
+          <span style={{ fontSize: 12, color: "#555" }}>⚖️ Votes:</span>
+          {debaters.map(m => (
+            <span key={m.user_id} style={{ fontSize: 12, color: "#888" }}>
+              {m.profiles?.username || "Debater"}: <strong style={{ color: "#f5a623" }}>{voteCount[m.user_id] || 0}</strong>
+            </span>
+          ))}
+          <span style={{ fontSize: 11, color: "#444" }}>({judges.length} judges)</span>
+        </div>
+      )}
+
+      <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
+        {callActive && livekitToken && livekitUrl && (
+          <div style={{ width: "55%", borderRight: "1px solid #1a1a1a", overflow: "hidden" }}>
+            <LiveKitRoom
+              token={livekitToken}
+              serverUrl={livekitUrl}
+              video={room.mode === "video" && !isJudge}
+              audio={!isJudge}
+              onDisconnected={() => setCallActive(false)}
+              style={{ height: "100%" }}
+            >
+              <VideoConference />
+            </LiveKitRoom>
+          </div>
+        )}
+
+        <div style={{ display: "flex", flexDirection: "column", flex: 1, overflow: "hidden" }}>
+          <div style={S.chatArea}>
+            {isJudge && (
+              <div style={{ textAlign: "center", padding: "8px 16px", background: "#0f0f00", borderRadius: 8, fontSize: 12, color: "#f5a623", marginBottom: 8 }}>
+                ⚖️ You are a judge — watch and vote, you cannot send messages
+              </div>
+            )}
+            {messages.length === 0 && (
+              <div style={{ textAlign: "center", color: "#333", fontSize: 13, marginTop: 20 }}>No messages yet. Start the debate!</div>
+            )}
+            {messages.map(msg => (
+              <div key={msg.id} style={{ ...S.msgRow, flexDirection: msg.user_id === user?.id ? "row-reverse" : "row" }}>
+                {msg.profiles?.avatar_url && (
+                  <img src={msg.profiles.avatar_url} style={{ width: 28, height: 28, borderRadius: "50%", flexShrink: 0 }} alt="" />
+                )}
+                <div style={{ ...S.msgBubble, background: msg.user_id === user?.id ? "#e63946" : "#1a1a1a" }}>
+                  {msg.user_id !== user?.id && <span style={{ fontSize: 11, color: "#888", marginBottom: 2 }}>{msg.profiles?.username || "Anonymous"}</span>}
+                  <span style={{ fontSize: 14, color: "#fff" }}>{msg.content}</span>
+                </div>
+              </div>
+            ))}
+            <div ref={bottomRef} />
+          </div>
+
+          {!isJudge && (
+            <div style={S.chatInput}>
+              <input
+                style={S.chatInputField}
+                placeholder="Type your argument…"
+                value={input}
+                onChange={e => setInput(e.target.value)}
+                onKeyDown={e => e.key === "Enter" && sendMessage()}
+              />
+              <button className="send-btn" style={S.sendBtn} onClick={sendMessage}>Send</button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -472,179 +724,24 @@ function HomeScreen({ search, setSearch, selectedCategory, setSelectedCategory, 
                     <p style={{ fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 4 }}>{room.title}</p>
                     {room.category && <span style={S.roomTag}>{room.category}</span>}
                   </div>
-                  <span style={{ fontSize: 11, color: "#555" }}>{room.mode}</span>
+                  <span style={{ fontSize: 11, color: room.status === "active" ? "#4caf50" : "#555" }}>
+                    {room.status === "active" ? "🔴 Live" : room.mode}
+                  </span>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 12 }}>
                   <span style={{ fontSize: 12, color: "#555" }}>
                     {room.format} • {DURATIONS.find(d => d.id === room.duration)?.label || "Standard"}
                   </span>
-                  <button className="join-btn" style={S.joinBtn} onClick={() => joinRoom(room)}>Join</button>
+                  <div style={{ display: "flex", gap: 6 }}>
+                    <button className="join-btn" style={S.joinBtn} onClick={() => joinRoom(room, "debater")}>Join</button>
+                    <button className="judge-btn" style={S.judgeBtn} onClick={() => joinRoom(room, "judge")}>⚖️ Judge</button>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         </div>
       )}
-    </div>
-  );
-}
-
-function RoomScreen({ room, user, profile }) {
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState("");
-  const [members, setMembers] = useState([]);
-  const [livekitToken, setLivekitToken] = useState(null);
-  const [livekitUrl, setLivekitUrl] = useState(null);
-  const [callActive, setCallActive] = useState(false);
-  const [timerStarted, setTimerStarted] = useState(room.started_at);
-  const bottomRef = useRef(null);
-
-  useEffect(() => {
-    loadMessages();
-    loadMembers();
-
-    const channel = supabase
-      .channel(`room-${room.id}`)
-      .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages", filter: `room_id=eq.${room.id}` },
-        (payload) => setMessages(prev => [...prev, payload.new])
-      )
-      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "rooms", filter: `id=eq.${room.id}` },
-        (payload) => { if (payload.new.started_at) setTimerStarted(payload.new.started_at); }
-      )
-      .subscribe();
-
-    return () => supabase.removeChannel(channel);
-  }, [room.id]);
-
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
-  async function loadMessages() {
-    const { data } = await supabase
-      .from("messages")
-      .select("*, profiles(username, avatar_url)")
-      .eq("room_id", room.id)
-      .order("created_at", { ascending: true });
-    if (data) setMessages(data);
-  }
-
-  async function loadMembers() {
-    const { data } = await supabase
-      .from("room_members")
-      .select("*, profiles(username, avatar_url)")
-      .eq("room_id", room.id);
-    if (data) setMembers(data);
-  }
-
-  async function sendMessage() {
-    if (!input.trim() || !user) return;
-    await supabase.from("messages").insert({ room_id: room.id, user_id: user.id, content: input.trim() });
-    setInput("");
-  }
-
-  async function startCall() {
-    try {
-      const res = await fetch("/api/create-room", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          roomName: `vi-${room.id}`,
-          participantName: profile?.username || user?.email || "user",
-        }),
-      });
-      const data = await res.json();
-      setLivekitToken(data.token);
-      setLivekitUrl(data.url);
-      setCallActive(true);
-    } catch (e) {
-      console.error(e);
-      alert("Failed to start call. Please try again.");
-    }
-  }
-
-  async function startTimer() {
-    const now = new Date().toISOString();
-    await supabase.from("rooms").update({ started_at: now, status: "active" }).eq("id", room.id);
-    setTimerStarted(now);
-  }
-
-  const showCall = room.mode === "voice" || room.mode === "video";
-  const durationLabel = DURATIONS.find(d => d.id === room.duration)?.label || "Standard";
-
-  return (
-    <div style={S.roomContainer}>
-      <div style={S.roomHeader}>
-        <div>
-          <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: 20, fontWeight: 700, color: "#fff" }}>{room.title}</h2>
-          <p style={{ fontSize: 12, color: "#555", marginTop: 2 }}>{room.mode} • {room.format} • {durationLabel} • {members.length} members</p>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          {timerStarted ? (
-            <Timer duration={room.duration} startedAt={timerStarted} />
-          ) : (
-            <button onClick={startTimer} style={{ padding: "6px 14px", background: "#1a1a1a", color: "#888", borderRadius: 8, fontSize: 12, fontWeight: 600, fontFamily: "'Inter',sans-serif", border: "1px solid #333", cursor: "pointer" }}>
-              ▶ Start Timer
-            </button>
-          )}
-          {members.map(m => m.profiles?.avatar_url && (
-            <img key={m.id} src={m.profiles.avatar_url} style={{ width: 28, height: 28, borderRadius: "50%", border: "2px solid #222" }} alt="" />
-          ))}
-          {showCall && !callActive && (
-            <button className="start-btn" onClick={startCall} style={{ padding: "8px 16px", background: "#e63946", color: "#fff", borderRadius: 8, fontSize: 13, fontWeight: 600, fontFamily: "'Inter',sans-serif", cursor: "pointer" }}>
-              {room.mode === "video" ? "📹 Start Video" : "🎙️ Start Voice"}
-            </button>
-          )}
-        </div>
-      </div>
-
-      <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
-        {callActive && livekitToken && livekitUrl && (
-          <div style={{ width: "55%", borderRight: "1px solid #1a1a1a", overflow: "hidden" }}>
-            <LiveKitRoom
-              token={livekitToken}
-              serverUrl={livekitUrl}
-              video={room.mode === "video"}
-              audio={true}
-              onDisconnected={() => setCallActive(false)}
-              style={{ height: "100%" }}
-            >
-              <VideoConference />
-            </LiveKitRoom>
-          </div>
-        )}
-
-        <div style={{ display: "flex", flexDirection: "column", flex: 1, overflow: "hidden" }}>
-          <div style={S.chatArea}>
-            {messages.length === 0 && (
-              <div style={{ textAlign: "center", color: "#333", fontSize: 13, marginTop: 40 }}>No messages yet. Start the debate!</div>
-            )}
-            {messages.map(msg => (
-              <div key={msg.id} style={{ ...S.msgRow, flexDirection: msg.user_id === user?.id ? "row-reverse" : "row" }}>
-                {msg.profiles?.avatar_url && (
-                  <img src={msg.profiles.avatar_url} style={{ width: 28, height: 28, borderRadius: "50%", flexShrink: 0 }} alt="" />
-                )}
-                <div style={{ ...S.msgBubble, background: msg.user_id === user?.id ? "#e63946" : "#1a1a1a" }}>
-                  {msg.user_id !== user?.id && <span style={{ fontSize: 11, color: "#888", marginBottom: 2 }}>{msg.profiles?.username || "Anonymous"}</span>}
-                  <span style={{ fontSize: 14, color: "#fff" }}>{msg.content}</span>
-                </div>
-              </div>
-            ))}
-            <div ref={bottomRef} />
-          </div>
-
-          <div style={S.chatInput}>
-            <input
-              style={S.chatInputField}
-              placeholder="Type your argument…"
-              value={input}
-              onChange={e => setInput(e.target.value)}
-              onKeyDown={e => e.key === "Enter" && sendMessage()}
-            />
-            <button className="send-btn" style={S.sendBtn} onClick={sendMessage}>Send</button>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
@@ -771,7 +868,7 @@ function CreateScreen({ roomTopic, setRoomTopic, roomHashtags, hashtagInput, set
       status: "waiting",
     }).select().single();
     if (data) {
-      await supabase.from("room_members").insert({ room_id: data.id, user_id: user.id });
+      await supabase.from("room_members").insert({ room_id: data.id, user_id: user.id, role: "debater" });
       onCreated(data);
     }
     setCreating(false);
@@ -783,7 +880,6 @@ function CreateScreen({ roomTopic, setRoomTopic, roomHashtags, hashtagInput, set
         <h2 style={S.cardTitle}>Create a Room</h2>
         <p style={S.fieldLabel}>Room Title</p>
         <input style={S.textInput} placeholder="e.g. Is veganism the future?" value={roomTopic} onChange={e => setRoomTopic(e.target.value)} />
-
         <p style={{ ...S.fieldLabel, marginTop: 22 }}>Duration</p>
         <div style={S.fmtRow}>
           {DURATIONS.map(d => (
@@ -793,7 +889,6 @@ function CreateScreen({ roomTopic, setRoomTopic, roomHashtags, hashtagInput, set
             </button>
           ))}
         </div>
-
         <p style={{ ...S.fieldLabel, marginTop: 22 }}>Select Debate Topic</p>
         <div style={S.searchBox}>
           <span style={S.searchIcon}>⌕</span>
@@ -866,7 +961,7 @@ const S = {
   fmtBtn: { flex: 1, padding: "10px 0", borderRadius: 10, border: "1px solid #222", fontSize: 14, fontWeight: 600, fontFamily: "'Inter', sans-serif", color: "#888", transition: "all 0.15s", display: "flex", alignItems: "center", justifyContent: "center" },
   langGrid: { display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8 },
   langBtn: { display: "flex", flexDirection: "column", alignItems: "center", gap: 4, padding: "10px 4px", borderRadius: 10, border: "1.5px solid #222", fontSize: 11, fontFamily: "'Inter', sans-serif", color: "#888", transition: "all 0.15s", background: "#0f0f0f" },
-  connectBtn: { marginTop: 20, width: "100%", padding: "15px 0", background: "#fff", color: "#0a0a0a", borderRadius: 12, fontSize: 15, fontWeight: 700, fontFamily: "'Syne', sans-serif", letterSpacing: "0.02em" },
+  connectBtn: { marginTop: 20, width: "100%", padding: "15px 0", background: "#fff", color: "#0a0a0a", borderRadius: 12, fontSize: 15, fontWeight: 700, fontFamily: "'Syne', sans-serif", letterSpacing: "0.02em", transition: "all 0.15s", cursor: "pointer" },
   hint: { textAlign: "center", fontSize: 12, color: "#444", marginTop: 10 },
   divider: { height: 1, background: "#1a1a1a", margin: "20px 0" },
   camPreview: { width: "100%", aspectRatio: "16/9", background: "#0a0a0a", borderRadius: 12, overflow: "hidden", border: "1px solid #222", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12 },
@@ -877,10 +972,11 @@ const S = {
   textInput: { width: "100%", padding: "10px 14px", borderRadius: 10, border: "1px solid #222", fontSize: 13, fontFamily: "'Inter', sans-serif", background: "#0a0a0a", color: "#e0e0e0" },
   hashtagAdd: { padding: "4px 12px", borderRadius: 8, background: "#1a1a1a", fontSize: 12, fontWeight: 600, fontFamily: "'Inter', sans-serif", color: "#888", transition: "all 0.15s" },
   hashtagPill: { display: "flex", alignItems: "center", padding: "4px 10px", background: "#1a1a1a", borderRadius: 20, fontSize: 13, color: "#ccc", border: "1px solid #2a2a2a" },
-  finalBtn: { marginTop: 24, width: "100%", padding: "15px 0", background: "#fff", color: "#0a0a0a", borderRadius: 12, fontSize: 15, fontWeight: 700, fontFamily: "'Syne', sans-serif", letterSpacing: "0.02em" },
+  finalBtn: { marginTop: 24, width: "100%", padding: "15px 0", background: "#fff", color: "#0a0a0a", borderRadius: 12, fontSize: 15, fontWeight: 700, fontFamily: "'Syne', sans-serif", letterSpacing: "0.02em", transition: "all 0.15s", cursor: "pointer" },
   roomCard: { background: "#111", borderRadius: 12, padding: 16, border: "1px solid #1e1e1e", transition: "all 0.15s", cursor: "pointer" },
   roomTag: { fontSize: 11, color: "#e63946", background: "#1a0a0b", padding: "2px 8px", borderRadius: 20 },
-  joinBtn: { padding: "6px 16px", borderRadius: 8, border: "1px solid #333", fontSize: 12, fontWeight: 600, color: "#888", fontFamily: "'Inter',sans-serif", transition: "all 0.15s" },
+  joinBtn: { padding: "6px 14px", borderRadius: 8, border: "1px solid #333", fontSize: 12, fontWeight: 600, color: "#888", fontFamily: "'Inter',sans-serif", transition: "all 0.15s" },
+  judgeBtn: { padding: "6px 14px", borderRadius: 8, border: "1px solid #444", fontSize: 12, fontWeight: 600, color: "#888", fontFamily: "'Inter',sans-serif", transition: "all 0.15s" },
   roomContainer: { display: "flex", flexDirection: "column", height: "calc(100vh - 130px)", background: "#111", borderRadius: 16, border: "1px solid #1e1e1e", overflow: "hidden" },
   roomHeader: { padding: "16px 20px", borderBottom: "1px solid #1a1a1a", display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0 },
   chatArea: { flex: 1, overflowY: "auto", padding: "16px 20px", display: "flex", flexDirection: "column", gap: 12 },
