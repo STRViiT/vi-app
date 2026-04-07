@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { supabase } from "./supabase";
 
 const TOPICS = [
   { id: 1, label: "Democracy vs Authoritarianism", category: "Politics", hashtags: ["#democracy","#politics","#freedom","#government","#power","#dictatorship","#voting","#rights","#elections","#ideology"] },
@@ -140,7 +141,28 @@ export default function App() {
   const [roomTopic, setRoomTopic] = useState("");
   const [roomHashtags, setRoomHashtags] = useState([]);
   const [hashtagInput, setHashtagInput] = useState("");
+const [user, setUser] = useState(null);
 
+useEffect(() => {
+  supabase.auth.getSession().then(({ data: { session } }) => {
+    setUser(session?.user ?? null);
+  });
+  const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    setUser(session?.user ?? null);
+  });
+  return () => subscription.unsubscribe();
+}, []);
+
+async function signInWithGoogle() {
+  await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: { redirectTo: window.location.origin }
+  });
+}
+
+async function signOut() {
+  await supabase.auth.signOut();
+}
   const filteredTopics = TOPICS.filter((t) => {
     const matchCat = selectedCategory === "All" || t.category === selectedCategory;
     const matchSearch = t.label.toLowerCase().includes(search.toLowerCase());
@@ -217,6 +239,16 @@ export default function App() {
             </button>
           ))}
         </nav>
+        {user ? (
+  <div style={{display:"flex", alignItems:"center", gap:12}}>
+    <span style={{fontSize:13, color:"#888"}}>{user.email}</span>
+    <button onClick={signOut} style={{fontSize:13, color:"#e63946", fontFamily:"'Inter',sans-serif"}}>Sign out</button>
+  </div>
+) : (
+  <button onClick={signInWithGoogle} style={{padding:"8px 18px", background:"#fff", color:"#0a0a0a", borderRadius:8, fontSize:13, fontWeight:600, fontFamily:"'Inter',sans-serif"}}>
+    Sign in with Google
+  </button>
+)}
       </header>
 
       <main style={S.main}>
