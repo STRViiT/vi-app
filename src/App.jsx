@@ -7,7 +7,7 @@ const TOPICS = [
   { id: 3, label: "Immigration Policy", category: "Politics", hashtags: ["#immigration","#borders","#refugees","#citizenship","#diversity","#culture","#law","#asylum","#migration","#politics"] },
   { id: 4, label: "Gun Control", category: "Politics", hashtags: ["#guns","#guncontrol","#2ndamendment","#safety","#violence","#rights","#firearms","#crime","#usa","#policy"] },
   { id: 5, label: "Electoral College", category: "Politics", hashtags: ["#electoralcollege","#voting","#elections","#usa","#democracy","#reform","#president","#politics","#fairness","#system"] },
-  { id: 6, label: "Free Speech Limits", category: "Politics", hashtags: ["#freespeech","#censorship","#rights","#hatespeed","#internet","#law","#media","#expression","#government","#debate"] },
+  { id: 6, label: "Free Speech Limits", category: "Politics", hashtags: ["#freespeech","#censorship","#rights","#hatespeech","#internet","#law","#media","#expression","#government","#debate"] },
   { id: 7, label: "Capital Punishment", category: "Politics", hashtags: ["#deathpenalty","#justice","#crime","#law","#morality","#punishment","#humanrights","#murder","#courts","#ethics"] },
   { id: 8, label: "Affirmative Action", category: "Politics", hashtags: ["#affirmativeaction","#diversity","#race","#equality","#education","#hiring","#discrimination","#policy","#fairness","#society"] },
   { id: 9, label: "Welfare State", category: "Politics", hashtags: ["#welfare","#socialism","#taxes","#poverty","#government","#healthcare","#benefits","#economy","#policy","#society"] },
@@ -115,13 +115,11 @@ const LANGUAGES = [
 ];
 
 const CATEGORIES = [...new Set(TOPICS.map((t) => t.category))];
-
 const MODES = [
   { id: "chat", icon: "💬", label: "Chat" },
   { id: "voice", icon: "🎙️", label: "Voice" },
   { id: "video", icon: "📹", label: "Video" },
 ];
-
 const FORMATS = [
   { id: "1v1", label: "1 vs 1" },
   { id: "3v3", label: "3 vs 3" },
@@ -141,28 +139,42 @@ export default function App() {
   const [roomTopic, setRoomTopic] = useState("");
   const [roomHashtags, setRoomHashtags] = useState([]);
   const [hashtagInput, setHashtagInput] = useState("");
-const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null);
+  const [profile, setProfile] = useState(null);
 
-useEffect(() => {
-  supabase.auth.getSession().then(({ data: { session } }) => {
-    setUser(session?.user ?? null);
-  });
-  const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-    setUser(session?.user ?? null);
-  });
-  return () => subscription.unsubscribe();
-}, []);
+  async function loadProfile(userId) {
+    const { data } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", userId)
+      .single();
+    if (data) setProfile(data);
+  }
 
-async function signInWithGoogle() {
-  await supabase.auth.signInWithOAuth({
-    provider: "google",
-    options: { redirectTo: window.location.origin }
-  });
-}
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      if (session?.user) loadProfile(session.user.id);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      if (session?.user) loadProfile(session.user.id);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
-async function signOut() {
-  await supabase.auth.signOut();
-}
+  async function signInWithGoogle() {
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: window.location.origin }
+    });
+  }
+
+  async function signOut() {
+    await supabase.auth.signOut();
+    setProfile(null);
+  }
+
   const filteredTopics = TOPICS.filter((t) => {
     const matchCat = selectedCategory === "All" || t.category === selectedCategory;
     const matchSearch = t.label.toLowerCase().includes(search.toLowerCase());
@@ -191,41 +203,29 @@ async function signOut() {
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
         input:focus { outline: none; }
         button { cursor: pointer; border: none; background: none; font-family: inherit; }
-
         .chip:hover { background: #fff !important; color: #0a0a0a !important; }
         .chip-sel { background: #fff !important; color: #0a0a0a !important; }
-
         .topic-row:hover { background: #1a1a1a !important; }
         .topic-row-sel { background: #1c1c1c !important; border-left: 2px solid #e63946 !important; }
-
         .mode-btn:hover { background: #1a1a1a !important; border-color: #444 !important; }
         .mode-sel { background: #e63946 !important; border-color: #e63946 !important; color: #fff !important; }
-
         .fmt-btn:hover { background: #1a1a1a !important; border-color: #555 !important; }
         .fmt-sel { background: #fff !important; color: #0a0a0a !important; border-color: #fff !important; }
-
         .lang-btn:hover { border-color: #555 !important; background: #1a1a1a !important; }
         .lang-sel { border-color: #e63946 !important; background: #1a0a0b !important; color: #e63946 !important; }
-
         .connect-btn { transition: all 0.15s; }
         .connect-btn:hover { background: #e63946 !important; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(230,57,70,0.35) !important; }
-
         .nav-btn { transition: color 0.15s; }
         .nav-btn:hover { color: #fff !important; }
         .nav-sel { color: #fff !important; }
-
-        .create-room-btn:hover { background: #1a1a1a !important; border-color: #555 !important; }
-
         .hashtag-add:hover { background: #e63946 !important; color: #fff !important; }
-
         .final-btn { transition: all 0.15s; }
         .final-btn:hover { background: #e63946 !important; box-shadow: 0 8px 24px rgba(230,57,70,0.35) !important; }
-
         .toggle-track { transition: background 0.2s; }
         .toggle-thumb { transition: left 0.2s; }
-
-        .hashtag-tag { transition: background 0.15s; }
-        .hashtag-tag:hover { background: #2a2a2a !important; }
+        .signin-btn:hover { background: #f0f0f0 !important; }
+        .signout-btn:hover { color: #ff6b6b !important; }
+        .profile-avatar { border-radius: 50%; width: 32px; height: 32px; object-fit: cover; border: 2px solid #333; }
       `}</style>
 
       <header style={S.header}>
@@ -233,22 +233,30 @@ async function signOut() {
           <span style={S.logoVi}>Vi</span>
         </div>
         <nav style={S.nav}>
-          {["home","create","settings"].map(s => (
+          {["home", "create", "settings"].map(s => (
             <button key={s} className={`nav-btn ${screen === s ? "nav-sel" : ""}`} style={S.navBtn} onClick={() => setScreen(s)}>
               {s === "home" ? "Home" : s === "create" ? "Create Room" : "Settings"}
             </button>
           ))}
         </nav>
         {user ? (
-  <div style={{display:"flex", alignItems:"center", gap:12}}>
-    <span style={{fontSize:13, color:"#888"}}>{user.email}</span>
-    <button onClick={signOut} style={{fontSize:13, color:"#e63946", fontFamily:"'Inter',sans-serif"}}>Sign out</button>
-  </div>
-) : (
-  <button onClick={signInWithGoogle} style={{padding:"8px 18px", background:"#fff", color:"#0a0a0a", borderRadius:8, fontSize:13, fontWeight:600, fontFamily:"'Inter',sans-serif"}}>
-    Sign in with Google
-  </button>
-)}
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            {profile?.avatar_url && <img src={profile.avatar_url} className="profile-avatar" alt="avatar" />}
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
+              <span style={{ fontSize: 13, color: "#fff", fontWeight: 600 }}>{profile?.username || user.email}</span>
+              <div style={{ display: "flex", gap: 8 }}>
+                <span style={{ fontSize: 11, color: "#e63946" }}>🏆 {profile?.wins || 0}W</span>
+                <span style={{ fontSize: 11, color: "#555" }}>{profile?.losses || 0}L</span>
+                <span style={{ fontSize: 11, color: "#888" }}>⭐ {profile?.points || 0}pts</span>
+              </div>
+            </div>
+            <button className="signout-btn" onClick={signOut} style={{ fontSize: 13, color: "#555", fontFamily: "'Inter',sans-serif", transition: "color 0.15s" }}>Sign out</button>
+          </div>
+        ) : (
+          <button className="signin-btn" onClick={signInWithGoogle} style={{ padding: "8px 18px", background: "#fff", color: "#0a0a0a", borderRadius: 8, fontSize: 13, fontWeight: 600, fontFamily: "'Inter',sans-serif", transition: "background 0.15s" }}>
+            Sign in with Google
+          </button>
+        )}
       </header>
 
       <main style={S.main}>
@@ -280,7 +288,6 @@ async function signOut() {
 function HomeScreen({ search, setSearch, selectedCategory, setSelectedCategory, filteredTopics, selectedTopic, setSelectedTopic, selectedLang, setSelectedLang, selectedMode, setSelectedMode, selectedFormat, setSelectedFormat }) {
   return (
     <div style={S.grid}>
-      {/* Topic Card */}
       <div style={S.card}>
         <h2 style={S.cardTitle}>Topic</h2>
         <div style={S.searchBox}>
@@ -315,10 +322,8 @@ function HomeScreen({ search, setSearch, selectedCategory, setSelectedCategory, 
         )}
       </div>
 
-      {/* Connect Card */}
       <div style={S.card}>
         <h2 style={S.cardTitle}>Connect</h2>
-
         <p style={S.fieldLabel}>Format</p>
         <div style={S.modeRow}>
           {MODES.map(m => (
@@ -328,16 +333,12 @@ function HomeScreen({ search, setSearch, selectedCategory, setSelectedCategory, 
             </button>
           ))}
         </div>
-
         <p style={S.fieldLabel}>Size</p>
         <div style={S.fmtRow}>
           {FORMATS.map(f => (
-            <button key={f.id} className={`fmt-btn ${selectedFormat === f.id ? "fmt-sel" : ""}`} style={S.fmtBtn} onClick={() => setSelectedFormat(f.id)}>
-              {f.label}
-            </button>
+            <button key={f.id} className={`fmt-btn ${selectedFormat === f.id ? "fmt-sel" : ""}`} style={S.fmtBtn} onClick={() => setSelectedFormat(f.id)}>{f.label}</button>
           ))}
         </div>
-
         <p style={S.fieldLabel}>Opponent Language</p>
         <div style={S.langGrid}>
           {LANGUAGES.map(l => (
@@ -347,7 +348,6 @@ function HomeScreen({ search, setSearch, selectedCategory, setSelectedCategory, 
             </button>
           ))}
         </div>
-
         <button className="connect-btn" style={S.connectBtn}>Find Debate</button>
         <p style={S.hint}>{selectedTopic ? <>Debating: <strong style={{ color: "#fff" }}>{selectedTopic.label}</strong></> : "No topic selected — any topic"}</p>
       </div>
@@ -397,7 +397,6 @@ function SettingsScreen({ settingsLang, setSettingsLang, camEnabled, setCamEnabl
     <div style={{ maxWidth: 580, margin: "0 auto", width: "100%" }}>
       <div style={S.card}>
         <h2 style={S.cardTitle}>Settings</h2>
-
         <p style={S.fieldLabel}>App Language</p>
         <div style={S.langGrid}>
           {LANGUAGES.map(l => (
@@ -407,9 +406,7 @@ function SettingsScreen({ settingsLang, setSettingsLang, camEnabled, setCamEnabl
             </button>
           ))}
         </div>
-
         <div style={S.divider} />
-
         <p style={S.fieldLabel}>Camera</p>
         <div style={S.camPreview}>
           {camEnabled && !camError ? (
@@ -430,9 +427,7 @@ function SettingsScreen({ settingsLang, setSettingsLang, camEnabled, setCamEnabl
             {devices.video.map(d => <option key={d.deviceId} value={d.deviceId}>{d.label || "Camera"}</option>)}
           </select>
         )}
-
         <div style={S.divider} />
-
         <p style={S.fieldLabel}>Microphone</p>
         <div style={S.toggleRow}>
           <span style={{ fontSize: 14, color: "#ccc" }}>Enable Microphone</span>
@@ -470,10 +465,8 @@ function CreateScreen({ roomTopic, setRoomTopic, roomHashtags, hashtagInput, set
     <div style={{ maxWidth: 620, margin: "0 auto", width: "100%" }}>
       <div style={S.card}>
         <h2 style={S.cardTitle}>Create a Room</h2>
-
         <p style={S.fieldLabel}>Room Title</p>
         <input style={S.textInput} placeholder="e.g. Is veganism the future?" value={roomTopic} onChange={e => setRoomTopic(e.target.value)} />
-
         <p style={{ ...S.fieldLabel, marginTop: 22 }}>Select Debate Topic</p>
         <div style={S.searchBox}>
           <span style={S.searchIcon}>⌕</span>
@@ -499,34 +492,17 @@ function CreateScreen({ roomTopic, setRoomTopic, roomHashtags, hashtagInput, set
             <button style={{ marginLeft: "auto", color: "#555" }} onClick={() => setSelectedTopic(null)}>✕</button>
           </div>
         )}
-
-        <p style={{ ...S.fieldLabel, marginTop: 22 }}>
-          Hashtags <span style={{ color: "#555", fontWeight: 400 }}>({roomHashtags.length}/5)</span>
-        </p>
+        <p style={{ ...S.fieldLabel, marginTop: 22 }}>Hashtags <span style={{ color: "#555", fontWeight: 400 }}>({roomHashtags.length}/5)</span></p>
         <div style={S.searchBox}>
           <span style={S.searchIcon}>#</span>
           <input style={S.searchInput} placeholder="Add hashtag…" value={hashtagInput} onChange={e => setHashtagInput(e.target.value)} onKeyDown={e => e.key === "Enter" && addHashtag()} />
           <button className="hashtag-add" style={S.hashtagAdd} onClick={addHashtag}>Add</button>
         </div>
-        {selectedTopic && (
-          <div style={{ marginTop: 8, marginBottom: 4 }}>
-            <p style={{ fontSize: 11, color: "#555", marginBottom: 6 }}>Suggested:</p>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-              {selectedTopic.hashtags.map(h => (
-                <button key={h} className="hashtag-tag" style={S.suggestedTag}
-                  onClick={() => { const t = h.replace(/^#/, ""); if (roomHashtags.length < 5 && !roomHashtags.includes(t)) { removeHashtag("_"); } }}>
-                  {h}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 10 }}>
           {roomHashtags.map(tag => (
             <span key={tag} style={S.hashtagPill}>#{tag} <button style={{ marginLeft: 6, color: "#666" }} onClick={() => removeHashtag(tag)}>✕</button></span>
           ))}
         </div>
-
         <button className="final-btn" style={S.finalBtn}>Create Room</button>
       </div>
     </div>
@@ -572,7 +548,6 @@ const S = {
   select: { width: "100%", marginTop: 10, padding: "9px 12px", background: "#0a0a0a", border: "1px solid #222", borderRadius: 10, color: "#ccc", fontSize: 13, fontFamily: "'Inter', sans-serif" },
   textInput: { width: "100%", padding: "10px 14px", borderRadius: 10, border: "1px solid #222", fontSize: 13, fontFamily: "'Inter', sans-serif", background: "#0a0a0a", color: "#e0e0e0" },
   hashtagAdd: { padding: "4px 12px", borderRadius: 8, background: "#1a1a1a", fontSize: 12, fontWeight: 600, fontFamily: "'Inter', sans-serif", color: "#888", transition: "all 0.15s" },
-  suggestedTag: { fontSize: 11, padding: "3px 8px", borderRadius: 20, background: "#1a1a1a", color: "#555", fontFamily: "'Inter', sans-serif", cursor: "pointer" },
   hashtagPill: { display: "flex", alignItems: "center", padding: "4px 10px", background: "#1a1a1a", borderRadius: 20, fontSize: 13, color: "#ccc", border: "1px solid #2a2a2a" },
   finalBtn: { marginTop: 24, width: "100%", padding: "15px 0", background: "#fff", color: "#0a0a0a", borderRadius: 12, fontSize: 15, fontWeight: 700, fontFamily: "'Syne', sans-serif", letterSpacing: "0.02em" },
 };
