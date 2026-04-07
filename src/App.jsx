@@ -2,106 +2,106 @@ import { useState, useRef, useEffect } from "react";
 import { supabase } from "./supabase";
 
 const TOPICS = [
-  { id: 1, label: "Democracy vs Authoritarianism", category: "Politics", hashtags: ["#democracy","#politics","#freedom","#government","#power","#dictatorship","#voting","#rights","#elections","#ideology"] },
-  { id: 2, label: "Universal Basic Income", category: "Politics", hashtags: ["#ubi","#basicincome","#economy","#welfare","#poverty","#automation","#future","#money","#socialism","#policy"] },
-  { id: 3, label: "Immigration Policy", category: "Politics", hashtags: ["#immigration","#borders","#refugees","#citizenship","#diversity","#culture","#law","#asylum","#migration","#politics"] },
-  { id: 4, label: "Gun Control", category: "Politics", hashtags: ["#guns","#guncontrol","#2ndamendment","#safety","#violence","#rights","#firearms","#crime","#usa","#policy"] },
-  { id: 5, label: "Electoral College", category: "Politics", hashtags: ["#electoralcollege","#voting","#elections","#usa","#democracy","#reform","#president","#politics","#fairness","#system"] },
-  { id: 6, label: "Free Speech Limits", category: "Politics", hashtags: ["#freespeech","#censorship","#rights","#hatespeech","#internet","#law","#media","#expression","#government","#debate"] },
-  { id: 7, label: "Capital Punishment", category: "Politics", hashtags: ["#deathpenalty","#justice","#crime","#law","#morality","#punishment","#humanrights","#murder","#courts","#ethics"] },
-  { id: 8, label: "Affirmative Action", category: "Politics", hashtags: ["#affirmativeaction","#diversity","#race","#equality","#education","#hiring","#discrimination","#policy","#fairness","#society"] },
-  { id: 9, label: "Welfare State", category: "Politics", hashtags: ["#welfare","#socialism","#taxes","#poverty","#government","#healthcare","#benefits","#economy","#policy","#society"] },
-  { id: 10, label: "Taxation & Redistribution", category: "Politics", hashtags: ["#taxes","#redistribution","#wealth","#inequality","#economy","#government","#fairness","#rich","#poor","#policy"] },
-  { id: 11, label: "Existence of God", category: "Religion", hashtags: ["#god","#atheism","#religion","#faith","#proof","#science","#belief","#philosophy","#spirituality","#existence"] },
-  { id: 12, label: "Creationism vs Evolution", category: "Religion", hashtags: ["#evolution","#creationism","#science","#religion","#darwin","#bible","#biology","#faith","#education","#origins"] },
-  { id: 13, label: "Morality Without Religion", category: "Religion", hashtags: ["#morality","#atheism","#ethics","#religion","#secular","#values","#philosophy","#god","#society","#goodness"] },
-  { id: 14, label: "Afterlife", category: "Religion", hashtags: ["#afterlife","#death","#heaven","#hell","#religion","#soul","#spirituality","#belief","#consciousness","#philosophy"] },
-  { id: 15, label: "Prayer in Schools", category: "Religion", hashtags: ["#prayer","#school","#religion","#separation","#government","#faith","#education","#rights","#children","#law"] },
-  { id: 16, label: "Religious Freedom vs Civil Rights", category: "Religion", hashtags: ["#religiousfreedom","#civilrights","#lgbtq","#discrimination","#law","#faith","#equality","#rights","#society","#belief"] },
-  { id: 17, label: "Atheism vs Agnosticism", category: "Religion", hashtags: ["#atheism","#agnosticism","#god","#belief","#religion","#philosophy","#faith","#secular","#spirituality","#debate"] },
-  { id: 18, label: "Free Will vs Determinism", category: "Philosophy", hashtags: ["#freewill","#determinism","#philosophy","#choice","#fate","#consciousness","#science","#mind","#ethics","#existence"] },
-  { id: 19, label: "Meaning of Life", category: "Philosophy", hashtags: ["#meaningoflife","#philosophy","#purpose","#existence","#happiness","#nihilism","#religion","#consciousness","#meaning","#life"] },
-  { id: 20, label: "Moral Relativism", category: "Philosophy", hashtags: ["#moralrelativism","#ethics","#philosophy","#culture","#morality","#values","#relativism","#society","#truth","#judgment"] },
-  { id: 21, label: "AI Will Replace Jobs", category: "Technology", hashtags: ["#ai","#automation","#jobs","#future","#technology","#economy","#robots","#work","#unemployment","#innovation"] },
-  { id: 22, label: "Social Media Is Harmful", category: "Technology", hashtags: ["#socialmedia","#mentalhealth","#technology","#addiction","#youth","#instagram","#tiktok","#harm","#society","#internet"] },
-  { id: 23, label: "Nuclear Energy", category: "Technology", hashtags: ["#nuclear","#energy","#environment","#safety","#cleanenergy","#radiation","#power","#climate","#future","#technology"] },
-  { id: 24, label: "GMO Foods Are Safe", category: "Technology", hashtags: ["#gmo","#food","#science","#safety","#health","#agriculture","#environment","#biotech","#nutrition","#farming"] },
-  { id: 25, label: "Space Exploration Priority", category: "Technology", hashtags: ["#space","#nasa","#exploration","#science","#mars","#funding","#future","#earth","#technology","#priority"] },
-  { id: 26, label: "Crypto & Blockchain Future", category: "Technology", hashtags: ["#crypto","#blockchain","#bitcoin","#finance","#future","#decentralization","#money","#technology","#nft","#investment"] },
-  { id: 27, label: "Surveillance Capitalism", category: "Technology", hashtags: ["#surveillance","#privacy","#bigdata","#capitalism","#google","#facebook","#technology","#rights","#data","#internet"] },
-  { id: 28, label: "Electric Vehicles Mandate", category: "Technology", hashtags: ["#ev","#electricvehicles","#climate","#cars","#environment","#tesla","#policy","#future","#energy","#transportation"] },
-  { id: 29, label: "Gene Editing Ethics", category: "Technology", hashtags: ["#geneediting","#crispr","#ethics","#science","#dna","#biotech","#medicine","#future","#morality","#genetics"] },
-  { id: 30, label: "Internet Regulation", category: "Technology", hashtags: ["#internet","#regulation","#censorship","#freespeech","#government","#law","#privacy","#technology","#policy","#rights"] },
-  { id: 31, label: "Alcohol Is Harmful", category: "Health", hashtags: ["#alcohol","#health","#addiction","#society","#drinking","#harm","#mentalhealth","#lifestyle","#ban","#culture"] },
-  { id: 32, label: "Veganism Is Healthier", category: "Health", hashtags: ["#vegan","#health","#diet","#nutrition","#animals","#environment","#plantbased","#food","#lifestyle","#science"] },
-  { id: 33, label: "Mandatory Vaccination", category: "Health", hashtags: ["#vaccines","#mandatoryvaccination","#health","#science","#freedom","#publichealth","#covid","#immunity","#policy","#rights"] },
-  { id: 34, label: "Marijuana Legalization", category: "Health", hashtags: ["#marijuana","#legalization","#cannabis","#drugs","#health","#law","#freedom","#society","#addiction","#policy"] },
-  { id: 35, label: "Universal Healthcare", category: "Health", hashtags: ["#healthcare","#universal","#medicine","#government","#insurance","#policy","#rights","#economy","#publichealth","#access"] },
-  { id: 36, label: "Mental Health Stigma", category: "Health", hashtags: ["#mentalhealth","#stigma","#psychology","#society","#awareness","#depression","#anxiety","#health","#therapy","#culture"] },
-  { id: 37, label: "Fast Food Should Be Taxed", category: "Health", hashtags: ["#fastfood","#tax","#health","#obesity","#policy","#nutrition","#government","#food","#society","#lifestyle"] },
-  { id: 38, label: "Intermittent Fasting Works", category: "Health", hashtags: ["#intermittentfasting","#diet","#health","#weightloss","#nutrition","#science","#lifestyle","#fasting","#metabolism","#food"] },
-  { id: 39, label: "Coffee Is Good For You", category: "Health", hashtags: ["#coffee","#health","#caffeine","#science","#nutrition","#lifestyle","#benefits","#addiction","#morning","#food"] },
-  { id: 40, label: "Alternative Medicine", category: "Health", hashtags: ["#alternativemedicine","#homeopathy","#health","#science","#placebo","#holistic","#natural","#medicine","#wellness","#pseudoscience"] },
-  { id: 41, label: "Cancel Culture", category: "Society", hashtags: ["#cancelculture","#socialmedia","#accountability","#freespeech","#culture","#internet","#woke","#society","#media","#censorship"] },
-  { id: 42, label: "Gender Is a Social Construct", category: "Society", hashtags: ["#gender","#socialconstruct","#identity","#lgbtq","#society","#biology","#culture","#transgender","#feminism","#philosophy"] },
-  { id: 43, label: "Feminism Today", category: "Society", hashtags: ["#feminism","#equality","#gender","#women","#rights","#society","#culture","#woke","#politics","#movement"] },
-  { id: 44, label: "Social Media & Mental Health", category: "Society", hashtags: ["#socialmedia","#mentalhealth","#instagram","#youth","#depression","#technology","#anxiety","#society","#addiction","#harm"] },
-  { id: 45, label: "Patriotism vs Globalism", category: "Society", hashtags: ["#patriotism","#globalism","#nationalism","#identity","#culture","#politics","#borders","#society","#flag","#world"] },
-  { id: 46, label: "Traditional Family Values", category: "Society", hashtags: ["#family","#traditional","#values","#culture","#religion","#society","#marriage","#children","#lgbtq","#conservative"] },
-  { id: 47, label: "Meritocracy Is a Myth", category: "Society", hashtags: ["#meritocracy","#equality","#privilege","#success","#society","#class","#race","#fairness","#capitalism","#culture"] },
-  { id: 48, label: "Art Has No Objective Value", category: "Society", hashtags: ["#art","#value","#philosophy","#culture","#aesthetics","#subjective","#society","#creativity","#beauty","#meaning"] },
-  { id: 49, label: "Animal Rights vs Human Rights", category: "Society", hashtags: ["#animalrights","#humanrights","#ethics","#vegan","#animals","#morality","#society","#law","#philosophy","#activism"] },
-  { id: 50, label: "Privilege & Systemic Racism", category: "Society", hashtags: ["#privilege","#racism","#systemic","#society","#race","#equality","#discrimination","#politics","#woke","#culture"] },
-  { id: 51, label: "Capitalism vs Socialism", category: "Economy", hashtags: ["#capitalism","#socialism","#economy","#politics","#wealth","#inequality","#market","#government","#freedom","#class"] },
-  { id: 52, label: "Minimum Wage Increase", category: "Economy", hashtags: ["#minimumwage","#economy","#workers","#poverty","#business","#policy","#jobs","#income","#inflation","#fairness"] },
-  { id: 53, label: "Globalization Is Good", category: "Economy", hashtags: ["#globalization","#economy","#trade","#culture","#jobs","#inequality","#world","#business","#politics","#development"] },
-  { id: 54, label: "Billionaires Should Exist", category: "Economy", hashtags: ["#billionaires","#wealth","#inequality","#capitalism","#economy","#taxes","#rich","#society","#power","#ethics"] },
-  { id: 55, label: "Gig Economy Workers Rights", category: "Economy", hashtags: ["#gigeconomy","#workers","#rights","#uber","#freelance","#labor","#economy","#policy","#jobs","#exploitation"] },
-  { id: 56, label: "Rent Control", category: "Economy", hashtags: ["#rentcontrol","#housing","#economy","#policy","#tenants","#landlords","#cities","#affordability","#market","#government"] },
-  { id: 57, label: "Student Loan Forgiveness", category: "Economy", hashtags: ["#studentloans","#forgiveness","#education","#debt","#policy","#economy","#college","#fairness","#government","#youth"] },
-  { id: 58, label: "Outsourcing Jobs", category: "Economy", hashtags: ["#outsourcing","#jobs","#economy","#globalization","#business","#workers","#trade","#inequality","#corporations","#labor"] },
-  { id: 59, label: "Unions Are Necessary", category: "Economy", hashtags: ["#unions","#workers","#rights","#labor","#economy","#strikes","#fairness","#business","#wages","#power"] },
-  { id: 60, label: "Open Borders Economics", category: "Economy", hashtags: ["#openborders","#immigration","#economy","#labor","#trade","#globalization","#freedom","#policy","#society","#migration"] },
-  { id: 61, label: "Climate Change Is Urgent", category: "Environment", hashtags: ["#climatechange","#environment","#urgency","#science","#globalwarming","#policy","#future","#earth","#activism","#crisis"] },
-  { id: 62, label: "Veganism Saves the Planet", category: "Environment", hashtags: ["#vegan","#environment","#climate","#animals","#food","#sustainability","#plantbased","#earth","#farming","#lifestyle"] },
-  { id: 63, label: "Nuclear Over Renewables", category: "Environment", hashtags: ["#nuclear","#renewables","#energy","#environment","#climate","#solar","#wind","#power","#future","#sustainability"] },
-  { id: 64, label: "Carbon Tax", category: "Environment", hashtags: ["#carbontax","#climate","#environment","#policy","#emissions","#economy","#energy","#government","#sustainability","#tax"] },
-  { id: 65, label: "Fast Fashion Ban", category: "Environment", hashtags: ["#fastfashion","#environment","#sustainability","#fashion","#waste","#climate","#ethics","#consumption","#industry","#ban"] },
-  { id: 66, label: "Deforestation Policy", category: "Environment", hashtags: ["#deforestation","#environment","#forest","#climate","#policy","#amazon","#trees","#biodiversity","#earth","#sustainability"] },
-  { id: 67, label: "Overpopulation Crisis", category: "Environment", hashtags: ["#overpopulation","#environment","#resources","#climate","#crisis","#future","#earth","#policy","#society","#sustainability"] },
-  { id: 68, label: "Animal Agriculture Impact", category: "Environment", hashtags: ["#animalagriculture","#environment","#climate","#vegan","#food","#farming","#emissions","#water","#land","#sustainability"] },
-  { id: 69, label: "Plastic Bans Effectiveness", category: "Environment", hashtags: ["#plastic","#ban","#environment","#pollution","#ocean","#sustainability","#policy","#waste","#recycling","#climate"] },
-  { id: 70, label: "Geoengineering Solutions", category: "Environment", hashtags: ["#geoengineering","#climate","#science","#environment","#technology","#future","#risk","#policy","#earth","#innovation"] },
-  { id: 71, label: "Homework Should Be Banned", category: "Education", hashtags: ["#homework","#school","#education","#students","#stress","#learning","#children","#policy","#ban","#teachers"] },
-  { id: 72, label: "University Degrees Worth It", category: "Education", hashtags: ["#university","#degree","#education","#debt","#career","#college","#worth","#future","#jobs","#learning"] },
-  { id: 73, label: "Sex Ed in Schools", category: "Education", hashtags: ["#sexeducation","#school","#education","#children","#policy","#health","#parents","#society","#curriculum","#rights"] },
-  { id: 74, label: "Standardized Tests Are Fair", category: "Education", hashtags: ["#standardizedtests","#education","#fairness","#school","#inequality","#assessment","#students","#policy","#sat","#learning"] },
-  { id: 75, label: "Private vs Public Schools", category: "Education", hashtags: ["#privateschool","#publicschool","#education","#inequality","#funding","#children","#policy","#quality","#society","#choice"] },
-  { id: 76, label: "Critical Race Theory in Schools", category: "Education", hashtags: ["#crt","#education","#race","#history","#school","#politics","#curriculum","#children","#society","#controversy"] },
-  { id: 77, label: "Religious Schools Public Funding", category: "Education", hashtags: ["#religiousschools","#funding","#education","#separation","#church","#state","#policy","#rights","#children","#law"] },
-  { id: 78, label: "Phones Banned in Class", category: "Education", hashtags: ["#phones","#school","#ban","#education","#distraction","#technology","#students","#learning","#policy","#children"] },
-  { id: 79, label: "School Uniforms", category: "Education", hashtags: ["#uniforms","#school","#education","#identity","#equality","#children","#policy","#dress","#society","#expression"] },
-  { id: 80, label: "Homeschooling Effectiveness", category: "Education", hashtags: ["#homeschooling","#education","#children","#learning","#parents","#school","#socialization","#effectiveness","#policy","#alternative"] },
-  { id: 81, label: "Video Games Cause Violence", category: "Entertainment", hashtags: ["#videogames","#violence","#media","#youth","#psychology","#entertainment","#research","#controversy","#gaming","#society"] },
-  { id: 82, label: "Streaming Killed Cinema", category: "Entertainment", hashtags: ["#streaming","#cinema","#netflix","#movies","#entertainment","#industry","#film","#culture","#future","#technology"] },
-  { id: 83, label: "Sports Stars Are Overpaid", category: "Entertainment", hashtags: ["#sports","#salary","#overpaid","#athletes","#entertainment","#money","#celebrity","#fairness","#business","#culture"] },
-  { id: 84, label: "Reality TV Is Harmful", category: "Entertainment", hashtags: ["#realitytv","#media","#harm","#entertainment","#culture","#youth","#society","#television","#influence","#celebrity"] },
-  { id: 85, label: "AI-Generated Art Is Real Art", category: "Entertainment", hashtags: ["#aiart","#creativity","#technology","#art","#debate","#future","#culture","#entertainment","#originality","#ethics"] },
-  { id: 86, label: "Music Today Is Worse", category: "Entertainment", hashtags: ["#music","#culture","#quality","#entertainment","#nostalgia","#industry","#art","#streaming","#pop","#debate"] },
-  { id: 87, label: "Censorship in Movies", category: "Entertainment", hashtags: ["#censorship","#movies","#freespeech","#entertainment","#media","#culture","#rights","#film","#government","#art"] },
-  { id: 88, label: "Celebrity Influence on Youth", category: "Entertainment", hashtags: ["#celebrity","#influence","#youth","#media","#culture","#entertainment","#socialmedia","#rolemodel","#society","#impact"] },
-  { id: 89, label: "Books vs Audiobooks", category: "Entertainment", hashtags: ["#books","#audiobooks","#reading","#learning","#entertainment","#culture","#literature","#technology","#habits","#debate"] },
-  { id: 90, label: "Esports Are Real Sports", category: "Entertainment", hashtags: ["#esports","#gaming","#sports","#debate","#competition","#culture","#entertainment","#athletes","#future","#recognition"] },
-  { id: 91, label: "Pineapple on Pizza", category: "Everyday", hashtags: ["#pineapple","#pizza","#food","#debate","#culture","#taste","#cooking","#controversial","#everyday","#fun"] },
-  { id: 92, label: "Morning vs Night People", category: "Everyday", hashtags: ["#morning","#night","#productivity","#lifestyle","#health","#sleep","#habits","#debate","#everyday","#routine"] },
-  { id: 93, label: "Cats vs Dogs", category: "Everyday", hashtags: ["#cats","#dogs","#pets","#animals","#lifestyle","#debate","#everyday","#fun","#companionship","#culture"] },
-  { id: 94, label: "Working from Home", category: "Everyday", hashtags: ["#wfh","#remotework","#productivity","#lifestyle","#work","#future","#technology","#balance","#office","#debate"] },
-  { id: 95, label: "4-Day Work Week", category: "Everyday", hashtags: ["#4dayworkweek","#work","#productivity","#lifestyle","#future","#balance","#economy","#policy","#happiness","#debate"] },
-  { id: 96, label: "Paper Books vs E-Readers", category: "Everyday", hashtags: ["#paperbooks","#ereader","#reading","#technology","#culture","#literature","#kindle","#habits","#debate","#everyday"] },
-  { id: 97, label: "Tipping Culture", category: "Everyday", hashtags: ["#tipping","#culture","#restaurants","#service","#economy","#debate","#fairness","#workers","#wages","#society"] },
-  { id: 98, label: "Open Relationships", category: "Everyday", hashtags: ["#openrelationships","#love","#society","#culture","#relationships","#debate","#lifestyle","#ethics","#freedom","#intimacy"] },
-  { id: 99, label: "Minimalism as a Lifestyle", category: "Everyday", hashtags: ["#minimalism","#lifestyle","#culture","#consumption","#happiness","#simplicity","#debate","#everyday","#philosophy","#society"] },
-  { id: 100, label: "Social Media Detox Necessity", category: "Everyday", hashtags: ["#socialmedia","#detox","#mentalhealth","#lifestyle","#technology","#wellbeing","#debate","#everyday","#addiction","#balance"] },
+  { id: 1, label: "Democracy vs Authoritarianism", category: "Politics" },
+  { id: 2, label: "Universal Basic Income", category: "Politics" },
+  { id: 3, label: "Immigration Policy", category: "Politics" },
+  { id: 4, label: "Gun Control", category: "Politics" },
+  { id: 5, label: "Electoral College", category: "Politics" },
+  { id: 6, label: "Free Speech Limits", category: "Politics" },
+  { id: 7, label: "Capital Punishment", category: "Politics" },
+  { id: 8, label: "Affirmative Action", category: "Politics" },
+  { id: 9, label: "Welfare State", category: "Politics" },
+  { id: 10, label: "Taxation & Redistribution", category: "Politics" },
+  { id: 11, label: "Existence of God", category: "Religion" },
+  { id: 12, label: "Creationism vs Evolution", category: "Religion" },
+  { id: 13, label: "Morality Without Religion", category: "Religion" },
+  { id: 14, label: "Afterlife", category: "Religion" },
+  { id: 15, label: "Prayer in Schools", category: "Religion" },
+  { id: 16, label: "Religious Freedom vs Civil Rights", category: "Religion" },
+  { id: 17, label: "Atheism vs Agnosticism", category: "Religion" },
+  { id: 18, label: "Free Will vs Determinism", category: "Philosophy" },
+  { id: 19, label: "Meaning of Life", category: "Philosophy" },
+  { id: 20, label: "Moral Relativism", category: "Philosophy" },
+  { id: 21, label: "AI Will Replace Jobs", category: "Technology" },
+  { id: 22, label: "Social Media Is Harmful", category: "Technology" },
+  { id: 23, label: "Nuclear Energy", category: "Technology" },
+  { id: 24, label: "GMO Foods Are Safe", category: "Technology" },
+  { id: 25, label: "Space Exploration Priority", category: "Technology" },
+  { id: 26, label: "Crypto & Blockchain Future", category: "Technology" },
+  { id: 27, label: "Surveillance Capitalism", category: "Technology" },
+  { id: 28, label: "Electric Vehicles Mandate", category: "Technology" },
+  { id: 29, label: "Gene Editing Ethics", category: "Technology" },
+  { id: 30, label: "Internet Regulation", category: "Technology" },
+  { id: 31, label: "Alcohol Is Harmful", category: "Health" },
+  { id: 32, label: "Veganism Is Healthier", category: "Health" },
+  { id: 33, label: "Mandatory Vaccination", category: "Health" },
+  { id: 34, label: "Marijuana Legalization", category: "Health" },
+  { id: 35, label: "Universal Healthcare", category: "Health" },
+  { id: 36, label: "Mental Health Stigma", category: "Health" },
+  { id: 37, label: "Fast Food Should Be Taxed", category: "Health" },
+  { id: 38, label: "Intermittent Fasting Works", category: "Health" },
+  { id: 39, label: "Coffee Is Good For You", category: "Health" },
+  { id: 40, label: "Alternative Medicine", category: "Health" },
+  { id: 41, label: "Cancel Culture", category: "Society" },
+  { id: 42, label: "Gender Is a Social Construct", category: "Society" },
+  { id: 43, label: "Feminism Today", category: "Society" },
+  { id: 44, label: "Social Media & Mental Health", category: "Society" },
+  { id: 45, label: "Patriotism vs Globalism", category: "Society" },
+  { id: 46, label: "Traditional Family Values", category: "Society" },
+  { id: 47, label: "Meritocracy Is a Myth", category: "Society" },
+  { id: 48, label: "Art Has No Objective Value", category: "Society" },
+  { id: 49, label: "Animal Rights vs Human Rights", category: "Society" },
+  { id: 50, label: "Privilege & Systemic Racism", category: "Society" },
+  { id: 51, label: "Capitalism vs Socialism", category: "Economy" },
+  { id: 52, label: "Minimum Wage Increase", category: "Economy" },
+  { id: 53, label: "Globalization Is Good", category: "Economy" },
+  { id: 54, label: "Billionaires Should Exist", category: "Economy" },
+  { id: 55, label: "Gig Economy Workers Rights", category: "Economy" },
+  { id: 56, label: "Rent Control", category: "Economy" },
+  { id: 57, label: "Student Loan Forgiveness", category: "Economy" },
+  { id: 58, label: "Outsourcing Jobs", category: "Economy" },
+  { id: 59, label: "Unions Are Necessary", category: "Economy" },
+  { id: 60, label: "Open Borders Economics", category: "Economy" },
+  { id: 61, label: "Climate Change Is Urgent", category: "Environment" },
+  { id: 62, label: "Veganism Saves the Planet", category: "Environment" },
+  { id: 63, label: "Nuclear Over Renewables", category: "Environment" },
+  { id: 64, label: "Carbon Tax", category: "Environment" },
+  { id: 65, label: "Fast Fashion Ban", category: "Environment" },
+  { id: 66, label: "Deforestation Policy", category: "Environment" },
+  { id: 67, label: "Overpopulation Crisis", category: "Environment" },
+  { id: 68, label: "Animal Agriculture Impact", category: "Environment" },
+  { id: 69, label: "Plastic Bans Effectiveness", category: "Environment" },
+  { id: 70, label: "Geoengineering Solutions", category: "Environment" },
+  { id: 71, label: "Homework Should Be Banned", category: "Education" },
+  { id: 72, label: "University Degrees Worth It", category: "Education" },
+  { id: 73, label: "Sex Ed in Schools", category: "Education" },
+  { id: 74, label: "Standardized Tests Are Fair", category: "Education" },
+  { id: 75, label: "Private vs Public Schools", category: "Education" },
+  { id: 76, label: "Critical Race Theory in Schools", category: "Education" },
+  { id: 77, label: "Religious Schools Public Funding", category: "Education" },
+  { id: 78, label: "Phones Banned in Class", category: "Education" },
+  { id: 79, label: "School Uniforms", category: "Education" },
+  { id: 80, label: "Homeschooling Effectiveness", category: "Education" },
+  { id: 81, label: "Video Games Cause Violence", category: "Entertainment" },
+  { id: 82, label: "Streaming Killed Cinema", category: "Entertainment" },
+  { id: 83, label: "Sports Stars Are Overpaid", category: "Entertainment" },
+  { id: 84, label: "Reality TV Is Harmful", category: "Entertainment" },
+  { id: 85, label: "AI-Generated Art Is Real Art", category: "Entertainment" },
+  { id: 86, label: "Music Today Is Worse", category: "Entertainment" },
+  { id: 87, label: "Censorship in Movies", category: "Entertainment" },
+  { id: 88, label: "Celebrity Influence on Youth", category: "Entertainment" },
+  { id: 89, label: "Books vs Audiobooks", category: "Entertainment" },
+  { id: 90, label: "Esports Are Real Sports", category: "Entertainment" },
+  { id: 91, label: "Pineapple on Pizza", category: "Everyday" },
+  { id: 92, label: "Morning vs Night People", category: "Everyday" },
+  { id: 93, label: "Cats vs Dogs", category: "Everyday" },
+  { id: 94, label: "Working from Home", category: "Everyday" },
+  { id: 95, label: "4-Day Work Week", category: "Everyday" },
+  { id: 96, label: "Paper Books vs E-Readers", category: "Everyday" },
+  { id: 97, label: "Tipping Culture", category: "Everyday" },
+  { id: 98, label: "Open Relationships", category: "Everyday" },
+  { id: 99, label: "Minimalism as a Lifestyle", category: "Everyday" },
+  { id: 100, label: "Social Media Detox Necessity", category: "Everyday" },
 ];
 
 const LANGUAGES = [
@@ -141,14 +141,22 @@ export default function App() {
   const [hashtagInput, setHashtagInput] = useState("");
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
+  const [currentRoom, setCurrentRoom] = useState(null);
+  const [rooms, setRooms] = useState([]);
 
   async function loadProfile(userId) {
-    const { data } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", userId)
-      .single();
+    const { data } = await supabase.from("profiles").select("*").eq("id", userId).single();
     if (data) setProfile(data);
+  }
+
+  async function loadRooms() {
+    const { data } = await supabase
+      .from("rooms")
+      .select("*, room_members(count)")
+      .eq("status", "waiting")
+      .order("created_at", { ascending: false })
+      .limit(20);
+    if (data) setRooms(data);
   }
 
   useEffect(() => {
@@ -160,14 +168,12 @@ export default function App() {
       setUser(session?.user ?? null);
       if (session?.user) loadProfile(session.user.id);
     });
+    loadRooms();
     return () => subscription.unsubscribe();
   }, []);
 
   async function signInWithGoogle() {
-    await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: window.location.origin }
-    });
+    await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: window.location.origin } });
   }
 
   async function signOut() {
@@ -175,10 +181,53 @@ export default function App() {
     setProfile(null);
   }
 
+  async function findOrCreateRoom() {
+    if (!user) { alert("Please sign in first!"); return; }
+    const { data: existing } = await supabase
+      .from("rooms")
+      .select("*")
+      .eq("status", "waiting")
+      .eq("mode", selectedMode)
+      .eq("format", selectedFormat)
+      .limit(1)
+      .single();
+
+    if (existing) {
+      await supabase.from("room_members").insert({ room_id: existing.id, user_id: user.id });
+      setCurrentRoom(existing);
+      setScreen("room");
+    } else {
+      const { data: newRoom } = await supabase
+        .from("rooms")
+        .insert({
+          title: selectedTopic ? selectedTopic.label : "Open Debate",
+          topic: selectedTopic?.label,
+          category: selectedTopic?.category,
+          mode: selectedMode,
+          format: selectedFormat,
+          created_by: user.id,
+          status: "waiting",
+        })
+        .select()
+        .single();
+      if (newRoom) {
+        await supabase.from("room_members").insert({ room_id: newRoom.id, user_id: user.id });
+        setCurrentRoom(newRoom);
+        setScreen("room");
+      }
+    }
+  }
+
+  async function joinRoom(room) {
+    if (!user) { alert("Please sign in first!"); return; }
+    await supabase.from("room_members").upsert({ room_id: room.id, user_id: user.id });
+    setCurrentRoom(room);
+    setScreen("room");
+  }
+
   const filteredTopics = TOPICS.filter((t) => {
     const matchCat = selectedCategory === "All" || t.category === selectedCategory;
-    const matchSearch = t.label.toLowerCase().includes(search.toLowerCase());
-    return matchCat && matchSearch;
+    return matchCat && t.label.toLowerCase().includes(search.toLowerCase());
   });
 
   function addHashtag() {
@@ -226,6 +275,8 @@ export default function App() {
         .signin-btn:hover { background: #f0f0f0 !important; }
         .signout-btn:hover { color: #ff6b6b !important; }
         .profile-avatar { border-radius: 50%; width: 32px; height: 32px; object-fit: cover; border: 2px solid #333; }
+        .room-card:hover { border-color: #333 !important; background: #161616 !important; }
+        .join-btn:hover { background: #e63946 !important; color: #fff !important; border-color: #e63946 !important; }
       `}</style>
 
       <header style={S.header}>
@@ -233,11 +284,15 @@ export default function App() {
           <span style={S.logoVi}>Vi</span>
         </div>
         <nav style={S.nav}>
-          {["home", "create", "settings"].map(s => (
-            <button key={s} className={`nav-btn ${screen === s ? "nav-sel" : ""}`} style={S.navBtn} onClick={() => setScreen(s)}>
-              {s === "home" ? "Home" : s === "create" ? "Create Room" : "Settings"}
-            </button>
-          ))}
+          {screen === "room" ? (
+            <button className="nav-btn" style={S.navBtn} onClick={() => { setScreen("home"); setCurrentRoom(null); loadRooms(); }}>← Back</button>
+          ) : (
+            ["home", "create", "settings"].map(s => (
+              <button key={s} className={`nav-btn ${screen === s ? "nav-sel" : ""}`} style={S.navBtn} onClick={() => setScreen(s)}>
+                {s === "home" ? "Home" : s === "create" ? "Create Room" : "Settings"}
+              </button>
+            ))
+          )}
         </nav>
         {user ? (
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -253,7 +308,7 @@ export default function App() {
             <button className="signout-btn" onClick={signOut} style={{ fontSize: 13, color: "#555", fontFamily: "'Inter',sans-serif", transition: "color 0.15s" }}>Sign out</button>
           </div>
         ) : (
-          <button className="signin-btn" onClick={signInWithGoogle} style={{ padding: "8px 18px", background: "#fff", color: "#0a0a0a", borderRadius: 8, fontSize: 13, fontWeight: 600, fontFamily: "'Inter',sans-serif", transition: "background 0.15s" }}>
+          <button className="signin-btn" onClick={signInWithGoogle} style={{ padding: "8px 18px", background: "#fff", color: "#0a0a0a", borderRadius: 8, fontSize: 13, fontWeight: 600, fontFamily: "'Inter',sans-serif" }}>
             Sign in with Google
           </button>
         )}
@@ -268,6 +323,8 @@ export default function App() {
           selectedLang={selectedLang} setSelectedLang={setSelectedLang}
           selectedMode={selectedMode} setSelectedMode={setSelectedMode}
           selectedFormat={selectedFormat} setSelectedFormat={setSelectedFormat}
+          findOrCreateRoom={findOrCreateRoom}
+          rooms={rooms} joinRoom={joinRoom}
         />}
         {screen === "settings" && <SettingsScreen
           settingsLang={settingsLang} setSettingsLang={setSettingsLang}
@@ -279,77 +336,198 @@ export default function App() {
           roomHashtags={roomHashtags}
           hashtagInput={hashtagInput} setHashtagInput={setHashtagInput}
           addHashtag={addHashtag} removeHashtag={removeHashtag}
+          user={user} onCreated={(room) => { setCurrentRoom(room); setScreen("room"); }}
         />}
+        {screen === "room" && currentRoom && <RoomScreen room={currentRoom} user={user} profile={profile} />}
       </main>
     </div>
   );
 }
 
-function HomeScreen({ search, setSearch, selectedCategory, setSelectedCategory, filteredTopics, selectedTopic, setSelectedTopic, selectedLang, setSelectedLang, selectedMode, setSelectedMode, selectedFormat, setSelectedFormat }) {
+function HomeScreen({ search, setSearch, selectedCategory, setSelectedCategory, filteredTopics, selectedTopic, setSelectedTopic, selectedLang, setSelectedLang, selectedMode, setSelectedMode, selectedFormat, setSelectedFormat, findOrCreateRoom, rooms, joinRoom }) {
   return (
-    <div style={S.grid}>
-      <div style={S.card}>
-        <h2 style={S.cardTitle}>Topic</h2>
-        <div style={S.searchBox}>
-          <span style={S.searchIcon}>⌕</span>
-          <input style={S.searchInput} placeholder="Search topics…" value={search} onChange={e => setSearch(e.target.value)} />
-        </div>
-        <div style={S.chips}>
-          {["All", ...CATEGORIES].map(cat => (
-            <button key={cat} className={`chip ${selectedCategory === cat ? "chip-sel" : ""}`} style={S.chip} onClick={() => setSelectedCategory(cat)}>{cat}</button>
-          ))}
-        </div>
-        <div style={S.topicScroll}>
-          {filteredTopics.length === 0 && <p style={{ color: "#555", fontSize: 13, padding: "12px 0" }}>No topics found</p>}
-          {filteredTopics.map(t => (
-            <button key={t.id} className={`topic-row ${selectedTopic?.id === t.id ? "topic-row-sel" : ""}`} style={S.topicRow} onClick={() => setSelectedTopic(t)}>
-              <span style={S.topicLabel}>{t.label}</span>
-              <span style={S.topicCat}>{t.category}</span>
-            </button>
-          ))}
-        </div>
-        {selectedTopic && (
-          <div style={S.selectedBadge}>
-            <span style={{ color: "#e63946" }}>▶</span>
-            <span style={{ fontWeight: 600, fontSize: 13 }}>{selectedTopic.label}</span>
-            <div style={{ marginLeft: "auto", display: "flex", flexWrap: "wrap", gap: 4 }}>
-              {selectedTopic.hashtags.slice(0, 5).map(h => (
-                <span key={h} style={S.miniTag}>{h}</span>
-              ))}
-            </div>
-            <button style={{ color: "#555", fontSize: 13, marginLeft: 8 }} onClick={() => setSelectedTopic(null)}>✕</button>
+    <div>
+      <div style={S.grid}>
+        <div style={S.card}>
+          <h2 style={S.cardTitle}>Topic</h2>
+          <div style={S.searchBox}>
+            <span style={S.searchIcon}>⌕</span>
+            <input style={S.searchInput} placeholder="Search topics…" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
-        )}
+          <div style={S.chips}>
+            {["All", ...CATEGORIES].map(cat => (
+              <button key={cat} className={`chip ${selectedCategory === cat ? "chip-sel" : ""}`} style={S.chip} onClick={() => setSelectedCategory(cat)}>{cat}</button>
+            ))}
+          </div>
+          <div style={S.topicScroll}>
+            {filteredTopics.map(t => (
+              <button key={t.id} className={`topic-row ${selectedTopic?.id === t.id ? "topic-row-sel" : ""}`} style={S.topicRow} onClick={() => setSelectedTopic(t)}>
+                <span style={S.topicLabel}>{t.label}</span>
+                <span style={S.topicCat}>{t.category}</span>
+              </button>
+            ))}
+          </div>
+          {selectedTopic && (
+            <div style={S.selectedBadge}>
+              <span style={{ color: "#e63946" }}>▶</span>
+              <span style={{ fontWeight: 600, fontSize: 13 }}>{selectedTopic.label}</span>
+              <button style={{ marginLeft: "auto", color: "#555" }} onClick={() => setSelectedTopic(null)}>✕</button>
+            </div>
+          )}
+        </div>
+
+        <div style={S.card}>
+          <h2 style={S.cardTitle}>Connect</h2>
+          <p style={S.fieldLabel}>Format</p>
+          <div style={S.modeRow}>
+            {MODES.map(m => (
+              <button key={m.id} className={`mode-btn ${selectedMode === m.id ? "mode-sel" : ""}`} style={S.modeBtn} onClick={() => setSelectedMode(m.id)}>
+                <span style={{ fontSize: 22 }}>{m.icon}</span>
+                <span style={{ fontSize: 12, marginTop: 4 }}>{m.label}</span>
+              </button>
+            ))}
+          </div>
+          <p style={S.fieldLabel}>Size</p>
+          <div style={S.fmtRow}>
+            {FORMATS.map(f => (
+              <button key={f.id} className={`fmt-btn ${selectedFormat === f.id ? "fmt-sel" : ""}`} style={S.fmtBtn} onClick={() => setSelectedFormat(f.id)}>{f.label}</button>
+            ))}
+          </div>
+          <p style={S.fieldLabel}>Opponent Language</p>
+          <div style={S.langGrid}>
+            {LANGUAGES.map(l => (
+              <button key={l.code} className={`lang-btn ${selectedLang === l.code ? "lang-sel" : ""}`} style={S.langBtn} onClick={() => setSelectedLang(l.code)}>
+                <span style={{ fontSize: 13, fontWeight: 700 }}>{l.flag}</span>
+                <span style={{ fontSize: 11, marginTop: 2 }}>{l.label}</span>
+              </button>
+            ))}
+          </div>
+          <button className="connect-btn" style={S.connectBtn} onClick={findOrCreateRoom}>Find Debate</button>
+          <p style={S.hint}>{selectedTopic ? <>Debating: <strong style={{ color: "#fff" }}>{selectedTopic.label}</strong></> : "No topic selected — any topic"}</p>
+        </div>
       </div>
 
-      <div style={S.card}>
-        <h2 style={S.cardTitle}>Connect</h2>
-        <p style={S.fieldLabel}>Format</p>
-        <div style={S.modeRow}>
-          {MODES.map(m => (
-            <button key={m.id} className={`mode-btn ${selectedMode === m.id ? "mode-sel" : ""}`} style={S.modeBtn} onClick={() => setSelectedMode(m.id)}>
-              <span style={{ fontSize: 22 }}>{m.icon}</span>
-              <span style={{ fontSize: 12, marginTop: 4 }}>{m.label}</span>
-            </button>
+      {/* Active Rooms */}
+      {rooms.length > 0 && (
+        <div style={{ marginTop: 24 }}>
+          <h2 style={{ ...S.cardTitle, marginBottom: 16 }}>Active Rooms</h2>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 12 }}>
+            {rooms.map(room => (
+              <div key={room.id} className="room-card" style={S.roomCard}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                  <div>
+                    <p style={{ fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 4 }}>{room.title}</p>
+                    {room.category && <span style={S.roomTag}>{room.category}</span>}
+                  </div>
+                  <span style={{ fontSize: 11, color: "#555" }}>{room.mode}</span>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 12 }}>
+                  <span style={{ fontSize: 12, color: "#555" }}>{room.format} • waiting</span>
+                  <button className="join-btn" style={S.joinBtn} onClick={() => joinRoom(room)}>Join</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function RoomScreen({ room, user, profile }) {
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState("");
+  const [members, setMembers] = useState([]);
+  const bottomRef = useRef(null);
+
+  useEffect(() => {
+    loadMessages();
+    loadMembers();
+
+    const channel = supabase
+      .channel(`room-${room.id}`)
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages", filter: `room_id=eq.${room.id}` },
+        (payload) => setMessages(prev => [...prev, payload.new])
+      )
+      .subscribe();
+
+    return () => supabase.removeChannel(channel);
+  }, [room.id]);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  async function loadMessages() {
+    const { data } = await supabase
+      .from("messages")
+      .select("*, profiles(username, avatar_url)")
+      .eq("room_id", room.id)
+      .order("created_at", { ascending: true });
+    if (data) setMessages(data);
+  }
+
+  async function loadMembers() {
+    const { data } = await supabase
+      .from("room_members")
+      .select("*, profiles(username, avatar_url)")
+      .eq("room_id", room.id);
+    if (data) setMembers(data);
+  }
+
+  async function sendMessage() {
+    if (!input.trim() || !user) return;
+    await supabase.from("messages").insert({
+      room_id: room.id,
+      user_id: user.id,
+      content: input.trim(),
+    });
+    setInput("");
+  }
+
+  return (
+    <div style={S.roomContainer}>
+      <div style={S.roomHeader}>
+        <div>
+          <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: 20, fontWeight: 700, color: "#fff" }}>{room.title}</h2>
+          <p style={{ fontSize: 12, color: "#555", marginTop: 2 }}>{room.mode} • {room.format} • {members.length} members</p>
+        </div>
+        <div style={{ display: "flex", gap: 8 }}>
+          {members.map(m => m.profiles?.avatar_url && (
+            <img key={m.id} src={m.profiles.avatar_url} style={{ width: 28, height: 28, borderRadius: "50%", border: "2px solid #222" }} alt="" />
           ))}
         </div>
-        <p style={S.fieldLabel}>Size</p>
-        <div style={S.fmtRow}>
-          {FORMATS.map(f => (
-            <button key={f.id} className={`fmt-btn ${selectedFormat === f.id ? "fmt-sel" : ""}`} style={S.fmtBtn} onClick={() => setSelectedFormat(f.id)}>{f.label}</button>
-          ))}
-        </div>
-        <p style={S.fieldLabel}>Opponent Language</p>
-        <div style={S.langGrid}>
-          {LANGUAGES.map(l => (
-            <button key={l.code} className={`lang-btn ${selectedLang === l.code ? "lang-sel" : ""}`} style={S.langBtn} onClick={() => setSelectedLang(l.code)}>
-              <span style={{ fontSize: 13, fontWeight: 700 }}>{l.flag}</span>
-              <span style={{ fontSize: 11, marginTop: 2 }}>{l.label}</span>
-            </button>
-          ))}
-        </div>
-        <button className="connect-btn" style={S.connectBtn}>Find Debate</button>
-        <p style={S.hint}>{selectedTopic ? <>Debating: <strong style={{ color: "#fff" }}>{selectedTopic.label}</strong></> : "No topic selected — any topic"}</p>
+      </div>
+
+      <div style={S.chatArea}>
+        {messages.length === 0 && (
+          <div style={{ textAlign: "center", color: "#333", fontSize: 13, marginTop: 40 }}>
+            No messages yet. Start the debate!
+          </div>
+        )}
+        {messages.map(msg => (
+          <div key={msg.id} style={{ ...S.msgRow, flexDirection: msg.user_id === user?.id ? "row-reverse" : "row" }}>
+            {msg.profiles?.avatar_url && (
+              <img src={msg.profiles.avatar_url} style={{ width: 28, height: 28, borderRadius: "50%", flexShrink: 0 }} alt="" />
+            )}
+            <div style={{ ...S.msgBubble, background: msg.user_id === user?.id ? "#e63946" : "#1a1a1a", alignItems: msg.user_id === user?.id ? "flex-end" : "flex-start" }}>
+              {msg.user_id !== user?.id && <span style={{ fontSize: 11, color: "#888", marginBottom: 2 }}>{msg.profiles?.username || "Anonymous"}</span>}
+              <span style={{ fontSize: 14, color: "#fff" }}>{msg.content}</span>
+            </div>
+          </div>
+        ))}
+        <div ref={bottomRef} />
+      </div>
+
+      <div style={S.chatInput}>
+        <input
+          style={S.chatInputField}
+          placeholder="Type your argument…"
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          onKeyDown={e => e.key === "Enter" && sendMessage()}
+        />
+        <button style={S.sendBtn} onClick={sendMessage}>Send</button>
       </div>
     </div>
   );
@@ -451,15 +629,35 @@ function Toggle({ value, onChange }) {
   );
 }
 
-function CreateScreen({ roomTopic, setRoomTopic, roomHashtags, hashtagInput, setHashtagInput, addHashtag, removeHashtag }) {
+function CreateScreen({ roomTopic, setRoomTopic, roomHashtags, hashtagInput, setHashtagInput, addHashtag, removeHashtag, user, onCreated }) {
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedTopic, setSelectedTopic] = useState(null);
+  const [creating, setCreating] = useState(false);
 
   const filtered = TOPICS.filter(t => {
     const matchCat = selectedCategory === "All" || t.category === selectedCategory;
     return matchCat && t.label.toLowerCase().includes(search.toLowerCase());
   });
+
+  async function createRoom() {
+    if (!user) { alert("Please sign in first!"); return; }
+    if (!roomTopic.trim()) { alert("Please enter a room title!"); return; }
+    setCreating(true);
+    const { data } = await supabase.from("rooms").insert({
+      title: roomTopic,
+      topic: selectedTopic?.label,
+      category: selectedTopic?.category,
+      hashtags: roomHashtags,
+      created_by: user.id,
+      status: "waiting",
+    }).select().single();
+    if (data) {
+      await supabase.from("room_members").insert({ room_id: data.id, user_id: user.id });
+      onCreated(data);
+    }
+    setCreating(false);
+  }
 
   return (
     <div style={{ maxWidth: 620, margin: "0 auto", width: "100%" }}>
@@ -503,7 +701,9 @@ function CreateScreen({ roomTopic, setRoomTopic, roomHashtags, hashtagInput, set
             <span key={tag} style={S.hashtagPill}>#{tag} <button style={{ marginLeft: 6, color: "#666" }} onClick={() => removeHashtag(tag)}>✕</button></span>
           ))}
         </div>
-        <button className="final-btn" style={S.finalBtn}>Create Room</button>
+        <button className="final-btn" style={S.finalBtn} onClick={createRoom} disabled={creating}>
+          {creating ? "Creating…" : "Create Room"}
+        </button>
       </div>
     </div>
   );
@@ -530,7 +730,6 @@ const S = {
   topicLabel: { fontSize: 13, color: "#ccc" },
   topicCat: { fontSize: 11, color: "#444", fontStyle: "italic" },
   selectedBadge: { display: "flex", alignItems: "center", gap: 8, marginTop: 12, background: "#161616", borderRadius: 10, padding: "8px 12px", border: "1px solid #222", flexWrap: "wrap" },
-  miniTag: { fontSize: 10, color: "#555", background: "#1a1a1a", padding: "2px 6px", borderRadius: 10 },
   fieldLabel: { fontSize: 11, fontWeight: 600, color: "#555", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10, marginTop: 18 },
   modeRow: { display: "flex", gap: 10 },
   modeBtn: { flex: 1, display: "flex", flexDirection: "column", alignItems: "center", padding: "14px 8px", borderRadius: 12, border: "1px solid #222", fontSize: 12, fontFamily: "'Inter', sans-serif", color: "#888", gap: 2, transition: "all 0.15s" },
@@ -538,7 +737,7 @@ const S = {
   fmtBtn: { flex: 1, padding: "10px 0", borderRadius: 10, border: "1px solid #222", fontSize: 14, fontWeight: 600, fontFamily: "'Inter', sans-serif", color: "#888", transition: "all 0.15s" },
   langGrid: { display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8 },
   langBtn: { display: "flex", flexDirection: "column", alignItems: "center", gap: 4, padding: "10px 4px", borderRadius: 10, border: "1.5px solid #222", fontSize: 11, fontFamily: "'Inter', sans-serif", color: "#888", transition: "all 0.15s", background: "#0f0f0f" },
-  connectBtn: { marginTop: 20, width: "100%", padding: "15px 0", background: "#fff", color: "#0a0a0a", borderRadius: 12, fontSize: 15, fontWeight: 700, fontFamily: "'Syne', sans-serif", letterSpacing: "0.02em", boxShadow: "0 4px 20px rgba(255,255,255,0.08)" },
+  connectBtn: { marginTop: 20, width: "100%", padding: "15px 0", background: "#fff", color: "#0a0a0a", borderRadius: 12, fontSize: 15, fontWeight: 700, fontFamily: "'Syne', sans-serif", letterSpacing: "0.02em" },
   hint: { textAlign: "center", fontSize: 12, color: "#444", marginTop: 10 },
   divider: { height: 1, background: "#1a1a1a", margin: "20px 0" },
   camPreview: { width: "100%", aspectRatio: "16/9", background: "#0a0a0a", borderRadius: 12, overflow: "hidden", border: "1px solid #222", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12 },
@@ -550,4 +749,15 @@ const S = {
   hashtagAdd: { padding: "4px 12px", borderRadius: 8, background: "#1a1a1a", fontSize: 12, fontWeight: 600, fontFamily: "'Inter', sans-serif", color: "#888", transition: "all 0.15s" },
   hashtagPill: { display: "flex", alignItems: "center", padding: "4px 10px", background: "#1a1a1a", borderRadius: 20, fontSize: 13, color: "#ccc", border: "1px solid #2a2a2a" },
   finalBtn: { marginTop: 24, width: "100%", padding: "15px 0", background: "#fff", color: "#0a0a0a", borderRadius: 12, fontSize: 15, fontWeight: 700, fontFamily: "'Syne', sans-serif", letterSpacing: "0.02em" },
+  roomCard: { background: "#111", borderRadius: 12, padding: 16, border: "1px solid #1e1e1e", transition: "all 0.15s", cursor: "pointer" },
+  roomTag: { fontSize: 11, color: "#e63946", background: "#1a0a0b", padding: "2px 8px", borderRadius: 20 },
+  joinBtn: { padding: "6px 16px", borderRadius: 8, border: "1px solid #333", fontSize: 12, fontWeight: 600, color: "#888", fontFamily: "'Inter',sans-serif", transition: "all 0.15s" },
+  roomContainer: { display: "flex", flexDirection: "column", height: "calc(100vh - 130px)", background: "#111", borderRadius: 16, border: "1px solid #1e1e1e", overflow: "hidden" },
+  roomHeader: { padding: "16px 20px", borderBottom: "1px solid #1a1a1a", display: "flex", justifyContent: "space-between", alignItems: "center" },
+  chatArea: { flex: 1, overflowY: "auto", padding: "16px 20px", display: "flex", flexDirection: "column", gap: 12 },
+  msgRow: { display: "flex", gap: 8, alignItems: "flex-end" },
+  msgBubble: { display: "flex", flexDirection: "column", padding: "8px 12px", borderRadius: 12, maxWidth: "70%" },
+  chatInput: { padding: "12px 20px", borderTop: "1px solid #1a1a1a", display: "flex", gap: 10 },
+  chatInputField: { flex: 1, background: "#0a0a0a", border: "1px solid #222", borderRadius: 10, padding: "10px 14px", fontSize: 14, color: "#e0e0e0", fontFamily: "'Inter',sans-serif" },
+  sendBtn: { padding: "10px 20px", background: "#e63946", color: "#fff", borderRadius: 10, fontSize: 14, fontWeight: 600, fontFamily: "'Syne',sans-serif" },
 };
