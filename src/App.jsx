@@ -188,45 +188,29 @@ export default function App() {
   async function signOut() {
     await supabase.auth.signOut();
     setProfile(null);
+    setScreen("home");
   }
 
   async function findOrCreateRoom() {
     if (!user) { alert("Please sign in first!"); return; }
     const { data: existing } = await supabase
-      .from("rooms")
-      .select("*")
-      .eq("status", "waiting")
-      .eq("mode", selectedMode)
-      .eq("format", selectedFormat)
-      .neq("created_by", user.id)
-      .limit(1)
-      .single();
+      .from("rooms").select("*")
+      .eq("status", "waiting").eq("mode", selectedMode).eq("format", selectedFormat)
+      .neq("created_by", user.id).limit(1).single();
 
     if (existing) {
       await supabase.from("room_members").upsert({ room_id: existing.id, user_id: user.id, role: "debater" });
-      setMyRole("debater");
-      setCurrentRoom(existing);
-      setScreen("room");
+      setMyRole("debater"); setCurrentRoom(existing); setScreen("room");
     } else {
-      const { data: newRoom } = await supabase
-        .from("rooms")
-        .insert({
-          title: selectedTopic ? selectedTopic.label : "Open Debate",
-          topic: selectedTopic?.label,
-          category: selectedTopic?.category,
-          mode: selectedMode,
-          format: selectedFormat,
-          duration: selectedDuration,
-          created_by: user.id,
-          status: "waiting",
-        })
-        .select()
-        .single();
+      const { data: newRoom } = await supabase.from("rooms").insert({
+        title: selectedTopic ? selectedTopic.label : "Open Debate",
+        topic: selectedTopic?.label, category: selectedTopic?.category,
+        mode: selectedMode, format: selectedFormat, duration: selectedDuration,
+        created_by: user.id, status: "waiting",
+      }).select().single();
       if (newRoom) {
         await supabase.from("room_members").insert({ room_id: newRoom.id, user_id: user.id, role: "debater" });
-        setMyRole("debater");
-        setCurrentRoom(newRoom);
-        setScreen("room");
+        setMyRole("debater"); setCurrentRoom(newRoom); setScreen("room");
       }
     }
   }
@@ -234,9 +218,7 @@ export default function App() {
   async function joinRoom(room, role = "debater") {
     if (!user) { alert("Please sign in first!"); return; }
     await supabase.from("room_members").upsert({ room_id: room.id, user_id: user.id, role });
-    setMyRole(role);
-    setCurrentRoom(room);
-    setScreen("room");
+    setMyRole(role); setCurrentRoom(room); setScreen("room");
   }
 
   const filteredTopics = TOPICS.filter((t) => {
@@ -288,13 +270,15 @@ export default function App() {
         .toggle-thumb { transition: left 0.2s; }
         .signin-btn:hover { background: #f0f0f0 !important; }
         .signout-btn:hover { color: #ff6b6b !important; }
-        .profile-avatar { border-radius: 50%; width: 32px; height: 32px; object-fit: cover; border: 2px solid #333; }
+        .profile-avatar { border-radius: 50%; width: 32px; height: 32px; object-fit: cover; border: 2px solid #333; cursor: pointer; transition: border-color 0.15s; }
+        .profile-avatar:hover { border-color: #e63946 !important; }
         .room-card:hover { border-color: #333 !important; background: #161616 !important; }
         .join-btn:hover { background: #e63946 !important; color: #fff !important; border-color: #e63946 !important; }
         .judge-btn:hover { background: #f5a623 !important; color: #000 !important; border-color: #f5a623 !important; }
         .send-btn:hover { background: #c0303a !important; }
         .vote-btn:hover { opacity: 0.85; transform: scale(1.02); }
         .timer-urgent { color: #e63946 !important; animation: pulse 1s infinite; }
+        .save-btn:hover { background: #c0303a !important; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
       `}</style>
 
@@ -313,8 +297,10 @@ export default function App() {
         </nav>
         {user ? (
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {profile?.avatar_url && <img src={profile.avatar_url} className="profile-avatar" alt="avatar" />}
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
+            {profile?.avatar_url && (
+              <img src={profile.avatar_url} className="profile-avatar" alt="avatar" onClick={() => setScreen("profile")} />
+            )}
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", cursor: "pointer" }} onClick={() => setScreen("profile")}>
               <span style={{ fontSize: 13, color: "#fff", fontWeight: 600 }}>{profile?.username || user.email}</span>
               <div style={{ display: "flex", gap: 8 }}>
                 <span style={{ fontSize: 11, color: "#e63946" }}>🏆 {profile?.wins || 0}W</span>
@@ -357,7 +343,100 @@ export default function App() {
           user={user} onCreated={(room) => { setMyRole("debater"); setCurrentRoom(room); setScreen("room"); }}
         />}
         {screen === "room" && currentRoom && <RoomScreen room={currentRoom} user={user} profile={profile} myRole={myRole} />}
+        {screen === "profile" && user && <ProfileScreen user={user} profile={profile} setProfile={setProfile} />}
       </main>
+    </div>
+  );
+}
+
+function ProfileScreen({ user, profile, setProfile }) {
+  const [username, setUsername] = useState(profile?.username || "");
+  const [saving, setSaving] = useState(false);
+  const [history, setHistory] = useState([]);
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    supabase.from("debate_history").select("*").eq("user_id", user.id)
+      .order("created_at", { ascending: false }).limit(20)
+      .then(({ data }) => { if (data) setHistory(data); });
+  }, [user.id]);
+
+  async function saveUsername() {
+    if (!username.trim()) return;
+    setSaving(true);
+    const { data } = await supabase.from("profiles").update({ username: username.trim() }).eq("id", user.id).select().single();
+    if (data) { setProfile(data); setSaved(true); setTimeout(() => setSaved(false), 2000); }
+    setSaving(false);
+  }
+
+  const winRate = profile?.wins || profile?.losses
+    ? Math.round(((profile?.wins || 0) / ((profile?.wins || 0) + (profile?.losses || 0))) * 100)
+    : 0;
+
+  return (
+    <div style={{ maxWidth: 580, margin: "0 auto", width: "100%" }}>
+      <div style={S.card}>
+        {/* Avatar + name */}
+        <div style={{ display: "flex", alignItems: "center", gap: 20, marginBottom: 28 }}>
+          {profile?.avatar_url ? (
+            <img src={profile.avatar_url} style={{ width: 80, height: 80, borderRadius: "50%", border: "3px solid #e63946" }} alt="avatar" />
+          ) : (
+            <div style={{ width: 80, height: 80, borderRadius: "50%", background: "#222", border: "3px solid #333", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 32 }}>👤</div>
+          )}
+          <div>
+            <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: 24, fontWeight: 800, color: "#fff" }}>{profile?.username || "Anonymous"}</h2>
+            <p style={{ fontSize: 12, color: "#555", marginTop: 4 }}>{user.email}</p>
+            {winRate > 0 && <p style={{ fontSize: 12, color: "#f5a623", marginTop: 4 }}>Win rate: {winRate}%</p>}
+          </div>
+        </div>
+
+        {/* Stats */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 28 }}>
+          {[
+            { label: "Wins", value: profile?.wins || 0, color: "#e63946", icon: "🏆" },
+            { label: "Losses", value: profile?.losses || 0, color: "#555", icon: "💀" },
+            { label: "Points", value: profile?.points || 0, color: "#f5a623", icon: "⭐" },
+          ].map(stat => (
+            <div key={stat.label} style={{ background: "#0a0a0a", borderRadius: 12, padding: "16px 0", textAlign: "center", border: "1px solid #222" }}>
+              <p style={{ fontSize: 22 }}>{stat.icon}</p>
+              <p style={{ fontSize: 28, fontWeight: 800, fontFamily: "'Syne',sans-serif", color: stat.color, marginTop: 4 }}>{stat.value}</p>
+              <p style={{ fontSize: 11, color: "#555", marginTop: 4, textTransform: "uppercase", letterSpacing: "0.08em" }}>{stat.label}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Username edit */}
+        <p style={S.fieldLabel}>Username</p>
+        <div style={{ display: "flex", gap: 10 }}>
+          <input
+            style={{ ...S.textInput, flex: 1 }}
+            value={username}
+            onChange={e => setUsername(e.target.value)}
+            placeholder="Enter username"
+            onKeyDown={e => e.key === "Enter" && saveUsername()}
+          />
+          <button className="save-btn" onClick={saveUsername} disabled={saving} style={{ padding: "10px 20px", background: saved ? "#4caf50" : "#e63946", color: "#fff", borderRadius: 10, fontSize: 13, fontWeight: 600, fontFamily: "'Inter',sans-serif", cursor: "pointer", transition: "background 0.2s", minWidth: 70 }}>
+            {saving ? "…" : saved ? "✓" : "Save"}
+          </button>
+        </div>
+
+        {/* Debate history */}
+        <p style={{ ...S.fieldLabel, marginTop: 28 }}>Debate History {history.length > 0 && <span style={{ color: "#444", fontWeight: 400 }}>({history.length})</span>}</p>
+        {history.length === 0 ? (
+          <p style={{ fontSize: 13, color: "#444", padding: "12px 0" }}>No debates yet — join your first debate!</p>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {history.map(h => (
+              <div key={h.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", background: "#0a0a0a", borderRadius: 10, border: "1px solid #222" }}>
+                <span style={{ fontSize: 13, color: "#ccc" }}>{h.topic || "Open Debate"}</span>
+                <span style={{ fontSize: 12, color: h.result === "win" ? "#e63946" : h.result === "loss" ? "#555" : "#888", fontWeight: 600 }}>
+                  {h.result === "win" ? "🏆 Win" : h.result === "loss" ? "💀 Loss" : "—"}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -370,8 +449,7 @@ function Timer({ duration, startedAt }) {
     const totalSeconds = duration * 60;
     function update() {
       const elapsed = Math.floor((Date.now() - new Date(startedAt).getTime()) / 1000);
-      const left = Math.max(0, totalSeconds - elapsed);
-      setTimeLeft(left);
+      setTimeLeft(Math.max(0, totalSeconds - elapsed));
     }
     update();
     const interval = setInterval(update, 1000);
@@ -379,15 +457,13 @@ function Timer({ duration, startedAt }) {
   }, [duration, startedAt]);
 
   if (!startedAt || timeLeft === null) return null;
-
   const mins = Math.floor(timeLeft / 60);
   const secs = timeLeft % 60;
   const isUrgent = timeLeft < 60;
-  const label = `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
 
   return (
     <span className={isUrgent ? "timer-urgent" : ""} style={{ fontFamily: "'Syne',sans-serif", fontSize: 18, fontWeight: 700, color: isUrgent ? "#e63946" : "#fff", minWidth: 60, textAlign: "center" }}>
-      {timeLeft === 0 ? "⏱ Time's up!" : label}
+      {timeLeft === 0 ? "⏱ Time's up!" : `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`}
     </span>
   );
 }
@@ -409,57 +485,35 @@ function RoomScreen({ room, user, profile, myRole }) {
   const isJudge = myRole === "judge";
 
   useEffect(() => {
-    loadMessages();
-    loadMembers();
-    loadVotes();
-
-    const channel = supabase
-      .channel(`room-${room.id}`)
+    loadMessages(); loadMembers(); loadVotes();
+    const channel = supabase.channel(`room-${room.id}`)
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages", filter: `room_id=eq.${room.id}` },
-        (payload) => setMessages(prev => [...prev, payload.new])
-      )
+        (payload) => setMessages(prev => [...prev, payload.new]))
       .on("postgres_changes", { event: "UPDATE", schema: "public", table: "rooms", filter: `id=eq.${room.id}` },
-        (payload) => { if (payload.new.started_at) setTimerStarted(payload.new.started_at); }
-      )
+        (payload) => { if (payload.new.started_at) setTimerStarted(payload.new.started_at); })
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "votes", filter: `room_id=eq.${room.id}` },
-        () => loadVotes()
-      )
+        () => loadVotes())
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "room_members", filter: `room_id=eq.${room.id}` },
-        () => loadMembers()
-      )
+        () => loadMembers())
       .subscribe();
-
     return () => supabase.removeChannel(channel);
   }, [room.id]);
 
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
 
   async function loadMessages() {
-    const { data } = await supabase
-      .from("messages")
-      .select("*, profiles(username, avatar_url)")
-      .eq("room_id", room.id)
-      .order("created_at", { ascending: true });
+    const { data } = await supabase.from("messages").select("*, profiles(username, avatar_url)").eq("room_id", room.id).order("created_at", { ascending: true });
     if (data) setMessages(data);
   }
 
   async function loadMembers() {
-    const { data } = await supabase
-      .from("room_members")
-      .select("*, profiles(username, avatar_url)")
-      .eq("room_id", room.id);
+    const { data } = await supabase.from("room_members").select("*, profiles(username, avatar_url)").eq("room_id", room.id);
     if (data) setMembers(data);
   }
 
   async function loadVotes() {
-    const { data } = await supabase.from("votes").select("*, profiles(username, avatar_url)").eq("room_id", room.id);
-    if (data) {
-      setVotes(data);
-      const mine = data.find(v => v.judge_id === user?.id);
-      if (mine) setMyVote(mine.voted_for);
-    }
+    const { data } = await supabase.from("votes").select("*").eq("room_id", room.id);
+    if (data) { setVotes(data); const mine = data.find(v => v.judge_id === user?.id); if (mine) setMyVote(mine.voted_for); }
   }
 
   async function sendMessage() {
@@ -476,22 +530,10 @@ function RoomScreen({ room, user, profile, myRole }) {
 
   async function startCall() {
     try {
-      const res = await fetch("/api/create-room", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          roomName: `vi-${room.id}`,
-          participantName: profile?.username || user?.email || "user",
-        }),
-      });
+      const res = await fetch("/api/create-room", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ roomName: `vi-${room.id}`, participantName: profile?.username || user?.email || "user" }) });
       const data = await res.json();
-      setLivekitToken(data.token);
-      setLivekitUrl(data.url);
-      setCallActive(true);
-    } catch (e) {
-      console.error(e);
-      alert("Failed to start call.");
-    }
+      setLivekitToken(data.token); setLivekitUrl(data.url); setCallActive(true);
+    } catch (e) { console.error(e); alert("Failed to start call."); }
   }
 
   async function startTimer() {
@@ -502,8 +544,6 @@ function RoomScreen({ room, user, profile, myRole }) {
 
   const showCall = room.mode === "voice" || room.mode === "video";
   const durationLabel = DURATIONS.find(d => d.id === room.duration)?.label || "Standard";
-
-  // Count votes per debater
   const voteCount = {};
   votes.forEach(v => { voteCount[v.voted_for] = (voteCount[v.voted_for] || 0) + 1; });
 
@@ -515,62 +555,36 @@ function RoomScreen({ room, user, profile, myRole }) {
             {room.title}
             {isJudge && <span style={{ marginLeft: 10, fontSize: 12, background: "#f5a623", color: "#000", padding: "2px 8px", borderRadius: 20, fontFamily: "'Inter',sans-serif" }}>⚖️ Judge</span>}
           </h2>
-          <p style={{ fontSize: 12, color: "#555", marginTop: 2 }}>
-            {room.mode} • {room.format} • {durationLabel} • {debaters.length} debaters • {judges.length} judges
-          </p>
+          <p style={{ fontSize: 12, color: "#555", marginTop: 2 }}>{room.mode} • {room.format} • {durationLabel} • {debaters.length} debaters • {judges.length} judges</p>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           {timerStarted ? (
             <Timer duration={room.duration} startedAt={timerStarted} />
-          ) : (
-            !isJudge && (
-              <button onClick={startTimer} style={{ padding: "6px 14px", background: "#1a1a1a", color: "#888", borderRadius: 8, fontSize: 12, fontWeight: 600, fontFamily: "'Inter',sans-serif", border: "1px solid #333", cursor: "pointer" }}>
-                ▶ Start Timer
-              </button>
-            )
+          ) : !isJudge && (
+            <button onClick={startTimer} style={{ padding: "6px 14px", background: "#1a1a1a", color: "#888", borderRadius: 8, fontSize: 12, fontWeight: 600, fontFamily: "'Inter',sans-serif", border: "1px solid #333", cursor: "pointer" }}>▶ Start Timer</button>
           )}
-          {showCall && !callActive && !isJudge && (
-            <button onClick={startCall} style={{ padding: "8px 16px", background: "#e63946", color: "#fff", borderRadius: 8, fontSize: 13, fontWeight: 600, fontFamily: "'Inter',sans-serif", cursor: "pointer" }}>
-              {room.mode === "video" ? "📹 Start Video" : "🎙️ Start Voice"}
-            </button>
-          )}
-          {showCall && !callActive && isJudge && (
-            <button onClick={startCall} style={{ padding: "8px 16px", background: "#333", color: "#888", borderRadius: 8, fontSize: 13, fontWeight: 600, fontFamily: "'Inter',sans-serif", cursor: "pointer" }}>
-              👁 Watch Live
+          {showCall && !callActive && (
+            <button onClick={startCall} style={{ padding: "8px 16px", background: isJudge ? "#333" : "#e63946", color: isJudge ? "#888" : "#fff", borderRadius: 8, fontSize: 13, fontWeight: 600, fontFamily: "'Inter',sans-serif", cursor: "pointer" }}>
+              {isJudge ? "👁 Watch" : room.mode === "video" ? "📹 Start Video" : "🎙️ Start Voice"}
             </button>
           )}
         </div>
       </div>
 
-      {/* Judge voting panel */}
       {isJudge && debaters.length > 0 && (
         <div style={{ padding: "12px 20px", borderBottom: "1px solid #1a1a1a", background: "#0f0f00", display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-          <span style={{ fontSize: 12, color: "#f5a623", fontWeight: 600 }}>⚖️ Your vote:</span>
+          <span style={{ fontSize: 12, color: "#f5a623", fontWeight: 600 }}>⚖️ Vote for winner:</span>
           {debaters.map(m => (
-            <button
-              key={m.user_id}
-              className="vote-btn"
-              onClick={() => castVote(m.user_id)}
-              disabled={!!myVote}
-              style={{
-                padding: "6px 16px", borderRadius: 20, fontSize: 13, fontWeight: 600,
-                background: myVote === m.user_id ? "#f5a623" : myVote ? "#1a1a1a" : "#222",
-                color: myVote === m.user_id ? "#000" : myVote ? "#555" : "#fff",
-                border: `1px solid ${myVote === m.user_id ? "#f5a623" : "#333"}`,
-                cursor: myVote ? "default" : "pointer",
-                transition: "all 0.15s", display: "flex", alignItems: "center", gap: 6,
-              }}
-            >
+            <button key={m.user_id} className="vote-btn" onClick={() => castVote(m.user_id)} disabled={!!myVote}
+              style={{ padding: "6px 16px", borderRadius: 20, fontSize: 13, fontWeight: 600, background: myVote === m.user_id ? "#f5a623" : myVote ? "#1a1a1a" : "#222", color: myVote === m.user_id ? "#000" : myVote ? "#555" : "#fff", border: `1px solid ${myVote === m.user_id ? "#f5a623" : "#333"}`, cursor: myVote ? "default" : "pointer", transition: "all 0.15s", display: "flex", alignItems: "center", gap: 6 }}>
               {m.profiles?.avatar_url && <img src={m.profiles.avatar_url} style={{ width: 18, height: 18, borderRadius: "50%" }} alt="" />}
-              {m.profiles?.username || "Debater"}
-              <span style={{ fontSize: 11, opacity: 0.7 }}>({voteCount[m.user_id] || 0})</span>
+              {m.profiles?.username || "Debater"} <span style={{ fontSize: 11, opacity: 0.7 }}>({voteCount[m.user_id] || 0})</span>
             </button>
           ))}
-          {myVote && <span style={{ fontSize: 12, color: "#f5a623" }}>✓ Vote cast!</span>}
+          {myVote && <span style={{ fontSize: 12, color: "#f5a623" }}>✓ Voted!</span>}
         </div>
       )}
 
-      {/* Vote results for debaters */}
       {!isJudge && votes.length > 0 && (
         <div style={{ padding: "8px 20px", borderBottom: "1px solid #1a1a1a", display: "flex", alignItems: "center", gap: 12 }}>
           <span style={{ fontSize: 12, color: "#555" }}>⚖️ Votes:</span>
@@ -586,34 +600,18 @@ function RoomScreen({ room, user, profile, myRole }) {
       <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
         {callActive && livekitToken && livekitUrl && (
           <div style={{ width: "55%", borderRight: "1px solid #1a1a1a", overflow: "hidden" }}>
-            <LiveKitRoom
-              token={livekitToken}
-              serverUrl={livekitUrl}
-              video={room.mode === "video" && !isJudge}
-              audio={!isJudge}
-              onDisconnected={() => setCallActive(false)}
-              style={{ height: "100%" }}
-            >
+            <LiveKitRoom token={livekitToken} serverUrl={livekitUrl} video={room.mode === "video" && !isJudge} audio={!isJudge} onDisconnected={() => setCallActive(false)} style={{ height: "100%" }}>
               <VideoConference />
             </LiveKitRoom>
           </div>
         )}
-
         <div style={{ display: "flex", flexDirection: "column", flex: 1, overflow: "hidden" }}>
           <div style={S.chatArea}>
-            {isJudge && (
-              <div style={{ textAlign: "center", padding: "8px 16px", background: "#0f0f00", borderRadius: 8, fontSize: 12, color: "#f5a623", marginBottom: 8 }}>
-                ⚖️ You are a judge — watch and vote, you cannot send messages
-              </div>
-            )}
-            {messages.length === 0 && (
-              <div style={{ textAlign: "center", color: "#333", fontSize: 13, marginTop: 20 }}>No messages yet. Start the debate!</div>
-            )}
+            {isJudge && <div style={{ textAlign: "center", padding: "8px 16px", background: "#0f0f00", borderRadius: 8, fontSize: 12, color: "#f5a623", marginBottom: 8 }}>⚖️ Judge mode — watch and vote, you cannot send messages</div>}
+            {messages.length === 0 && <div style={{ textAlign: "center", color: "#333", fontSize: 13, marginTop: 20 }}>No messages yet. Start the debate!</div>}
             {messages.map(msg => (
               <div key={msg.id} style={{ ...S.msgRow, flexDirection: msg.user_id === user?.id ? "row-reverse" : "row" }}>
-                {msg.profiles?.avatar_url && (
-                  <img src={msg.profiles.avatar_url} style={{ width: 28, height: 28, borderRadius: "50%", flexShrink: 0 }} alt="" />
-                )}
+                {msg.profiles?.avatar_url && <img src={msg.profiles.avatar_url} style={{ width: 28, height: 28, borderRadius: "50%", flexShrink: 0 }} alt="" />}
                 <div style={{ ...S.msgBubble, background: msg.user_id === user?.id ? "#e63946" : "#1a1a1a" }}>
                   {msg.user_id !== user?.id && <span style={{ fontSize: 11, color: "#888", marginBottom: 2 }}>{msg.profiles?.username || "Anonymous"}</span>}
                   <span style={{ fontSize: 14, color: "#fff" }}>{msg.content}</span>
@@ -622,16 +620,9 @@ function RoomScreen({ room, user, profile, myRole }) {
             ))}
             <div ref={bottomRef} />
           </div>
-
           {!isJudge && (
             <div style={S.chatInput}>
-              <input
-                style={S.chatInputField}
-                placeholder="Type your argument…"
-                value={input}
-                onChange={e => setInput(e.target.value)}
-                onKeyDown={e => e.key === "Enter" && sendMessage()}
-              />
+              <input style={S.chatInputField} placeholder="Type your argument…" value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && sendMessage()} />
               <button className="send-btn" style={S.sendBtn} onClick={sendMessage}>Send</button>
             </div>
           )}
@@ -672,7 +663,6 @@ function HomeScreen({ search, setSearch, selectedCategory, setSelectedCategory, 
             </div>
           )}
         </div>
-
         <div style={S.card}>
           <h2 style={S.cardTitle}>Connect</h2>
           <p style={S.fieldLabel}>Format</p>
@@ -712,7 +702,6 @@ function HomeScreen({ search, setSearch, selectedCategory, setSelectedCategory, 
           <p style={S.hint}>{selectedTopic ? <>Debating: <strong style={{ color: "#fff" }}>{selectedTopic.label}</strong></> : "No topic selected — any topic"}</p>
         </div>
       </div>
-
       {rooms.length > 0 && (
         <div style={{ marginTop: 24 }}>
           <h2 style={{ ...S.cardTitle, marginBottom: 16 }}>Active Rooms</h2>
@@ -724,14 +713,10 @@ function HomeScreen({ search, setSearch, selectedCategory, setSelectedCategory, 
                     <p style={{ fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 4 }}>{room.title}</p>
                     {room.category && <span style={S.roomTag}>{room.category}</span>}
                   </div>
-                  <span style={{ fontSize: 11, color: room.status === "active" ? "#4caf50" : "#555" }}>
-                    {room.status === "active" ? "🔴 Live" : room.mode}
-                  </span>
+                  <span style={{ fontSize: 11, color: room.status === "active" ? "#4caf50" : "#555" }}>{room.status === "active" ? "🔴 Live" : room.mode}</span>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 12 }}>
-                  <span style={{ fontSize: 12, color: "#555" }}>
-                    {room.format} • {DURATIONS.find(d => d.id === room.duration)?.label || "Standard"}
-                  </span>
+                  <span style={{ fontSize: 12, color: "#555" }}>{room.format} • {DURATIONS.find(d => d.id === room.duration)?.label || "Standard"}</span>
                   <div style={{ display: "flex", gap: 6 }}>
                     <button className="join-btn" style={S.joinBtn} onClick={() => joinRoom(room, "debater")}>Join</button>
                     <button className="judge-btn" style={S.judgeBtn} onClick={() => joinRoom(room, "judge")}>⚖️ Judge</button>
@@ -800,9 +785,7 @@ function SettingsScreen({ settingsLang, setSettingsLang, camEnabled, setCamEnabl
         <div style={S.divider} />
         <p style={S.fieldLabel}>Camera</p>
         <div style={S.camPreview}>
-          {camEnabled && !camError ? (
-            <video ref={videoRef} autoPlay muted playsInline style={S.video} />
-          ) : (
+          {camEnabled && !camError ? <video ref={videoRef} autoPlay muted playsInline style={S.video} /> : (
             <div style={S.camOff}>
               <span style={{ fontSize: 32 }}>📷</span>
               <span style={{ color: "#555", fontSize: 13, marginTop: 8 }}>{camError ? "Camera not available" : "Camera is off"}</span>
@@ -859,13 +842,8 @@ function CreateScreen({ roomTopic, setRoomTopic, roomHashtags, hashtagInput, set
     if (!roomTopic.trim()) { alert("Please enter a room title!"); return; }
     setCreating(true);
     const { data } = await supabase.from("rooms").insert({
-      title: roomTopic,
-      topic: selectedTopic?.label,
-      category: selectedTopic?.category,
-      hashtags: roomHashtags,
-      duration: selectedDuration,
-      created_by: user.id,
-      status: "waiting",
+      title: roomTopic, topic: selectedTopic?.label, category: selectedTopic?.category,
+      hashtags: roomHashtags, duration: selectedDuration, created_by: user.id, status: "waiting",
     }).select().single();
     if (data) {
       await supabase.from("room_members").insert({ room_id: data.id, user_id: user.id, role: "debater" });
