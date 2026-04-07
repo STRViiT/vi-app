@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { supabase } from "./supabase";
-import { LiveKitRoom, VideoConference, useRoomContext } from "@livekit/components-react";
+import { LiveKitRoom, VideoConference } from "@livekit/components-react";
 import "@livekit/components-styles";
 
 const TOPICS = [
@@ -126,6 +126,11 @@ const FORMATS = [
   { id: "1v1", label: "1 vs 1" },
   { id: "3v3", label: "3 vs 3" },
 ];
+const DURATIONS = [
+  { id: 10, label: "Blitz", desc: "10 min" },
+  { id: 40, label: "Standard", desc: "40 min" },
+  { id: 180, label: "Long", desc: "3 hrs" },
+];
 
 export default function App() {
   const [screen, setScreen] = useState("home");
@@ -135,6 +140,7 @@ export default function App() {
   const [selectedLang, setSelectedLang] = useState("en");
   const [selectedMode, setSelectedMode] = useState("chat");
   const [selectedFormat, setSelectedFormat] = useState("1v1");
+  const [selectedDuration, setSelectedDuration] = useState(40);
   const [settingsLang, setSettingsLang] = useState("en");
   const [camEnabled, setCamEnabled] = useState(true);
   const [micEnabled, setMicEnabled] = useState(true);
@@ -208,6 +214,7 @@ export default function App() {
           category: selectedTopic?.category,
           mode: selectedMode,
           format: selectedFormat,
+          duration: selectedDuration,
           created_by: user.id,
           status: "waiting",
         })
@@ -263,6 +270,8 @@ export default function App() {
         .mode-sel { background: #e63946 !important; border-color: #e63946 !important; color: #fff !important; }
         .fmt-btn:hover { background: #1a1a1a !important; border-color: #555 !important; }
         .fmt-sel { background: #fff !important; color: #0a0a0a !important; border-color: #fff !important; }
+        .dur-btn:hover { background: #1a1a1a !important; border-color: #555 !important; }
+        .dur-sel { background: #e63946 !important; color: #fff !important; border-color: #e63946 !important; }
         .lang-btn:hover { border-color: #555 !important; background: #1a1a1a !important; }
         .lang-sel { border-color: #e63946 !important; background: #1a0a0b !important; color: #e63946 !important; }
         .connect-btn { transition: all 0.15s; }
@@ -281,7 +290,9 @@ export default function App() {
         .room-card:hover { border-color: #333 !important; background: #161616 !important; }
         .join-btn:hover { background: #e63946 !important; color: #fff !important; border-color: #e63946 !important; }
         .send-btn:hover { background: #c0303a !important; }
-        .lk-room-container { background: #0a0a0a !important; }
+        .start-btn:hover { opacity: 0.85; }
+        .timer-urgent { color: #e63946 !important; animation: pulse 1s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
       `}</style>
 
       <header style={S.header}>
@@ -326,6 +337,7 @@ export default function App() {
           selectedLang={selectedLang} setSelectedLang={setSelectedLang}
           selectedMode={selectedMode} setSelectedMode={setSelectedMode}
           selectedFormat={selectedFormat} setSelectedFormat={setSelectedFormat}
+          selectedDuration={selectedDuration} setSelectedDuration={setSelectedDuration}
           findOrCreateRoom={findOrCreateRoom}
           rooms={rooms} joinRoom={joinRoom}
         />}
@@ -347,7 +359,37 @@ export default function App() {
   );
 }
 
-function HomeScreen({ search, setSearch, selectedCategory, setSelectedCategory, filteredTopics, selectedTopic, setSelectedTopic, selectedLang, setSelectedLang, selectedMode, setSelectedMode, selectedFormat, setSelectedFormat, findOrCreateRoom, rooms, joinRoom }) {
+function Timer({ duration, startedAt }) {
+  const [timeLeft, setTimeLeft] = useState(null);
+
+  useEffect(() => {
+    if (!startedAt) return;
+    const totalSeconds = duration * 60;
+    function update() {
+      const elapsed = Math.floor((Date.now() - new Date(startedAt).getTime()) / 1000);
+      const left = Math.max(0, totalSeconds - elapsed);
+      setTimeLeft(left);
+    }
+    update();
+    const interval = setInterval(update, 1000);
+    return () => clearInterval(interval);
+  }, [duration, startedAt]);
+
+  if (!startedAt || timeLeft === null) return null;
+
+  const mins = Math.floor(timeLeft / 60);
+  const secs = timeLeft % 60;
+  const isUrgent = timeLeft < 60;
+  const label = `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+
+  return (
+    <span className={isUrgent ? "timer-urgent" : ""} style={{ fontFamily: "'Syne',sans-serif", fontSize: 18, fontWeight: 700, color: isUrgent ? "#e63946" : "#fff", minWidth: 60, textAlign: "center" }}>
+      {timeLeft === 0 ? "Time's up!" : label}
+    </span>
+  );
+}
+
+function HomeScreen({ search, setSearch, selectedCategory, setSelectedCategory, filteredTopics, selectedTopic, setSelectedTopic, selectedLang, setSelectedLang, selectedMode, setSelectedMode, selectedFormat, setSelectedFormat, selectedDuration, setSelectedDuration, findOrCreateRoom, rooms, joinRoom }) {
   return (
     <div>
       <div style={S.grid}>
@@ -396,6 +438,15 @@ function HomeScreen({ search, setSearch, selectedCategory, setSelectedCategory, 
               <button key={f.id} className={`fmt-btn ${selectedFormat === f.id ? "fmt-sel" : ""}`} style={S.fmtBtn} onClick={() => setSelectedFormat(f.id)}>{f.label}</button>
             ))}
           </div>
+          <p style={S.fieldLabel}>Duration</p>
+          <div style={S.fmtRow}>
+            {DURATIONS.map(d => (
+              <button key={d.id} className={`dur-btn ${selectedDuration === d.id ? "dur-sel" : ""}`} style={{ ...S.fmtBtn, flexDirection: "column", gap: 2 }} onClick={() => setSelectedDuration(d.id)}>
+                <span style={{ fontSize: 13, fontWeight: 600 }}>{d.label}</span>
+                <span style={{ fontSize: 10, opacity: 0.6 }}>{d.desc}</span>
+              </button>
+            ))}
+          </div>
           <p style={S.fieldLabel}>Opponent Language</p>
           <div style={S.langGrid}>
             {LANGUAGES.map(l => (
@@ -424,7 +475,9 @@ function HomeScreen({ search, setSearch, selectedCategory, setSelectedCategory, 
                   <span style={{ fontSize: 11, color: "#555" }}>{room.mode}</span>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 12 }}>
-                  <span style={{ fontSize: 12, color: "#555" }}>{room.format} • waiting</span>
+                  <span style={{ fontSize: 12, color: "#555" }}>
+                    {room.format} • {DURATIONS.find(d => d.id === room.duration)?.label || "Standard"}
+                  </span>
                   <button className="join-btn" style={S.joinBtn} onClick={() => joinRoom(room)}>Join</button>
                 </div>
               </div>
@@ -443,6 +496,7 @@ function RoomScreen({ room, user, profile }) {
   const [livekitToken, setLivekitToken] = useState(null);
   const [livekitUrl, setLivekitUrl] = useState(null);
   const [callActive, setCallActive] = useState(false);
+  const [timerStarted, setTimerStarted] = useState(room.started_at);
   const bottomRef = useRef(null);
 
   useEffect(() => {
@@ -453,6 +507,9 @@ function RoomScreen({ room, user, profile }) {
       .channel(`room-${room.id}`)
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages", filter: `room_id=eq.${room.id}` },
         (payload) => setMessages(prev => [...prev, payload.new])
+      )
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "rooms", filter: `id=eq.${room.id}` },
+        (payload) => { if (payload.new.started_at) setTimerStarted(payload.new.started_at); }
       )
       .subscribe();
 
@@ -506,21 +563,35 @@ function RoomScreen({ room, user, profile }) {
     }
   }
 
+  async function startTimer() {
+    const now = new Date().toISOString();
+    await supabase.from("rooms").update({ started_at: now, status: "active" }).eq("id", room.id);
+    setTimerStarted(now);
+  }
+
   const showCall = room.mode === "voice" || room.mode === "video";
+  const durationLabel = DURATIONS.find(d => d.id === room.duration)?.label || "Standard";
 
   return (
     <div style={S.roomContainer}>
       <div style={S.roomHeader}>
         <div>
           <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: 20, fontWeight: 700, color: "#fff" }}>{room.title}</h2>
-          <p style={{ fontSize: 12, color: "#555", marginTop: 2 }}>{room.mode} • {room.format} • {members.length} members</p>
+          <p style={{ fontSize: 12, color: "#555", marginTop: 2 }}>{room.mode} • {room.format} • {durationLabel} • {members.length} members</p>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          {timerStarted ? (
+            <Timer duration={room.duration} startedAt={timerStarted} />
+          ) : (
+            <button onClick={startTimer} style={{ padding: "6px 14px", background: "#1a1a1a", color: "#888", borderRadius: 8, fontSize: 12, fontWeight: 600, fontFamily: "'Inter',sans-serif", border: "1px solid #333", cursor: "pointer" }}>
+              ▶ Start Timer
+            </button>
+          )}
           {members.map(m => m.profiles?.avatar_url && (
             <img key={m.id} src={m.profiles.avatar_url} style={{ width: 28, height: 28, borderRadius: "50%", border: "2px solid #222" }} alt="" />
           ))}
           {showCall && !callActive && (
-            <button onClick={startCall} style={{ padding: "8px 16px", background: "#e63946", color: "#fff", borderRadius: 8, fontSize: 13, fontWeight: 600, fontFamily: "'Inter',sans-serif", cursor: "pointer" }}>
+            <button className="start-btn" onClick={startCall} style={{ padding: "8px 16px", background: "#e63946", color: "#fff", borderRadius: 8, fontSize: 13, fontWeight: 600, fontFamily: "'Inter',sans-serif", cursor: "pointer" }}>
               {room.mode === "video" ? "📹 Start Video" : "🎙️ Start Voice"}
             </button>
           )}
@@ -679,6 +750,7 @@ function CreateScreen({ roomTopic, setRoomTopic, roomHashtags, hashtagInput, set
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [creating, setCreating] = useState(false);
+  const [selectedDuration, setSelectedDuration] = useState(40);
 
   const filtered = TOPICS.filter(t => {
     const matchCat = selectedCategory === "All" || t.category === selectedCategory;
@@ -694,6 +766,7 @@ function CreateScreen({ roomTopic, setRoomTopic, roomHashtags, hashtagInput, set
       topic: selectedTopic?.label,
       category: selectedTopic?.category,
       hashtags: roomHashtags,
+      duration: selectedDuration,
       created_by: user.id,
       status: "waiting",
     }).select().single();
@@ -710,6 +783,17 @@ function CreateScreen({ roomTopic, setRoomTopic, roomHashtags, hashtagInput, set
         <h2 style={S.cardTitle}>Create a Room</h2>
         <p style={S.fieldLabel}>Room Title</p>
         <input style={S.textInput} placeholder="e.g. Is veganism the future?" value={roomTopic} onChange={e => setRoomTopic(e.target.value)} />
+
+        <p style={{ ...S.fieldLabel, marginTop: 22 }}>Duration</p>
+        <div style={S.fmtRow}>
+          {DURATIONS.map(d => (
+            <button key={d.id} className={`dur-btn ${selectedDuration === d.id ? "dur-sel" : ""}`} style={{ ...S.fmtBtn, flexDirection: "column", gap: 2 }} onClick={() => setSelectedDuration(d.id)}>
+              <span style={{ fontSize: 13, fontWeight: 600 }}>{d.label}</span>
+              <span style={{ fontSize: 10, opacity: 0.6 }}>{d.desc}</span>
+            </button>
+          ))}
+        </div>
+
         <p style={{ ...S.fieldLabel, marginTop: 22 }}>Select Debate Topic</p>
         <div style={S.searchBox}>
           <span style={S.searchIcon}>⌕</span>
@@ -779,7 +863,7 @@ const S = {
   modeRow: { display: "flex", gap: 10 },
   modeBtn: { flex: 1, display: "flex", flexDirection: "column", alignItems: "center", padding: "14px 8px", borderRadius: 12, border: "1px solid #222", fontSize: 12, fontFamily: "'Inter', sans-serif", color: "#888", gap: 2, transition: "all 0.15s" },
   fmtRow: { display: "flex", gap: 10 },
-  fmtBtn: { flex: 1, padding: "10px 0", borderRadius: 10, border: "1px solid #222", fontSize: 14, fontWeight: 600, fontFamily: "'Inter', sans-serif", color: "#888", transition: "all 0.15s" },
+  fmtBtn: { flex: 1, padding: "10px 0", borderRadius: 10, border: "1px solid #222", fontSize: 14, fontWeight: 600, fontFamily: "'Inter', sans-serif", color: "#888", transition: "all 0.15s", display: "flex", alignItems: "center", justifyContent: "center" },
   langGrid: { display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8 },
   langBtn: { display: "flex", flexDirection: "column", alignItems: "center", gap: 4, padding: "10px 4px", borderRadius: 10, border: "1.5px solid #222", fontSize: 11, fontFamily: "'Inter', sans-serif", color: "#888", transition: "all 0.15s", background: "#0f0f0f" },
   connectBtn: { marginTop: 20, width: "100%", padding: "15px 0", background: "#fff", color: "#0a0a0a", borderRadius: 12, fontSize: 15, fontWeight: 700, fontFamily: "'Syne', sans-serif", letterSpacing: "0.02em" },
