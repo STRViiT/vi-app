@@ -1,18 +1,27 @@
-export default async function handler(req, res) {
-  if (req.method !== "POST") return res.status(405).end();
+import { AccessToken } from 'livekit-server-sdk';
 
-  const response = await fetch("https://api.daily.co/v1/rooms", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.DAILY_API_KEY}`,
-    },
-    body: JSON.stringify({
-      name: req.body.name,
-      properties: { max_participants: 10, enable_chat: true },
-    }),
+export default async function handler(req, res) {
+  if (req.method !== 'POST') return res.status(405).end();
+
+  const { roomName, participantName } = req.body;
+
+  const at = new AccessToken(
+    process.env.LIVEKIT_API_KEY,
+    process.env.LIVEKIT_API_SECRET,
+    { identity: participantName || 'user' }
+  );
+
+  at.addGrant({
+    roomJoin: true,
+    room: roomName,
+    canPublish: true,
+    canSubscribe: true,
   });
 
-  const data = await response.json();
-  res.status(200).json(data);
+  const token = await at.toJwt();
+
+  res.status(200).json({
+    token,
+    url: process.env.LIVEKIT_URL,
+  });
 }
