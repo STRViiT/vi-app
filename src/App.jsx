@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { supabase } from "./supabase";
+import { LiveKitRoom, VideoConference, useRoomContext } from "@livekit/components-react";
+import "@livekit/components-styles";
 
 const TOPICS = [
   { id: 1, label: "Democracy vs Authoritarianism", category: "Politics" },
@@ -152,7 +154,7 @@ export default function App() {
   async function loadRooms() {
     const { data } = await supabase
       .from("rooms")
-      .select("*, room_members(count)")
+      .select("*")
       .eq("status", "waiting")
       .order("created_at", { ascending: false })
       .limit(20);
@@ -264,7 +266,7 @@ export default function App() {
         .lang-btn:hover { border-color: #555 !important; background: #1a1a1a !important; }
         .lang-sel { border-color: #e63946 !important; background: #1a0a0b !important; color: #e63946 !important; }
         .connect-btn { transition: all 0.15s; }
-        .connect-btn:hover { background: #e63946 !important; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(230,57,70,0.35) !important; }
+        .connect-btn:hover { background: #e63946 !important; transform: translateY(-1px); }
         .nav-btn { transition: color 0.15s; }
         .nav-btn:hover { color: #fff !important; }
         .nav-sel { color: #fff !important; }
@@ -278,8 +280,8 @@ export default function App() {
         .profile-avatar { border-radius: 50%; width: 32px; height: 32px; object-fit: cover; border: 2px solid #333; }
         .room-card:hover { border-color: #333 !important; background: #161616 !important; }
         .join-btn:hover { background: #e63946 !important; color: #fff !important; border-color: #e63946 !important; }
-        .call-btn:hover { opacity: 0.85; }
         .send-btn:hover { background: #c0303a !important; }
+        .lk-room-container { background: #0a0a0a !important; }
       `}</style>
 
       <header style={S.header}>
@@ -438,10 +440,9 @@ function RoomScreen({ room, user, profile }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [members, setMembers] = useState([]);
+  const [livekitToken, setLivekitToken] = useState(null);
+  const [livekitUrl, setLivekitUrl] = useState(null);
   const [callActive, setCallActive] = useState(false);
-  const [micOn, setMicOn] = useState(true);
-  const [camOn, setCamOn] = useState(room.mode === "video");
-  const callRef = useRef(null);
   const bottomRef = useRef(null);
 
   useEffect(() => {
@@ -455,10 +456,7 @@ function RoomScreen({ room, user, profile }) {
       )
       .subscribe();
 
-    return () => {
-      supabase.removeChannel(channel);
-      if (callRef.current) { callRef.current.destroy(); callRef.current = null; }
-    };
+    return () => supabase.removeChannel(channel);
   }, [room.id]);
 
   useEffect(() => {
@@ -493,38 +491,19 @@ function RoomScreen({ room, user, profile }) {
       const res = await fetch("/api/create-room", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: `vi-${room.id}` }),
+        body: JSON.stringify({
+          roomName: `vi-${room.id}`,
+          participantName: profile?.username || user?.email || "user",
+        }),
       });
       const data = await res.json();
-      const roomUrl = data.url;
-
-      const DailyIframe = (await import("@daily-co/daily-js")).default;
-      const callFrame = DailyIframe.createFrame(document.getElementById("call-container"), {
-        iframeStyle: { width: "100%", height: "100%", border: "none", borderRadius: "12px" },
-        showLeaveButton: false,
-        showFullscreenButton: false,
-      });
-      callRef.current = callFrame;
-      await callFrame.join({ url: roomUrl, startVideoOff: !camOn, startAudioOff: !micOn });
+      setLivekitToken(data.token);
+      setLivekitUrl(data.url);
       setCallActive(true);
     } catch (e) {
       console.error(e);
+      alert("Failed to start call. Please try again.");
     }
-  }
-
-  async function endCall() {
-    if (callRef.current) { await callRef.current.destroy(); callRef.current = null; }
-    setCallActive(false);
-  }
-
-  async function toggleMic() {
-    if (callRef.current) { callRef.current.setLocalAudio(!micOn); }
-    setMicOn(!micOn);
-  }
-
-  async function toggleCam() {
-    if (callRef.current) { callRef.current.setLocalVideo(!camOn); }
-    setCamOn(!camOn);
   }
 
   const showCall = room.mode === "voice" || room.mode === "video";
@@ -541,31 +520,27 @@ function RoomScreen({ room, user, profile }) {
             <img key={m.id} src={m.profiles.avatar_url} style={{ width: 28, height: 28, borderRadius: "50%", border: "2px solid #222" }} alt="" />
           ))}
           {showCall && !callActive && (
-            <button className="call-btn" onClick={startCall} style={{ padding: "8px 16px", background: "#e63946", color: "#fff", borderRadius: 8, fontSize: 13, fontWeight: 600, fontFamily: "'Inter',sans-serif" }}>
+            <button onClick={startCall} style={{ padding: "8px 16px", background: "#e63946", color: "#fff", borderRadius: 8, fontSize: 13, fontWeight: 600, fontFamily: "'Inter',sans-serif", cursor: "pointer" }}>
               {room.mode === "video" ? "📹 Start Video" : "🎙️ Start Voice"}
             </button>
-          )}
-          {showCall && callActive && (
-            <div style={{ display: "flex", gap: 8 }}>
-              <button className="call-btn" onClick={toggleMic} style={{ padding: "8px 12px", background: micOn ? "#222" : "#e63946", color: "#fff", borderRadius: 8, fontSize: 13, fontFamily: "'Inter',sans-serif" }}>
-                {micOn ? "🎙️" : "🔇"}
-              </button>
-              {room.mode === "video" && (
-                <button className="call-btn" onClick={toggleCam} style={{ padding: "8px 12px", background: camOn ? "#222" : "#e63946", color: "#fff", borderRadius: 8, fontSize: 13, fontFamily: "'Inter',sans-serif" }}>
-                  {camOn ? "📹" : "🚫"}
-                </button>
-              )}
-              <button className="call-btn" onClick={endCall} style={{ padding: "8px 12px", background: "#e63946", color: "#fff", borderRadius: 8, fontSize: 13, fontFamily: "'Inter',sans-serif" }}>
-                End
-              </button>
-            </div>
           )}
         </div>
       </div>
 
       <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
-        {showCall && (
-          <div id="call-container" style={{ width: callActive ? "60%" : "0%", transition: "width 0.3s", background: "#0a0a0a", borderRight: callActive ? "1px solid #1a1a1a" : "none", minHeight: 0 }} />
+        {callActive && livekitToken && livekitUrl && (
+          <div style={{ width: "55%", borderRight: "1px solid #1a1a1a", overflow: "hidden" }}>
+            <LiveKitRoom
+              token={livekitToken}
+              serverUrl={livekitUrl}
+              video={room.mode === "video"}
+              audio={true}
+              onDisconnected={() => setCallActive(false)}
+              style={{ height: "100%" }}
+            >
+              <VideoConference />
+            </LiveKitRoom>
+          </div>
         )}
 
         <div style={{ display: "flex", flexDirection: "column", flex: 1, overflow: "hidden" }}>
@@ -829,5 +804,5 @@ const S = {
   msgBubble: { display: "flex", flexDirection: "column", padding: "8px 12px", borderRadius: 12, maxWidth: "70%" },
   chatInput: { padding: "12px 20px", borderTop: "1px solid #1a1a1a", display: "flex", gap: 10, flexShrink: 0 },
   chatInputField: { flex: 1, background: "#0a0a0a", border: "1px solid #222", borderRadius: 10, padding: "10px 14px", fontSize: 14, color: "#e0e0e0", fontFamily: "'Inter',sans-serif" },
-  sendBtn: { padding: "10px 20px", background: "#e63946", color: "#fff", borderRadius: 10, fontSize: 14, fontWeight: 600, fontFamily: "'Syne',sans-serif", transition: "background 0.15s" },
+  sendBtn: { padding: "10px 20px", background: "#e63946", color: "#fff", borderRadius: 10, fontSize: 14, fontWeight: 600, fontFamily: "'Syne',sans-serif", transition: "background 0.15s", cursor: "pointer" },
 };
