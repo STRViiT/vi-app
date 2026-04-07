@@ -189,11 +189,12 @@ export default function App() {
       .eq("status", "waiting")
       .eq("mode", selectedMode)
       .eq("format", selectedFormat)
+      .neq("created_by", user.id)
       .limit(1)
       .single();
 
     if (existing) {
-      await supabase.from("room_members").insert({ room_id: existing.id, user_id: user.id });
+      await supabase.from("room_members").upsert({ room_id: existing.id, user_id: user.id });
       setCurrentRoom(existing);
       setScreen("room");
     } else {
@@ -269,7 +270,7 @@ export default function App() {
         .nav-sel { color: #fff !important; }
         .hashtag-add:hover { background: #e63946 !important; color: #fff !important; }
         .final-btn { transition: all 0.15s; }
-        .final-btn:hover { background: #e63946 !important; box-shadow: 0 8px 24px rgba(230,57,70,0.35) !important; }
+        .final-btn:hover { background: #e63946 !important; }
         .toggle-track { transition: background 0.2s; }
         .toggle-thumb { transition: left 0.2s; }
         .signin-btn:hover { background: #f0f0f0 !important; }
@@ -277,12 +278,12 @@ export default function App() {
         .profile-avatar { border-radius: 50%; width: 32px; height: 32px; object-fit: cover; border: 2px solid #333; }
         .room-card:hover { border-color: #333 !important; background: #161616 !important; }
         .join-btn:hover { background: #e63946 !important; color: #fff !important; border-color: #e63946 !important; }
+        .call-btn:hover { opacity: 0.85; }
+        .send-btn:hover { background: #c0303a !important; }
       `}</style>
 
       <header style={S.header}>
-        <div style={S.logo}>
-          <span style={S.logoVi}>Vi</span>
-        </div>
+        <div style={S.logo}><span style={S.logoVi}>Vi</span></div>
         <nav style={S.nav}>
           {screen === "room" ? (
             <button className="nav-btn" style={S.navBtn} onClick={() => { setScreen("home"); setCurrentRoom(null); loadRooms(); }}>← Back</button>
@@ -407,7 +408,6 @@ function HomeScreen({ search, setSearch, selectedCategory, setSelectedCategory, 
         </div>
       </div>
 
-      {/* Active Rooms */}
       {rooms.length > 0 && (
         <div style={{ marginTop: 24 }}>
           <h2 style={{ ...S.cardTitle, marginBottom: 16 }}>Active Rooms</h2>
@@ -438,6 +438,10 @@ function RoomScreen({ room, user, profile }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [members, setMembers] = useState([]);
+  const [callActive, setCallActive] = useState(false);
+  const [micOn, setMicOn] = useState(true);
+  const [camOn, setCamOn] = useState(room.mode === "video");
+  const callRef = useRef(null);
   const bottomRef = useRef(null);
 
   useEffect(() => {
@@ -451,7 +455,10 @@ function RoomScreen({ room, user, profile }) {
       )
       .subscribe();
 
-    return () => supabase.removeChannel(channel);
+    return () => {
+      supabase.removeChannel(channel);
+      if (callRef.current) { callRef.current.destroy(); callRef.current = null; }
+    };
   }, [room.id]);
 
   useEffect(() => {
@@ -477,13 +484,50 @@ function RoomScreen({ room, user, profile }) {
 
   async function sendMessage() {
     if (!input.trim() || !user) return;
-    await supabase.from("messages").insert({
-      room_id: room.id,
-      user_id: user.id,
-      content: input.trim(),
-    });
+    await supabase.from("messages").insert({ room_id: room.id, user_id: user.id, content: input.trim() });
     setInput("");
   }
+
+  async function startCall() {
+    try {
+      const res = await fetch("/api/create-room", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: `vi-${room.id}` }),
+      });
+      const data = await res.json();
+      const roomUrl = data.url;
+
+      const DailyIframe = (await import("@daily-co/daily-js")).default;
+      const callFrame = DailyIframe.createFrame(document.getElementById("call-container"), {
+        iframeStyle: { width: "100%", height: "100%", border: "none", borderRadius: "12px" },
+        showLeaveButton: false,
+        showFullscreenButton: false,
+      });
+      callRef.current = callFrame;
+      await callFrame.join({ url: roomUrl, startVideoOff: !camOn, startAudioOff: !micOn });
+      setCallActive(true);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  async function endCall() {
+    if (callRef.current) { await callRef.current.destroy(); callRef.current = null; }
+    setCallActive(false);
+  }
+
+  async function toggleMic() {
+    if (callRef.current) { callRef.current.setLocalAudio(!micOn); }
+    setMicOn(!micOn);
+  }
+
+  async function toggleCam() {
+    if (callRef.current) { callRef.current.setLocalVideo(!camOn); }
+    setCamOn(!camOn);
+  }
+
+  const showCall = room.mode === "voice" || room.mode === "video";
 
   return (
     <div style={S.roomContainer}>
@@ -492,42 +536,68 @@ function RoomScreen({ room, user, profile }) {
           <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: 20, fontWeight: 700, color: "#fff" }}>{room.title}</h2>
           <p style={{ fontSize: 12, color: "#555", marginTop: 2 }}>{room.mode} • {room.format} • {members.length} members</p>
         </div>
-        <div style={{ display: "flex", gap: 8 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           {members.map(m => m.profiles?.avatar_url && (
             <img key={m.id} src={m.profiles.avatar_url} style={{ width: 28, height: 28, borderRadius: "50%", border: "2px solid #222" }} alt="" />
           ))}
+          {showCall && !callActive && (
+            <button className="call-btn" onClick={startCall} style={{ padding: "8px 16px", background: "#e63946", color: "#fff", borderRadius: 8, fontSize: 13, fontWeight: 600, fontFamily: "'Inter',sans-serif" }}>
+              {room.mode === "video" ? "📹 Start Video" : "🎙️ Start Voice"}
+            </button>
+          )}
+          {showCall && callActive && (
+            <div style={{ display: "flex", gap: 8 }}>
+              <button className="call-btn" onClick={toggleMic} style={{ padding: "8px 12px", background: micOn ? "#222" : "#e63946", color: "#fff", borderRadius: 8, fontSize: 13, fontFamily: "'Inter',sans-serif" }}>
+                {micOn ? "🎙️" : "🔇"}
+              </button>
+              {room.mode === "video" && (
+                <button className="call-btn" onClick={toggleCam} style={{ padding: "8px 12px", background: camOn ? "#222" : "#e63946", color: "#fff", borderRadius: 8, fontSize: 13, fontFamily: "'Inter',sans-serif" }}>
+                  {camOn ? "📹" : "🚫"}
+                </button>
+              )}
+              <button className="call-btn" onClick={endCall} style={{ padding: "8px 12px", background: "#e63946", color: "#fff", borderRadius: 8, fontSize: 13, fontFamily: "'Inter',sans-serif" }}>
+                End
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
-      <div style={S.chatArea}>
-        {messages.length === 0 && (
-          <div style={{ textAlign: "center", color: "#333", fontSize: 13, marginTop: 40 }}>
-            No messages yet. Start the debate!
-          </div>
+      <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
+        {showCall && (
+          <div id="call-container" style={{ width: callActive ? "60%" : "0%", transition: "width 0.3s", background: "#0a0a0a", borderRight: callActive ? "1px solid #1a1a1a" : "none", minHeight: 0 }} />
         )}
-        {messages.map(msg => (
-          <div key={msg.id} style={{ ...S.msgRow, flexDirection: msg.user_id === user?.id ? "row-reverse" : "row" }}>
-            {msg.profiles?.avatar_url && (
-              <img src={msg.profiles.avatar_url} style={{ width: 28, height: 28, borderRadius: "50%", flexShrink: 0 }} alt="" />
-            )}
-            <div style={{ ...S.msgBubble, background: msg.user_id === user?.id ? "#e63946" : "#1a1a1a", alignItems: msg.user_id === user?.id ? "flex-end" : "flex-start" }}>
-              {msg.user_id !== user?.id && <span style={{ fontSize: 11, color: "#888", marginBottom: 2 }}>{msg.profiles?.username || "Anonymous"}</span>}
-              <span style={{ fontSize: 14, color: "#fff" }}>{msg.content}</span>
-            </div>
-          </div>
-        ))}
-        <div ref={bottomRef} />
-      </div>
 
-      <div style={S.chatInput}>
-        <input
-          style={S.chatInputField}
-          placeholder="Type your argument…"
-          value={input}
-          onChange={e => setInput(e.target.value)}
-          onKeyDown={e => e.key === "Enter" && sendMessage()}
-        />
-        <button style={S.sendBtn} onClick={sendMessage}>Send</button>
+        <div style={{ display: "flex", flexDirection: "column", flex: 1, overflow: "hidden" }}>
+          <div style={S.chatArea}>
+            {messages.length === 0 && (
+              <div style={{ textAlign: "center", color: "#333", fontSize: 13, marginTop: 40 }}>No messages yet. Start the debate!</div>
+            )}
+            {messages.map(msg => (
+              <div key={msg.id} style={{ ...S.msgRow, flexDirection: msg.user_id === user?.id ? "row-reverse" : "row" }}>
+                {msg.profiles?.avatar_url && (
+                  <img src={msg.profiles.avatar_url} style={{ width: 28, height: 28, borderRadius: "50%", flexShrink: 0 }} alt="" />
+                )}
+                <div style={{ ...S.msgBubble, background: msg.user_id === user?.id ? "#e63946" : "#1a1a1a" }}>
+                  {msg.user_id !== user?.id && <span style={{ fontSize: 11, color: "#888", marginBottom: 2 }}>{msg.profiles?.username || "Anonymous"}</span>}
+                  <span style={{ fontSize: 14, color: "#fff" }}>{msg.content}</span>
+                </div>
+              </div>
+            ))}
+            <div ref={bottomRef} />
+          </div>
+
+          <div style={S.chatInput}>
+            <input
+              style={S.chatInputField}
+              placeholder="Type your argument…"
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && sendMessage()}
+            />
+            <button className="send-btn" style={S.sendBtn} onClick={sendMessage}>Send</button>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -753,11 +823,11 @@ const S = {
   roomTag: { fontSize: 11, color: "#e63946", background: "#1a0a0b", padding: "2px 8px", borderRadius: 20 },
   joinBtn: { padding: "6px 16px", borderRadius: 8, border: "1px solid #333", fontSize: 12, fontWeight: 600, color: "#888", fontFamily: "'Inter',sans-serif", transition: "all 0.15s" },
   roomContainer: { display: "flex", flexDirection: "column", height: "calc(100vh - 130px)", background: "#111", borderRadius: 16, border: "1px solid #1e1e1e", overflow: "hidden" },
-  roomHeader: { padding: "16px 20px", borderBottom: "1px solid #1a1a1a", display: "flex", justifyContent: "space-between", alignItems: "center" },
+  roomHeader: { padding: "16px 20px", borderBottom: "1px solid #1a1a1a", display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0 },
   chatArea: { flex: 1, overflowY: "auto", padding: "16px 20px", display: "flex", flexDirection: "column", gap: 12 },
   msgRow: { display: "flex", gap: 8, alignItems: "flex-end" },
   msgBubble: { display: "flex", flexDirection: "column", padding: "8px 12px", borderRadius: 12, maxWidth: "70%" },
-  chatInput: { padding: "12px 20px", borderTop: "1px solid #1a1a1a", display: "flex", gap: 10 },
+  chatInput: { padding: "12px 20px", borderTop: "1px solid #1a1a1a", display: "flex", gap: 10, flexShrink: 0 },
   chatInputField: { flex: 1, background: "#0a0a0a", border: "1px solid #222", borderRadius: 10, padding: "10px 14px", fontSize: 14, color: "#e0e0e0", fontFamily: "'Inter',sans-serif" },
-  sendBtn: { padding: "10px 20px", background: "#e63946", color: "#fff", borderRadius: 10, fontSize: 14, fontWeight: 600, fontFamily: "'Syne',sans-serif" },
+  sendBtn: { padding: "10px 20px", background: "#e63946", color: "#fff", borderRadius: 10, fontSize: 14, fontWeight: 600, fontFamily: "'Syne',sans-serif", transition: "background 0.15s" },
 };
