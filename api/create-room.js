@@ -4,11 +4,12 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
   const { roomName, participantName } = req.body;
+  const uniqueName = `${participantName}-${Date.now()}`;
 
   const at = new AccessToken(
     process.env.LIVEKIT_API_KEY,
     process.env.LIVEKIT_API_SECRET,
-    { identity: participantName || 'user' }
+    { identity: uniqueName }
   );
 
   at.addGrant({
