@@ -163,6 +163,11 @@ export default function App() {
       .order("created_at", { ascending: false })
       .limit(20);
     if (data) setRooms(data);
+    // Also close rooms where timer has expired
+await supabase.from("rooms").update({ status: "closed" })
+  .eq("status", "active")
+  .not("started_at", "is", null)
+  .lt("started_at", new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString());
   }
 
   useEffect(() => {
@@ -189,26 +194,24 @@ export default function App() {
   }
 
   async function findOrCreateRoom() {
-    if (!user) { alert("Please sign in first!"); return; }
-    const { data: existing } = await supabase.from("rooms").select("*")
-      .eq("status", "waiting").eq("format", selectedFormat)
-      .neq("created_by", user.id).limit(1).single();
-
-    if (existing) {
-      await supabase.from("room_members").upsert({ room_id: existing.id, user_id: user.id, role: "debater" });
-      setMyRole("debater"); setCurrentRoom(existing); setScreen("room");
-    } else {
-      const { data: newRoom } = await supabase.from("rooms").insert({
-        title: selectedTopic ? selectedTopic.label : "Open Debate",
-        topic: selectedTopic?.label, category: selectedTopic?.category,
-        format: selectedFormat, duration: selectedDuration,
-        is_adult_only: isAdultOnly,
-        created_by: user.id, status: "waiting",
-      }).select().single();
-      if (newRoom) {
-        await supabase.from("room_members").insert({ room_id: newRoom.id, user_id: user.id, role: "debater" });
-        setMyRole("debater"); setCurrentRoom(newRoom); setScreen("room");
-      }
+   async function findDebate() {
+  if (!user) { alert("Please sign in first!"); return; }
+  let query = supabase.from("rooms").select("*").eq("status", "waiting").neq("created_by", user.id);
+  if (selectedFormat) query = query.eq("format", selectedFormat);
+  const { data: matches } = await query.limit(20);
+  if (!matches || matches.length === 0) { alert("No rooms found. Use Create Room!"); return; }
+  const scored = matches.map(r => {
+    let score = 0;
+    if (r.format === selectedFormat) score += 3;
+    if (r.language === selectedLang) score += 2;
+    if (selectedTopic && r.category === selectedTopic.category) score += 2;
+    if (r.duration === selectedDuration) score += 1;
+    return { ...r, score };
+  }).sort((a, b) => b.score - a.score);
+  const best = scored[0];
+  await supabase.from("room_members").upsert({ room_id: best.id, user_id: user.id, role: "debater" });
+  setMyRole("debater"); setCurrentRoom(best); setScreen("room");
+}
     }
   }
 
@@ -324,7 +327,7 @@ export default function App() {
           selectedFormat={selectedFormat} setSelectedFormat={setSelectedFormat}
           selectedDuration={selectedDuration} setSelectedDuration={setSelectedDuration}
           isAdultOnly={isAdultOnly} setIsAdultOnly={setIsAdultOnly}
-          findOrCreateRoom={findOrCreateRoom}
+          findDebate={findDebate}
           rooms={rooms} joinRoom={joinRoom}
         />}
         {screen === "settings" && <SettingsScreen
@@ -379,7 +382,7 @@ function ProfileScreen({ user, profile, setProfile }) {
             <div style={{ width: 80, height: 80, borderRadius: "50%", background: "#222", border: "3px solid #333", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 32 }}>👤</div>
           )}
           <div>
-            <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: 24, fontWeight: 800, color: "#fff" }}>{profile?.username || "Anonymous"}</h2>
+            <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: 24, fontWeight: 700, color: "#fff" }}>{profile?.username || "Anonymous"}</h2>
             <p style={{ fontSize: 12, color: "#555", marginTop: 4 }}>{user.email}</p>
             {winRate > 0 && <p style={{ fontSize: 12, color: "#f5a623", marginTop: 4 }}>Win rate: {winRate}%</p>}
           </div>
@@ -766,7 +769,10 @@ function HomeScreen({ search, setSearch, selectedCategory, setSelectedCategory, 
             </div>
             <Toggle value={isAdultOnly} onChange={setIsAdultOnly} />
           </div>
-          <button className="connect-btn" style={S.connectBtn} onClick={findOrCreateRoom}>Find Debate</button>
+          <button onClick={() => { setSelectedTopic(null); setSelectedFormat("1v1"); setSelectedDuration(40); setSelectedLang("en"); setIsAdultOnly(false); }} style={{ width: "100%", padding: "10px 0", background: "transparent", color: "#555", borderRadius: 12, fontSize: 13, border: "1px solid #222", marginTop: 12, cursor: "pointer" }}>
+  Reset Filters
+</button>
+<button className="connect-btn" style={S.connectBtn} onClick={findDebate}>Find Debate</button>
           <p style={S.hint}>{selectedTopic ? <>Debating: <strong style={{ color: "#fff" }}>{selectedTopic.label}</strong></> : "No topic selected — any topic"}</p>
         </div>
       </div>
@@ -868,7 +874,7 @@ function SettingsScreen({ settingsLang, setSettingsLang, camEnabled, setCamEnabl
           <span style={{ fontSize: 14, color: "#ccc" }}>Enable Camera</span>
           <Toggle value={camEnabled} onChange={setCamEnabled} />
         </div>
-        {devices.video.length > 1 && (
+        {devices.video.length > 0 && (
           <select style={S.select} value={selectedCam} onChange={e => setSelectedCam(e.target.value)}>
             {devices.video.map(d => <option key={d.deviceId} value={d.deviceId}>{d.label || "Camera"}</option>)}
           </select>
