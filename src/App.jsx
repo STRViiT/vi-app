@@ -1000,7 +1000,7 @@ function CreateScreen({ roomTopic, setRoomTopic, roomHashtags, hashtagInput, set
 }
 
 const S = {
-  root: { minHeight: "100vh", background: "#0a0a0a", fontFamily: "'Inter', sans-serif", color: "#e0e0e0" },
+  root: { minHeight: "100vh", background: "#0a0a0a", width: "100%", fontFamily: "'Inter', sans-serif", color: "#e0e0e0" },
   header: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 32px", borderBottom: "1px solid #1a1a1a", background: "#0a0a0a", position: "sticky", top: 0, zIndex: 10 },
   logo: { display: "flex", alignItems: "center" },
   logoVi: { fontFamily: "'Syne', sans-serif", fontSize: 26, fontWeight: 800, color: "#fff", letterSpacing: "-1px" },

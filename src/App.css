@@ -182,3 +182,9 @@
     border-right-color: var(--border);
   }
 }
+html, body {
+  background: #0a0a0a;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
