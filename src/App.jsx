@@ -193,8 +193,7 @@ await supabase.from("rooms").update({ status: "closed" })
     setScreen("home");
   }
 
-  async function findOrCreateRoom() {
-   async function findDebate() {
+  async function findDebate() {
   if (!user) { alert("Please sign in first!"); return; }
   let query = supabase.from("rooms").select("*").eq("status", "waiting").neq("created_by", user.id);
   if (selectedFormat) query = query.eq("format", selectedFormat);
@@ -212,8 +211,7 @@ await supabase.from("rooms").update({ status: "closed" })
   await supabase.from("room_members").upsert({ room_id: best.id, user_id: user.id, role: "debater" });
   setMyRole("debater"); setCurrentRoom(best); setScreen("room");
 }
-    }
-  }
+   
 
   async function joinRoom(room, role = "debater") {
     if (!user) { alert("Please sign in first!"); return; }
@@ -704,7 +702,7 @@ function RoomScreen({ room, user, profile, myRole, setProfile }) {
   );
 }
 
-function HomeScreen({ search, setSearch, selectedCategory, setSelectedCategory, filteredTopics, selectedTopic, setSelectedTopic, selectedLang, setSelectedLang, selectedFormat, setSelectedFormat, selectedDuration, setSelectedDuration, isAdultOnly, setIsAdultOnly, findOrCreateRoom, rooms, joinRoom }) {
+function HomeScreen({ search, setSearch, selectedCategory, setSelectedCategory, filteredTopics, selectedTopic, setSelectedTopic, selectedLang, setSelectedLang, selectedFormat, setSelectedFormat, selectedDuration, setSelectedDuration, isAdultOnly, setIsAdultOnly, findDebate, rooms, joinRoom }) {
   return (
     <div>
       <div style={S.grid}>
@@ -772,7 +770,7 @@ function HomeScreen({ search, setSearch, selectedCategory, setSelectedCategory, 
           <button onClick={() => { setSelectedTopic(null); setSelectedFormat("1v1"); setSelectedDuration(40); setSelectedLang("en"); setIsAdultOnly(false); }} style={{ width: "100%", padding: "10px 0", background: "transparent", color: "#555", borderRadius: 12, fontSize: 13, border: "1px solid #222", marginTop: 12, cursor: "pointer" }}>
   Reset Filters
 </button>
-<button className="connect-btn" style={S.connectBtn} onClick={findDebate}>Find Debate</button>
+          <button className="connect-btn" style={S.connectBtn} onClick={findDebate}>Find Debate</button>
           <p style={S.hint}>{selectedTopic ? <>Debating: <strong style={{ color: "#fff" }}>{selectedTopic.label}</strong></> : "No topic selected — any topic"}</p>
         </div>
       </div>
