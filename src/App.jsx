@@ -193,23 +193,9 @@ await supabase.from("rooms").update({ status: "closed" })
     setScreen("home");
   }
 
-  async function findDebate() {
+ function findDebate() {
   if (!user) { alert("Please sign in first!"); return; }
-  let query = supabase.from("rooms").select("*").eq("status", "waiting").neq("created_by", user.id);
-  if (selectedFormat) query = query.eq("format", selectedFormat);
-  const { data: matches } = await query.limit(20);
-  if (!matches || matches.length === 0) { alert("No rooms found. Use Create Room!"); return; }
-  const scored = matches.map(r => {
-    let score = 0;
-    if (r.format === selectedFormat) score += 3;
-    if (r.language === selectedLang) score += 2;
-    if (selectedTopic && r.category === selectedTopic.category) score += 2;
-    if (r.duration === selectedDuration) score += 1;
-    return { ...r, score };
-  }).sort((a, b) => b.score - a.score);
-  const best = scored[0];
-  await supabase.from("room_members").upsert({ room_id: best.id, user_id: user.id, role: "debater" });
-  setMyRole("debater"); setCurrentRoom(best); setScreen("room");
+  // Just scroll to Active Rooms — filtering is done in render
 }
    
 
@@ -280,6 +266,13 @@ await supabase.from("rooms").update({ status: "closed" })
         .adult-toggle:hover { border-color: #e63946 !important; }
         .adult-toggle-on { background: #1a0505 !important; border-color: #e63946 !important; color: #e63946 !important; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        @media (max-width: 768px) {
+  .mobile-grid { grid-template-columns: 1fr !important; }
+  .mobile-header { padding: 12px 16px !important; flex-wrap: wrap; gap: 8px; }
+  .mobile-main { padding: 16px 12px !important; }
+  .mobile-nav { gap: 16px !important; }
+  .mobile-hide { display: none !important; }
+}
       `}</style>
 
       <header style={S.header}>
@@ -360,12 +353,15 @@ function ProfileScreen({ user, profile, setProfile }) {
   }, [user.id]);
 
   async function saveUsername() {
-    if (!username.trim()) return;
-    setSaving(true);
-    const { data } = await supabase.from("profiles").update({ username: username.trim() }).eq("id", user.id).select().single();
-    if (data) { setProfile(data); setSaved(true); setTimeout(() => setSaved(false), 2000); }
-    setSaving(false);
-  }
+  if (!username.trim()) return;
+  if (username.trim().length > 15) { alert("Username must be 15 characters or less!"); return; }
+  setSaving(true);
+  const { data: existing } = await supabase.from("profiles").select("id").eq("username", username.trim()).neq("id", user.id).single();
+  if (existing) { alert("This username is already taken!"); setSaving(false); return; }
+  const { data } = await supabase.from("profiles").update({ username: username.trim() }).eq("id", user.id).select().single();
+  if (data) { setProfile(data); setSaved(true); setTimeout(() => setSaved(false), 2000); }
+  setSaving(false);
+}
 
   const winRate = (profile?.wins || profile?.losses)
     ? Math.round(((profile?.wins || 0) / ((profile?.wins || 0) + (profile?.losses || 0))) * 100) : 0;
@@ -403,7 +399,7 @@ function ProfileScreen({ user, profile, setProfile }) {
 
         <p style={S.fieldLabel}>Username</p>
         <div style={{ display: "flex", gap: 10 }}>
-          <input style={{ ...S.textInput, flex: 1 }} value={username} onChange={e => setUsername(e.target.value)} placeholder="Enter username" onKeyDown={e => e.key === "Enter" && saveUsername()} />
+<input style={{ ...S.textInput, flex: 1 }} value={username} onChange={e => setUsername(e.target.value)} placeholder="Enter username (max 15)" maxLength={15} onKeyDown={e => e.key === "Enter" && saveUsername()} />
           <button className="save-btn" onClick={saveUsername} disabled={saving} style={{ padding: "10px 20px", background: saved ? "#4caf50" : "#e63946", color: "#fff", borderRadius: 10, fontSize: 13, fontWeight: 600, fontFamily: "'Inter',sans-serif", cursor: "pointer", transition: "background 0.2s", minWidth: 70 }}>
             {saving ? "…" : saved ? "✓" : "Save"}
           </button>
@@ -775,34 +771,50 @@ function HomeScreen({ search, setSearch, selectedCategory, setSelectedCategory, 
         </div>
       </div>
 
-      {rooms.length > 0 && (
-        <div style={{ marginTop: 24 }}>
-          <h2 style={{ ...S.cardTitle, marginBottom: 16 }}>Active Rooms</h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 12 }}>
-            {rooms.map(room => (
-              <div key={room.id} className="room-card" style={S.roomCard}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                  <div>
-                    <p style={{ fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 4, display: "flex", alignItems: "center", gap: 6 }}>
-                      {room.title}
-                      {room.is_adult_only && <span style={{ fontSize: 10, background: "#e63946", color: "#fff", padding: "1px 6px", borderRadius: 10 }}>18+</span>}
-                    </p>
-                    {room.category && <span style={S.roomTag}>{room.category}</span>}
+{(() => {
+        const filtered = rooms.filter(r => {
+          let score = 0;
+          if (r.format === selectedFormat) score += 3;
+          if (r.language === selectedLang) score += 2;
+          if (selectedTopic && r.category === selectedTopic.category) score += 2;
+          if (r.duration === selectedDuration) score += 1;
+          return score > 0;
+        });
+        const display = filtered.length > 0 ? filtered : rooms;
+        return display.length > 0 ? (
+          <div style={{ marginTop: 24 }}>
+            <h2 style={{ ...S.cardTitle, marginBottom: 16 }}>
+              Active Rooms
+              {filtered.length > 0 && filtered.length < rooms.length && (
+                <span style={{ fontSize: 13, color: "#555", fontWeight: 400, marginLeft: 10 }}>{filtered.length} matching</span>
+              )}
+            </h2>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 12 }}>
+              {display.map(room => (
+                <div key={room.id} className="room-card" style={{ ...S.roomCard, opacity: filtered.length > 0 && !filtered.includes(room) ? 0.4 : 1 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                    <div>
+                      <p style={{ fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 4, display: "flex", alignItems: "center", gap: 6 }}>
+                        {room.title}
+                        {room.is_adult_only && <span style={{ fontSize: 10, background: "#e63946", color: "#fff", padding: "1px 6px", borderRadius: 10 }}>18+</span>}
+                      </p>
+                      {room.category && <span style={S.roomTag}>{room.category}</span>}
+                    </div>
+                    <span style={{ fontSize: 11, color: room.status === "active" ? "#4caf50" : "#555" }}>{room.status === "active" ? "🔴 Live" : "waiting"}</span>
                   </div>
-                  <span style={{ fontSize: 11, color: room.status === "active" ? "#4caf50" : "#555" }}>{room.status === "active" ? "🔴 Live" : "waiting"}</span>
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 12 }}>
-                  <span style={{ fontSize: 12, color: "#555" }}>{room.format} • {DURATIONS.find(d => d.id === room.duration)?.label || "Standard"}</span>
-                  <div style={{ display: "flex", gap: 6 }}>
-                    <button className="join-btn" style={S.joinBtn} onClick={() => joinRoom(room, "debater")}>Join</button>
-                    <button className="judge-btn" style={S.judgeBtn} onClick={() => joinRoom(room, "judge")}>⚖️</button>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 12 }}>
+                    <span style={{ fontSize: 12, color: "#555" }}>{room.format} • {DURATIONS.find(d => d.id === room.duration)?.label || "Standard"}</span>
+                    <div style={{ display: "flex", gap: 6 }}>
+                      <button className="join-btn" style={S.joinBtn} onClick={() => joinRoom(room, "debater")}>Join</button>
+                      <button className="judge-btn" style={S.judgeBtn} onClick={() => joinRoom(room, "judge")}>⚖️</button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        ) : null;
+      })()}
     </div>
   );
 }
@@ -1001,13 +1013,13 @@ function CreateScreen({ roomTopic, setRoomTopic, roomHashtags, hashtagInput, set
 
 const S = {
   root: { minHeight: "100vh", background: "#0a0a0a", width: "100%", fontFamily: "'Inter', sans-serif", color: "#e0e0e0" },
-  header: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 32px", borderBottom: "1px solid #1a1a1a", background: "#0a0a0a", position: "sticky", top: 0, zIndex: 10 },
+  header: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 20px", flexWrap: "wrap", gap: 8, borderBottom: "1px solid #1a1a1a", background: "#0a0a0a", position: "sticky", top: 0, zIndex: 10 },
   logo: { display: "flex", alignItems: "center" },
   logoVi: { fontFamily: "'Syne', sans-serif", fontSize: 26, fontWeight: 800, color: "#fff", letterSpacing: "-1px" },
   nav: { display: "flex", gap: 28 },
   navBtn: { fontSize: 14, color: "#555", fontWeight: 500, padding: "4px 0" },
-  main: { padding: "32px 24px", maxWidth: 980, margin: "0 auto" },
-  grid: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 },
+  main: { padding: "24px 16px", maxWidth: 980, margin: "0 auto", width: "100%" },
+  grid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20 },
   card: { background: "#111", borderRadius: 16, padding: 24, border: "1px solid #1e1e1e" },
   cardTitle: { fontFamily: "'Syne', sans-serif", fontSize: 22, fontWeight: 700, color: "#fff", marginBottom: 18, letterSpacing: "-0.5px" },
   searchBox: { display: "flex", alignItems: "center", gap: 8, background: "#0a0a0a", borderRadius: 10, padding: "9px 12px", border: "1px solid #222", marginBottom: 12 },
