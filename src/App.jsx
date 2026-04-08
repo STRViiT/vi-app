@@ -280,7 +280,7 @@ await supabase.from("rooms").update({ status: "closed" })
         <nav style={S.nav}>
           {screen === "room" ? (
             <button className="nav-btn" style={S.navBtn} onClick={async () => {
-  if (currentRoom && user) {
+  if (currentRoom && user) {console.log("closing room", currentRoom.id, "user", user.id);
     await supabase.from("room_members").delete().eq("room_id", currentRoom.id).eq("user_id", user.id);
     const { count } = await supabase.from("room_members").select("*", { count: "exact", head: true }).eq("room_id", currentRoom.id);
     if (count === 0) await supabase.from("rooms").update({ status: "closed" }).eq("id", currentRoom.id);
