@@ -280,14 +280,14 @@ await supabase.from("rooms").update({ status: "closed" })
         <nav style={S.nav}>
           {screen === "room" ? (
             <button className="nav-btn" style={S.navBtn} onClick={async () => {
-  await supabase.from("room_members").delete().eq("room_id", currentRoom.id).eq("user_id", user?.id);
-  const { data: remaining } = await supabase.from("room_members").select("id").eq("room_id", currentRoom.id);
-  if (!remaining || remaining.length === 0) {
-    await supabase.from("rooms").update({ status: "closed" }).eq("id", currentRoom.id);
+  if (currentRoom && user) {
+    await supabase.from("room_members").delete().eq("room_id", currentRoom.id).eq("user_id", user.id);
+    const { count } = await supabase.from("room_members").select("*", { count: "exact", head: true }).eq("room_id", currentRoom.id);
+    if (count === 0) await supabase.from("rooms").update({ status: "closed" }).eq("id", currentRoom.id);
   }
   setScreen("home"); setCurrentRoom(null); setMyRole("debater"); loadRooms();
 }}>← Back</button>
-          ) : (
+) : (
             ["home", "create", "settings"].map(s => (
               <button key={s} className={`nav-btn ${screen === s ? "nav-sel" : ""}`} style={S.navBtn} onClick={() => setScreen(s)}>
                 {s === "home" ? "Home" : s === "create" ? "Create Room" : "Settings"}
