@@ -949,7 +949,7 @@ function CreateScreen({ roomTopic, setRoomTopic, roomHashtags, hashtagInput, set
       created_by: user.id, status: "waiting",
     }).select().single();
     if (data) {
-      await supabase.from("room_members").insert({ room_id: data.id, user_id: user.id, role: "debater" });
+      await supabase.from("room_members").upsert({ room_id: data.id, user_id: user.id, role: "debater" }, { onConflict: "room_id,user_id" });
       onCreated(data);
     }
     setCreating(false);
