@@ -285,6 +285,7 @@ await supabase.from("rooms").update({ status: "closed" })
             <button className="nav-btn" style={S.navBtn} onClick={async () => {
   if (currentRoom && user) {
     await supabase.from("room_members").delete().eq("room_id", currentRoom.id).eq("user_id", user.id);
+    await new Promise(r => setTimeout(r, 300));
     const { data: remaining } = await supabase.from("room_members").select("user_id").eq("room_id", currentRoom.id);
     console.log("remaining members:", remaining?.length);
     if (!remaining || remaining.length === 0) {
