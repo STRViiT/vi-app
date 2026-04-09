@@ -201,7 +201,10 @@ await supabase.from("rooms").update({ status: "closed" })
 
   async function joinRoom(room, role = "debater") {
     if (!user) { alert("Please sign in first!"); return; }
-    await supabase.from("room_members").upsert({ room_id: room.id, user_id: user.id, role });
+    await supabase.from("room_members").upsert(
+  { room_id: room.id, user_id: user.id, role },
+  { onConflict: "room_id,user_id" }
+);
     setMyRole(role); setCurrentRoom(room); setScreen("room");
   }
 
