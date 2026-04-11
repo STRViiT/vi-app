@@ -1160,7 +1160,7 @@ function LoungeRoom({ room, user, profile, onBack }) {
     loadMessages(); loadMembers();
     const channel = supabase.channel(`lounge-${room.id}`)
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages", filter: `room_id=eq.${room.id}` },
-        (payload) => setMessages(prev => [...prev, payload.new]))
+       (payload) => { loadMessages(); })
       .on("postgres_changes", { event: "UPDATE", schema: "public", table: "rooms", filter: `id=eq.${room.id}` },
         (payload) => { if (payload.new.title) setCurrentTitle(payload.new.title); })
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "room_members", filter: `room_id=eq.${room.id}` }, () => loadMembers())
