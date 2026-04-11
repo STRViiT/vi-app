@@ -629,7 +629,22 @@ function RoomScreen({ room, user, profile, myRole, setProfile }) {
           )}
 
           {/* Start debate / kick — only creator before debate starts */}
-          {isCreator && !debateStarted && debaters.length >= 2 && (
+          {isCreator && !debateStarted && (
+  <button 
+    className="start-debate-btn" 
+    onClick={debaters.length >= 2 ? startDebate : null}
+    style={{ 
+      padding: "8px 16px", 
+      background: debaters.length >= 2 ? "#1a3a1a" : "#1a1a1a", 
+      color: debaters.length >= 2 ? "#4caf50" : "#555", 
+      borderRadius: 8, fontSize: 13, fontWeight: 600, 
+      border: `1px solid ${debaters.length >= 2 ? "#4caf50" : "#333"}`, 
+      cursor: debaters.length >= 2 ? "pointer" : "default",
+      transition: "background 0.15s" 
+    }}>
+    {debaters.length >= 2 ? "▶ Start" : `▶ Start (${debaters.length}/2)`}
+  </button>
+)}
             <button className="start-debate-btn" onClick={startDebate} style={{ padding: "8px 16px", background: "#1a3a1a", color: "#4caf50", borderRadius: 8, fontSize: 13, fontWeight: 600, border: "1px solid #4caf50", cursor: "pointer", transition: "background 0.15s" }}>
               ▶ Start
             </button>
