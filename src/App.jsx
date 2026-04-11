@@ -323,6 +323,11 @@ await supabase.from("rooms").update({ status: "closed" })
           </button>
         )}
       </header>
+      <button 
+  onClick={() => setShowMembers(!showMembers)} 
+  style={{ padding: "8px 12px", background: showMembers ? "#222" : "#1a1a1a", color: "#888", borderRadius: 8, fontSize: 13, border: "1px solid #333", cursor: "pointer" }}>
+  👥 {members.length}
+</button>
 
       <main style={S.main}>
         {screen === "home" && <HomeScreen
@@ -462,6 +467,13 @@ function Timer({ duration, startedAt }) {
       {timeLeft === 0 ? "⏱ Time's up!" : `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`}
     </span>
   );
+  async function voteEnd() {
+  await supabase.from("room_members")
+    .update({ wants_end: true })
+    .eq("room_id", room.id)
+    .eq("user_id", user.id);
+  setWantsEnd(true);
+}
 }
 
 function RoomScreen({ room, user, profile, myRole, setProfile }) {
@@ -480,6 +492,9 @@ function RoomScreen({ room, user, profile, myRole, setProfile }) {
   const [coinsAwarded, setCoinsAwarded] = useState(false);
   const [showMembers, setShowMembers] = useState(false);
   const bottomRef = useRef(null);
+  const [endVotes, setEndVotes] = useState([]);
+  const [wantsEnd, setWantsEnd] = useState(false);
+  const [endRequesters, setEndRequesters] = useState([]);
 
   const isCreator = user?.id === room.created_by;
   const isJudge = myRole === "judge";
@@ -569,11 +584,16 @@ function RoomScreen({ room, user, profile, myRole, setProfile }) {
     } catch (e) { alert("Failed to start call."); }
   }
 
-  async function startTimer() {
-    const now = new Date().toISOString();
-    await supabase.from("rooms").update({ started_at: now, status: "active" }).eq("id", room.id);
-    setTimerStarted(now);
-  }
+async function startDebate() {
+  const now = new Date().toISOString();
+  await supabase.from("rooms").update({ 
+    started: true, 
+    status: "active",
+    started_at: now  // <-- добавляем
+  }).eq("id", room.id);
+  setDebateStarted(true);
+  setTimerStarted(now);  // <-- добавляем
+}
 
   async function startDebate() {
     await supabase.from("rooms").update({ started: true, status: "active" }).eq("id", room.id);
@@ -601,11 +621,9 @@ function RoomScreen({ room, user, profile, myRole, setProfile }) {
           <p style={{ fontSize: 12, color: "#555", marginTop: 2 }}>{room.format} • {durationLabel} • {debaters.length} debaters • {judges.length} judges</p>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          {timerStarted ? (
-            <Timer duration={room.duration} startedAt={timerStarted} />
-          ) : isCreator && !isJudge && (
-            <button onClick={startTimer} style={{ padding: "6px 14px", background: "#1a1a1a", color: "#888", borderRadius: 8, fontSize: 12, fontWeight: 600, fontFamily: "'Inter',sans-serif", border: "1px solid #333", cursor: "pointer" }}>▶ Timer</button>
-          )}
+         {timerStarted && (
+  <Timer duration={room.duration} startedAt={timerStarted} />
+)}
 
           {/* Mic toggle */}
           {!isJudge && (
@@ -643,6 +661,13 @@ function RoomScreen({ room, user, profile, myRole, setProfile }) {
       transition: "background 0.15s" 
     }}>
     {debaters.length >= 2 ? "▶ Start" : `▶ Start (${debaters.length}/2)`}
+  </button>
+)}
+{!isJudge && debateStarted && (
+  <button 
+    onClick={voteEnd}
+    style={{ padding: "8px 16px", background: wantsEnd ? "#333" : "#1a0a0a", color: wantsEnd ? "#555" : "#e63946", borderRadius: 8, fontSize: 13, fontWeight: 600, border: "1px solid #e63946", cursor: wantsEnd ? "default" : "pointer" }}>
+    {wantsEnd ? "⏳ Waiting…" : "🏁 End"}
   </button>
 )}
 
@@ -1196,14 +1221,26 @@ function LoungeRoom({ room, user, profile, onBack }) {
     const { data } = await supabase.from("room_members").select("*, profiles(username, avatar_url)").eq("room_id", room.id);
     if (data) setMembers(data);
   }
-
- async function sendMessage() {
+  useEffect(() => {
+  const debaterMembers = members.filter(m => m.role === "debater");
+  const allWantEnd = debaterMembers.length >= 2 && 
+    debaterMembers.every(m => m.wants_end);
+  if (allWantEnd && debateStarted) endDebate();
+}, [members]);
+ 
+async function sendMessage() {
   console.log("sendMessage called, input:", input, "user:", user?.id);
   if (!input.trim() || !user) return;
   const { data, error } = await supabase.from("messages").insert({ room_id: room.id, user_id: user.id, content: input.trim() });
   setInput(""); loadMessages();
 }
 
+async function voteEnd() {
+  await supabase.from("room_members")
+    .update({ wants_end: true })
+    .eq("room_id", room.id)
+    .eq("user_id", user.id);
+}
   async function updateTitle() {
     if (!newTitle.trim()) return;
     await supabase.from("rooms").update({ title: newTitle.trim() }).eq("id", room.id);
