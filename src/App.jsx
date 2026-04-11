@@ -295,9 +295,9 @@ await supabase.from("rooms").update({ status: "closed" })
   setScreen("home"); setCurrentRoom(null); setMyRole("debater"); loadRooms();
 }}>← Back</button>
           ) : (
-            ["home", "create", "settings"].map(s => (
+            ["home", "lounge", "create", "settings"].map(s => (
               <button key={s} className={`nav-btn ${screen === s ? "nav-sel" : ""}`} style={S.navBtn} onClick={() => setScreen(s)}>
-                {s === "home" ? "Home" : s === "create" ? "Create Room" : "Settings"}
+                {s === "home" ? "Home" : s === "lounge" ? "Lounge" : s === "create" ? "Create Room" : "Settings"}
               </button>
             ))
           )}
@@ -349,6 +349,7 @@ await supabase.from("rooms").update({ status: "closed" })
         />}
         {screen === "room" && currentRoom && <RoomScreen room={currentRoom} user={user} profile={profile} myRole={myRole} setProfile={setProfile} />}
         {screen === "profile" && user && <ProfileScreen user={user} profile={profile} setProfile={setProfile} />}
+        {screen === "lounge" && <LoungeScreen user={user} profile={profile} />}
       </main>
     </div>
   );
@@ -1020,6 +1021,250 @@ function CreateScreen({ roomTopic, setRoomTopic, roomHashtags, hashtagInput, set
         <button className="final-btn" style={S.finalBtn} onClick={createRoom} disabled={creating}>
           {creating ? "Creating…" : "Create Room"}
         </button>
+      </div>
+    </div>
+  );
+}
+function LoungeScreen({ user, profile }) {
+  const [rooms, setRooms] = useState([]);
+  const [creating, setCreating] = useState(false);
+  const [newTitle, setNewTitle] = useState("");
+  const [isPrivate, setIsPrivate] = useState(false);
+  const [maxMembers, setMaxMembers] = useState(5);
+  const [currentRoom, setCurrentRoom] = useState(null);
+  const [screen, setScreen] = useState("list");
+
+  useEffect(() => { loadRooms(); }, []);
+
+  async function loadRooms() {
+    const { data } = await supabase.from("rooms")
+      .select("*").eq("type", "discussion").eq("is_private", false)
+      .in("status", ["waiting", "active"]).order("created_at", { ascending: false }).limit(20);
+    if (data) setRooms(data);
+  }
+
+  async function createLounge() {
+    if (!user) { alert("Please sign in first!"); return; }
+    if (!newTitle.trim()) { alert("Please enter a title!"); return; }
+    setCreating(true);
+    const inviteCode = isPrivate ? Math.random().toString(36).substring(2, 8).toUpperCase() : null;
+    const { data } = await supabase.from("rooms").insert({
+      title: newTitle, type: "discussion", is_private: isPrivate,
+      invite_code: inviteCode, max_members: maxMembers,
+      created_by: user.id, status: "waiting", format: "group",
+    }).select().single();
+    if (data) {
+      await supabase.from("room_members").upsert({ room_id: data.id, user_id: user.id, role: "member" }, { onConflict: "room_id,user_id" });
+      setCurrentRoom(data);
+      setScreen("room");
+    }
+    setCreating(false);
+  }
+
+  async function joinLounge(room) {
+    if (!user) { alert("Please sign in first!"); return; }
+    await supabase.from("room_members").upsert({ room_id: room.id, user_id: user.id, role: "member" }, { onConflict: "room_id,user_id" });
+    setCurrentRoom(room);
+    setScreen("room");
+  }
+
+  if (screen === "room" && currentRoom) {
+    return <LoungeRoom room={currentRoom} user={user} profile={profile} onBack={async () => {
+      await supabase.from("room_members").delete().eq("room_id", currentRoom.id).eq("user_id", user.id);
+      const { data: remaining } = await supabase.from("room_members").select("user_id").eq("room_id", currentRoom.id);
+      if (!remaining || remaining.length === 0) await supabase.from("rooms").update({ status: "closed" }).eq("id", currentRoom.id);
+      setCurrentRoom(null); setScreen("list"); loadRooms();
+    }} />;
+  }
+
+  return (
+    <div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20, marginBottom: 24 }}>
+        <div style={S.card}>
+          <h2 style={S.cardTitle}>Create a Lounge</h2>
+          <p style={S.fieldLabel}>Title</p>
+          <input style={S.textInput} placeholder="e.g. Philosophy book club" value={newTitle} onChange={e => setNewTitle(e.target.value)} />
+          <p style={S.fieldLabel}>Max Members</p>
+          <div style={{ display: "flex", gap: 8 }}>
+            {[2, 5, 10].map(n => (
+              <button key={n} onClick={() => setMaxMembers(n)} style={{ flex: 1, padding: "10px 0", borderRadius: 10, border: `1px solid ${maxMembers === n ? "#fff" : "#222"}`, background: maxMembers === n ? "#fff" : "transparent", color: maxMembers === n ? "#0a0a0a" : "#888", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>{n}</button>
+            ))}
+          </div>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 18, padding: "10px 14px", background: "#0a0a0a", borderRadius: 10, border: `1px solid ${isPrivate ? "#f5a623" : "#222"}` }}>
+            <div>
+              <p style={{ fontSize: 13, color: isPrivate ? "#f5a623" : "#888", fontWeight: 600 }}>🔒 Private</p>
+              <p style={{ fontSize: 11, color: "#444", marginTop: 2 }}>Only invite-link access</p>
+            </div>
+            <Toggle value={isPrivate} onChange={setIsPrivate} />
+          </div>
+          <button onClick={createLounge} disabled={creating} style={{ marginTop: 20, width: "100%", padding: "15px 0", background: "#fff", color: "#0a0a0a", borderRadius: 12, fontSize: 15, fontWeight: 700, fontFamily: "'Syne',sans-serif", cursor: "pointer" }}>
+            {creating ? "Creating…" : "Create Lounge"}
+          </button>
+        </div>
+
+        <div style={S.card}>
+          <h2 style={S.cardTitle}>About Lounge</h2>
+          <p style={{ fontSize: 14, color: "#888", lineHeight: 1.6, marginTop: 8 }}>
+            Lounges are calm discussion rooms — no debates, no judges, no timers. Just open conversation with up to 10 people.
+          </p>
+          <div style={{ marginTop: 20, display: "flex", flexDirection: "column", gap: 10 }}>
+            {[["💬", "Free-form chat"], ["🎙️", "Voice & video"], ["🔒", "Private rooms with invite link"], ["✏️", "Change topic anytime"], ["👥", "Up to 10 members"]].map(([icon, text]) => (
+              <div key={text} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <span style={{ fontSize: 18 }}>{icon}</span>
+                <span style={{ fontSize: 13, color: "#ccc" }}>{text}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {rooms.length > 0 && (
+        <div>
+          <h2 style={{ ...S.cardTitle, marginBottom: 16 }}>Open Lounges</h2>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 12 }}>
+            {rooms.map(room => (
+              <div key={room.id} className="room-card" style={S.roomCard}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                  <p style={{ fontSize: 14, fontWeight: 600, color: "#fff" }}>{room.title}</p>
+                  <span style={{ fontSize: 11, color: "#555" }}>👥 {room.max_members || 10}</span>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 12 }}>
+                  <span style={{ fontSize: 12, color: "#555" }}>discussion</span>
+                  <button className="join-btn" style={S.joinBtn} onClick={() => joinLounge(room)}>Join</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function LoungeRoom({ room, user, profile, onBack }) {
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState("");
+  const [members, setMembers] = useState([]);
+  const [livekitToken, setLivekitToken] = useState(null);
+  const [livekitUrl, setLivekitUrl] = useState(null);
+  const [callActive, setCallActive] = useState(false);
+  const [micOn, setMicOn] = useState(false);
+  const [camOn, setCamOn] = useState(false);
+  const [editingTitle, setEditingTitle] = useState(false);
+  const [newTitle, setNewTitle] = useState(room.title);
+  const [currentTitle, setCurrentTitle] = useState(room.title);
+  const bottomRef = useRef(null);
+  const isCreator = user?.id === room.created_by;
+
+  useEffect(() => {
+    loadMessages(); loadMembers();
+    const channel = supabase.channel(`lounge-${room.id}`)
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages", filter: `room_id=eq.${room.id}` },
+        (payload) => setMessages(prev => [...prev, payload.new]))
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "rooms", filter: `id=eq.${room.id}` },
+        (payload) => { if (payload.new.title) setCurrentTitle(payload.new.title); })
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "room_members", filter: `room_id=eq.${room.id}` }, () => loadMembers())
+      .on("postgres_changes", { event: "DELETE", schema: "public", table: "room_members", filter: `room_id=eq.${room.id}` }, () => loadMembers())
+      .subscribe();
+    return () => supabase.removeChannel(channel);
+  }, [room.id]);
+
+  useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
+
+  async function loadMessages() {
+    const { data } = await supabase.from("messages").select("*, profiles(username, avatar_url)").eq("room_id", room.id).order("created_at", { ascending: true });
+    if (data) setMessages(data);
+  }
+
+  async function loadMembers() {
+    const { data } = await supabase.from("room_members").select("*, profiles(username, avatar_url)").eq("room_id", room.id);
+    if (data) setMembers(data);
+  }
+
+  async function sendMessage() {
+    if (!input.trim() || !user) return;
+    await supabase.from("messages").insert({ room_id: room.id, user_id: user.id, content: input.trim() });
+    setInput("");
+  }
+
+  async function updateTitle() {
+    if (!newTitle.trim()) return;
+    await supabase.from("rooms").update({ title: newTitle.trim() }).eq("id", room.id);
+    setCurrentTitle(newTitle.trim());
+    setEditingTitle(false);
+  }
+
+  async function toggleCall() {
+    if (callActive) { setCallActive(false); setLivekitToken(null); return; }
+    try {
+      const res = await fetch("/api/create-room", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ roomName: `vi-lounge-${room.id}`, participantName: profile?.username || user?.email || "user" }) });
+      const data = await res.json();
+      setLivekitToken(data.token); setLivekitUrl(data.url); setCallActive(true);
+    } catch (e) { alert("Failed to start call."); }
+  }
+
+  return (
+    <div style={S.roomContainer}>
+      <div style={S.roomHeader}>
+        <div style={{ flex: 1 }}>
+          {editingTitle && isCreator ? (
+            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              <input style={{ ...S.chatInputField, fontSize: 16, fontWeight: 600, flex: 1 }} value={newTitle} onChange={e => setNewTitle(e.target.value)} onKeyDown={e => e.key === "Enter" && updateTitle()} autoFocus />
+              <button onClick={updateTitle} style={{ padding: "6px 14px", background: "#e63946", color: "#fff", borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: "pointer" }}>Save</button>
+              <button onClick={() => setEditingTitle(false)} style={{ padding: "6px 10px", color: "#555", borderRadius: 8, fontSize: 12, cursor: "pointer" }}>✕</button>
+            </div>
+          ) : (
+            <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: 20, fontWeight: 700, color: "#fff", display: "flex", alignItems: "center", gap: 8 }}>
+              {currentTitle}
+              <span style={{ fontSize: 11, background: "#1a2a1a", color: "#4caf50", padding: "2px 8px", borderRadius: 20 }}>lounge</span>
+              {isCreator && <button onClick={() => setEditingTitle(true)} style={{ fontSize: 12, color: "#555", cursor: "pointer" }}>✏️</button>}
+            </h2>
+          )}
+          <p style={{ fontSize: 12, color: "#555", marginTop: 2 }}>{members.length} members</p>
+        </div>
+        <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+          {room.is_private && room.invite_code && (
+            <span style={{ fontSize: 11, color: "#f5a623", background: "#1a1500", padding: "4px 10px", borderRadius: 20, border: "1px solid #f5a623" }}>
+              🔒 {room.invite_code}
+            </span>
+          )}
+          <button onClick={() => setMicOn(!micOn)} style={{ padding: "8px 12px", background: micOn ? "#e63946" : "#1a1a1a", color: micOn ? "#fff" : "#888", borderRadius: 8, fontSize: 13, border: "1px solid #333", cursor: "pointer" }}>
+            {micOn ? "🎙️" : "🔇"}
+          </button>
+          <button onClick={() => { setCamOn(!camOn); if (!callActive) toggleCall(); }} style={{ padding: "8px 12px", background: camOn ? "#e63946" : "#1a1a1a", color: camOn ? "#fff" : "#888", borderRadius: 8, fontSize: 13, border: "1px solid #333", cursor: "pointer" }}>
+            {camOn ? "📹" : "📷"}
+          </button>
+          <button onClick={onBack} style={{ padding: "8px 14px", background: "#1a1a1a", color: "#888", borderRadius: 8, fontSize: 12, border: "1px solid #333", cursor: "pointer" }}>← Leave</button>
+        </div>
+      </div>
+
+      <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
+        {callActive && livekitToken && livekitUrl && (
+          <div style={{ width: "55%", borderRight: "1px solid #1a1a1a", overflow: "hidden" }}>
+            <LiveKitRoom token={livekitToken} serverUrl={livekitUrl} video={camOn} audio={micOn} onDisconnected={() => setCallActive(false)} style={{ height: "100%" }}>
+              <VideoConference />
+            </LiveKitRoom>
+          </div>
+        )}
+        <div style={{ display: "flex", flexDirection: "column", flex: 1, overflow: "hidden" }}>
+          <div style={S.chatArea}>
+            {messages.length === 0 && <div style={{ textAlign: "center", color: "#333", fontSize: 13, marginTop: 20 }}>No messages yet. Start the conversation!</div>}
+            {messages.map(msg => (
+              <div key={msg.id} style={{ ...S.msgRow, flexDirection: msg.user_id === user?.id ? "row-reverse" : "row" }}>
+                {msg.profiles?.avatar_url && <img src={msg.profiles.avatar_url} style={{ width: 28, height: 28, borderRadius: "50%", flexShrink: 0 }} alt="" />}
+                <div style={{ ...S.msgBubble, background: msg.user_id === user?.id ? "#4caf50" : "#1a1a1a" }}>
+                  {msg.user_id !== user?.id && <span style={{ fontSize: 11, color: "#888", marginBottom: 2 }}>{msg.profiles?.username || "Anonymous"}</span>}
+                  <span style={{ fontSize: 14, color: "#fff" }}>{msg.content}</span>
+                </div>
+              </div>
+            ))}
+            <div ref={bottomRef} />
+          </div>
+          <div style={S.chatInput}>
+            <input style={S.chatInputField} placeholder="Say something…" value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && sendMessage()} />
+            <button className="send-btn" style={{ ...S.sendBtn, background: "#4caf50" }} onClick={sendMessage}>Send</button>
+          </div>
+        </div>
       </div>
     </div>
   );
