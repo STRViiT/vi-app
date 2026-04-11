@@ -1054,7 +1054,7 @@ function LoungeScreen({ user, profile }) {
       created_by: user.id, status: "waiting", format: "group",
     }).select().single();
     if (data) {
-      await supabase.from("room_members").insert({ room_id: data.id, user_id: user.id, role: "member" });
+      const { error } = await supabase.from("room_members").upsert({ room_id: data.id, user_id: user.id, role: "member" });
       setCurrentRoom(data);
       setScreen("room");
     }
@@ -1063,7 +1063,7 @@ function LoungeScreen({ user, profile }) {
 
   async function joinLounge(room) {
     if (!user) { alert("Please sign in first!"); return; }
-    await supabase.from("room_members").insert({ room_id: room.id, user_id: user.id, role: "member" });
+    const { error } = await supabase.from("room_members").upsert({ room_id: room.id, user_id: user.id, role: "member" });
     setCurrentRoom(room);
     setScreen("room");
   }
