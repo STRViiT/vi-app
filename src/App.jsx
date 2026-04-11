@@ -1185,7 +1185,6 @@ function LoungeRoom({ room, user, profile, onBack }) {
   console.log("sendMessage called, input:", input, "user:", user?.id);
   if (!input.trim() || !user) return;
   const { data, error } = await supabase.from("messages").insert({ room_id: room.id, user_id: user.id, content: input.trim() });
-  console.log("send result:", data, error);
   setInput(""); loadMessages();
 }
 
