@@ -490,11 +490,12 @@ function RoomScreen({ room, user, profile, myRole, setProfile }) {
   const [timerStarted, setTimerStarted] = useState(room.started_at);
   const [debateStarted, setDebateStarted] = useState(room.started || false);
   const [coinsAwarded, setCoinsAwarded] = useState(false);
-  const [showMembers, setShowMembers] = useState(false);
   const bottomRef = useRef(null);
   const [endVotes, setEndVotes] = useState([]);
-  const [wantsEnd, setWantsEnd] = useState(false);
   const [endRequesters, setEndRequesters] = useState([]);
+  const [showMembers, setShowMembers] = useState(false);
+  const [wantsEnd, setWantsEnd] = useState(false);
+
 
   const isCreator = user?.id === room.created_by;
   const isJudge = myRole === "judge";
