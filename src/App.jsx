@@ -645,10 +645,7 @@ function RoomScreen({ room, user, profile, myRole, setProfile }) {
     {debaters.length >= 2 ? "▶ Start" : `▶ Start (${debaters.length}/2)`}
   </button>
 )}
-            <button className="start-debate-btn" onClick={startDebate} style={{ padding: "8px 16px", background: "#1a3a1a", color: "#4caf50", borderRadius: 8, fontSize: 13, fontWeight: 600, border: "1px solid #4caf50", cursor: "pointer", transition: "background 0.15s" }}>
-              ▶ Start
-            </button>
-          )}
+
         </div>
       </div>
 
