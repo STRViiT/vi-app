@@ -323,12 +323,7 @@ await supabase.from("rooms").update({ status: "closed" })
           </button>
         )}
       </header>
-      <button 
-  onClick={() => setShowMembers(!showMembers)} 
-  style={{ padding: "8px 12px", background: showMembers ? "#222" : "#1a1a1a", color: "#888", borderRadius: 8, fontSize: 13, border: "1px solid #333", cursor: "pointer" }}>
-  👥 {members.length}
-</button>
-
+   
       <main style={S.main}>
         {screen === "home" && <HomeScreen
           search={search} setSearch={setSearch}
