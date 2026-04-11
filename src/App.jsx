@@ -269,6 +269,8 @@ await supabase.from("rooms").update({ status: "closed" })
         .adult-toggle:hover { border-color: #e63946 !important; }
         .adult-toggle-on { background: #1a0505 !important; border-color: #e63946 !important; color: #e63946 !important; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        @keyframes msgIn { from { opacity: 0; transform: translateY(8px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.msg-animate { animation: msgIn 0.18s ease-out; }
         @media (max-width: 768px) {
   .mobile-grid { grid-template-columns: 1fr !important; }
   .mobile-header { padding: 12px 16px !important; flex-wrap: wrap; gap: 8px; }
@@ -476,6 +478,7 @@ function RoomScreen({ room, user, profile, myRole, setProfile }) {
   const [timerStarted, setTimerStarted] = useState(room.started_at);
   const [debateStarted, setDebateStarted] = useState(room.started || false);
   const [coinsAwarded, setCoinsAwarded] = useState(false);
+  const [showMembers, setShowMembers] = useState(false);
   const bottomRef = useRef(null);
 
   const isCreator = user?.id === room.created_by;
@@ -691,7 +694,7 @@ function RoomScreen({ room, user, profile, myRole, setProfile }) {
             {!debateStarted && !isJudge && <div style={{ textAlign: "center", padding: "8px 16px", background: "#0a1a0a", borderRadius: 8, fontSize: 12, color: "#4caf50", marginBottom: 8 }}>Waiting for host to start the debate…</div>}
             {messages.length === 0 && <div style={{ textAlign: "center", color: "#333", fontSize: 13, marginTop: 20 }}>No messages yet.</div>}
             {messages.map(msg => (
-              <div key={msg.id} style={{ ...S.msgRow, flexDirection: msg.user_id === user?.id ? "row-reverse" : "row" }}>
+              <div key={msg.id} className="msg-animate" style={{ ...S.msgRow, flexDirection: msg.user_id === user?.id ? "row-reverse" : "row" }}>
                 {msg.profiles?.avatar_url && <img src={msg.profiles.avatar_url} style={{ width: 28, height: 28, borderRadius: "50%", flexShrink: 0 }} alt="" />}
                 <div style={{ ...S.msgBubble, background: msg.user_id === user?.id ? "#e63946" : "#1a1a1a" }}>
                   {msg.user_id !== user?.id && <span style={{ fontSize: 11, color: "#888", marginBottom: 2 }}>{msg.profiles?.username || "Anonymous"}</span>}
@@ -1155,6 +1158,7 @@ function LoungeRoom({ room, user, profile, onBack }) {
   const [currentTitle, setCurrentTitle] = useState(room.title);
   const bottomRef = useRef(null);
   const isCreator = user?.id === room.created_by;
+  const [showMembers, setShowMembers] = useState(false);
 
   useEffect(() => {
     loadMessages(); loadMembers();
@@ -1229,7 +1233,13 @@ function LoungeRoom({ room, user, profile, onBack }) {
               🔒 {room.invite_code}
             </span>
           )}
-          <button onClick={() => setMicOn(!micOn)} style={{ padding: "8px 12px", background: micOn ? "#e63946" : "#1a1a1a", color: micOn ? "#fff" : "#888", borderRadius: 8, fontSize: 13, border: "1px solid #333", cursor: "pointer" }}>
+          <button onClick={() => setShowMembers(!showMembers)} style={{ padding: "8px 12px", background: showMembers ? "#222" : "#1a1a1a", color: "#888", borderRadius: 8, fontSize: 13, border: "1px solid #333", cursor: "pointer", position: "relative" }}>
+  👥 {members.length}
+</button>
+<button onClick={() => setShowMembers(!showMembers)} style={{ padding: "8px 12px", background: showMembers ? "#222" : "#1a1a1a", color: "#888", borderRadius: 8, fontSize: 13, border: "1px solid #333", cursor: "pointer" }}>
+  👥 {members.length}
+</button>
+<button onClick={() => setMicOn(!micOn)} style={{ padding: "8px 12px", background: micOn ? "#e63946" : "#1a1a1a", color: micOn ? "#fff" : "#888", borderRadius: 8, fontSize: 13, border: "1px solid #333", cursor: "pointer" }}>
             {micOn ? "🎙️" : "🔇"}
           </button>
           <button onClick={() => { setCamOn(!camOn); if (!callActive) toggleCall(); }} style={{ padding: "8px 12px", background: camOn ? "#e63946" : "#1a1a1a", color: camOn ? "#fff" : "#888", borderRadius: 8, fontSize: 13, border: "1px solid #333", cursor: "pointer" }}>
@@ -1239,6 +1249,24 @@ function LoungeRoom({ room, user, profile, onBack }) {
         </div>
       </div>
 
+{showMembers && (
+  <div style={{ position: "absolute", top: 60, right: 20, background: "#111", border: "1px solid #222", borderRadius: 12, padding: 16, zIndex: 20, minWidth: 200, boxShadow: "0 8px 32px rgba(0,0,0,0.5)" }}>
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+      <span style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>Players</span>
+      <button onClick={() => setShowMembers(false)} style={{ color: "#555", fontSize: 14 }}>✕</button>
+    </div>
+    {members.map(m => (
+      <div key={m.user_id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 0", borderBottom: "1px solid #1a1a1a" }}>
+        {m.profiles?.avatar_url ? <img src={m.profiles.avatar_url} style={{ width: 28, height: 28, borderRadius: "50%" }} alt="" /> : <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#222", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>👤</div>}
+        <div>
+          <p style={{ fontSize: 13, color: "#fff", fontWeight: 500 }}>{m.profiles?.username || "Anonymous"}</p>
+          <p style={{ fontSize: 11, color: m.role === "judge" ? "#f5a623" : "#555" }}>{m.role}</p>
+        </div>
+        {m.user_id === user?.id && <span style={{ marginLeft: "auto", fontSize: 10, color: "#444" }}>you</span>}
+      </div>
+    ))}
+  </div>
+)}
       <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
         {callActive && livekitToken && livekitUrl && (
           <div style={{ width: "55%", borderRight: "1px solid #1a1a1a", overflow: "hidden" }}>
@@ -1251,7 +1279,7 @@ function LoungeRoom({ room, user, profile, onBack }) {
           <div style={S.chatArea}>
             {messages.length === 0 && <div style={{ textAlign: "center", color: "#333", fontSize: 13, marginTop: 20 }}>No messages yet. Start the conversation!</div>}
             {messages.map(msg => (
-              <div key={msg.id} style={{ ...S.msgRow, flexDirection: msg.user_id === user?.id ? "row-reverse" : "row" }}>
+              <div key={msg.id} className="msg-animate" style={{ ...S.msgRow, flexDirection: msg.user_id === user?.id ? "row-reverse" : "row" }}>
                 {msg.profiles?.avatar_url && <img src={msg.profiles.avatar_url} style={{ width: 28, height: 28, borderRadius: "50%", flexShrink: 0 }} alt="" />}
                 <div style={{ ...S.msgBubble, background: msg.user_id === user?.id ? "#4caf50" : "#1a1a1a" }}>
                   {msg.user_id !== user?.id && <span style={{ fontSize: 11, color: "#888", marginBottom: 2 }}>{msg.profiles?.username || "Anonymous"}</span>}
@@ -1313,7 +1341,7 @@ const S = {
   roomTag: { fontSize: 11, color: "#e63946", background: "#1a0a0b", padding: "2px 8px", borderRadius: 20 },
   joinBtn: { padding: "6px 14px", borderRadius: 8, border: "1px solid #333", fontSize: 12, fontWeight: 600, color: "#888", fontFamily: "'Inter',sans-serif", transition: "all 0.15s" },
   judgeBtn: { padding: "6px 10px", borderRadius: 8, border: "1px solid #444", fontSize: 12, fontWeight: 600, color: "#888", fontFamily: "'Inter',sans-serif", transition: "all 0.15s" },
-  roomContainer: { display: "flex", flexDirection: "column", height: "calc(100vh - 130px)", background: "#111", borderRadius: 16, border: "1px solid #1e1e1e", overflow: "hidden" },
+roomContainer: { display: "flex", flexDirection: "column", height: "calc(100vh - 130px)", background: "#111", borderRadius: 16, border: "1px solid #1e1e1e", overflow: "hidden", position: "relative" },
   roomHeader: { padding: "16px 20px", borderBottom: "1px solid #1a1a1a", display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0 },
   chatArea: { flex: 1, overflowY: "auto", padding: "16px 20px", display: "flex", flexDirection: "column", gap: 12 },
   msgRow: { display: "flex", gap: 8, alignItems: "flex-end" },
