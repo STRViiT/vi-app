@@ -1236,9 +1236,7 @@ function LoungeRoom({ room, user, profile, onBack }) {
           <button onClick={() => setShowMembers(!showMembers)} style={{ padding: "8px 12px", background: showMembers ? "#222" : "#1a1a1a", color: "#888", borderRadius: 8, fontSize: 13, border: "1px solid #333", cursor: "pointer", position: "relative" }}>
   👥 {members.length}
 </button>
-<button onClick={() => setShowMembers(!showMembers)} style={{ padding: "8px 12px", background: showMembers ? "#222" : "#1a1a1a", color: "#888", borderRadius: 8, fontSize: 13, border: "1px solid #333", cursor: "pointer" }}>
-  👥 {members.length}
-</button>
+
 <button onClick={() => setMicOn(!micOn)} style={{ padding: "8px 12px", background: micOn ? "#e63946" : "#1a1a1a", color: micOn ? "#fff" : "#888", borderRadius: 8, fontSize: 13, border: "1px solid #333", cursor: "pointer" }}>
             {micOn ? "🎙️" : "🔇"}
           </button>
