@@ -366,7 +366,10 @@ await supabase.from("rooms").update({ status: "closed" })
               {m.profiles?.avatar_url ? <img src={m.profiles.avatar_url} style={{ width: 28, height: 28, borderRadius: "50%" }} alt="" /> : <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#222", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>👤</div>}
               <div>
                 <p style={{ fontSize: 13, color: "#fff", fontWeight: 500 }}>{m.profiles?.username || "Anonymous"}</p>
-                <p style={{ fontSize: 11, color: m.role === "judge" ? "#f5a623" : "#555" }}>{m.role}</p>
+                <p style={{ fontSize: 11, color: m.role === "judge" ? "#f5a623" : "#555" }}>
+  {m.role}
+  {m.is_host && <span style={{ marginLeft: 6, fontSize: 9, background: "#e63946", color: "#fff", padding: "1px 5px", borderRadius: 8 }}>🎙️ HOST</span>}
+</p>
               </div>
               {m.user_id === user?.id && <span style={{ marginLeft: "auto", fontSize: 10, color: "#444" }}>you</span>}
             </div>
@@ -602,10 +605,11 @@ async function startDebate() {
   setTimerStarted(now);  // <-- добавляем
 }
 
-  async function kickMember(memberId) {
-    if (!isCreator || debateStarted) return;
-    await supabase.from("room_members").delete().eq("room_id", room.id).eq("user_id", memberId);
-  }
+ async function kickMember(memberId) {
+  if (!isCreator) return;
+  if (!room.host_mode && debateStarted) return;
+  await supabase.from("room_members").delete().eq("room_id", room.id).eq("user_id", memberId);
+}
 
   const durationLabel = DURATIONS.find(d => d.id === room.duration)?.label || "Standard";
   const voteCount = {};
@@ -668,7 +672,7 @@ async function voteEnd() {
           )}
 
           {/* Start debate / kick — only creator before debate starts */}
-          {isCreator && !debateStarted && (
+          {isCreator && (!debateStarted || room.host_mode) && (
   <button 
     className="start-debate-btn" 
     onClick={debaters.length >= 2 ? startDebate : null}
@@ -706,7 +710,10 @@ async function voteEnd() {
               {m.profiles?.avatar_url ? <img src={m.profiles.avatar_url} style={{ width: 28, height: 28, borderRadius: "50%" }} alt="" /> : <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#222", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>👤</div>}
               <div>
                 <p style={{ fontSize: 13, color: "#fff", fontWeight: 500 }}>{m.profiles?.username || "Anonymous"}</p>
-                <p style={{ fontSize: 11, color: m.role === "judge" ? "#f5a623" : "#555" }}>{m.role}</p>
+                <p style={{ fontSize: 11, color: m.role === "judge" ? "#f5a623" : "#555" }}>
+  {m.role}
+  {m.is_host && <span style={{ marginLeft: 6, fontSize: 9, background: "#e63946", color: "#fff", padding: "1px 5px", borderRadius: 8 }}>🎙️ HOST</span>}
+</p>
               </div>
               {m.user_id === user?.id && <span style={{ marginLeft: "auto", fontSize: 10, color: "#444" }}>you</span>}
             </div>
@@ -730,7 +737,7 @@ async function voteEnd() {
       )}
 
       {/* Members panel with kick for creator */}
-      {isCreator && !debateStarted && (
+      {isCreator && (!debateStarted || room.host_mode) && (
         <div style={{ padding: "10px 20px", borderBottom: "1px solid #1a1a1a", display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
           <span style={{ fontSize: 11, color: "#555" }}>Waiting room:</span>
           {members.filter(m => m.user_id !== user.id).map(m => (
@@ -892,6 +899,7 @@ function HomeScreen({ search, setSearch, selectedCategory, setSelectedCategory, 
                       <p style={{ fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 4, display: "flex", alignItems: "center", gap: 6 }}>
                         {room.title}
                         {room.is_adult_only && <span style={{ fontSize: 10, background: "#e63946", color: "#fff", padding: "1px 6px", borderRadius: 10 }}>18+</span>}
+                        {room.host_mode && <span style={{ fontSize: 10, background: "#e63946", color: "#fff", padding: "1px 6px", borderRadius: 10, marginLeft: 4 }}>🎙️ HOST</span>}
                       </p>
                       {room.category && <span style={S.roomTag}>{room.category}</span>}
                     </div>
@@ -1015,27 +1023,31 @@ function CreateScreen({ roomTopic, setRoomTopic, roomHashtags, hashtagInput, set
   const [creating, setCreating] = useState(false);
   const [selectedDuration, setSelectedDuration] = useState(40);
   const [adultOnly, setAdultOnly] = useState(false);
+  const [hostMode, setHostMode] = useState(false);
 
   const filtered = TOPICS.filter(t => {
     const matchCat = selectedCategory === "All" || t.category === selectedCategory;
     return matchCat && t.label.toLowerCase().includes(search.toLowerCase());
   });
 
-  async function createRoom() {
-    if (!user) { alert("Please sign in first!"); return; }
-    if (!roomTopic.trim()) { alert("Please enter a room title!"); return; }
-    setCreating(true);
-    const { data } = await supabase.from("rooms").insert({
-      title: roomTopic, topic: selectedTopic?.label, category: selectedTopic?.category,
-      hashtags: roomHashtags, duration: selectedDuration, is_adult_only: adultOnly,
-      created_by: user.id, status: "waiting",
-    }).select().single();
-    if (data) {
-      await supabase.from("room_members").upsert({ room_id: data.id, user_id: user.id, role: "debater" }, { onConflict: "room_id,user_id" });
-      onCreated(data);
-    }
-    setCreating(false);
+async function createRoom() {
+  if (!user) { alert("Please sign in first!"); return; }
+  if (!roomTopic.trim()) { alert("Please enter a room title!"); return; }
+  setCreating(true);
+  const { data } = await supabase.from("rooms").insert({
+    title: roomTopic, topic: selectedTopic?.label, category: selectedTopic?.category,
+    hashtags: roomHashtags, duration: selectedDuration, is_adult_only: adultOnly,
+    host_mode: hostMode,
+    created_by: user.id, status: "waiting",
+  }).select().single();
+  if (data) {
+    await supabase.from("room_members").upsert({ 
+      room_id: data.id, user_id: user.id, role: "debater", is_host: true 
+    }, { onConflict: "room_id,user_id" });
+    onCreated(data);
   }
+  setCreating(false);
+}
 
   return (
     <div style={{ maxWidth: 620, margin: "0 auto", width: "100%" }}>
@@ -1061,6 +1073,14 @@ function CreateScreen({ roomTopic, setRoomTopic, roomHashtags, hashtagInput, set
           </div>
           <Toggle value={adultOnly} onChange={setAdultOnly} />
         </div>
+
+<div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 12, padding: "10px 14px", background: "#0a0a0a", borderRadius: 10, border: `1px solid ${hostMode ? "#e63946" : "#222"}` }}>
+  <div>
+    <p style={{ fontSize: 13, color: hostMode ? "#e63946" : "#888", fontWeight: 600 }}>🎙️ Host Mode</p>
+    <p style={{ fontSize: 11, color: "#444", marginTop: 2 }}>Streamer-style: kick & swap opponents anytime</p>
+  </div>
+  <Toggle value={hostMode} onChange={setHostMode} />
+</div>
 
         <p style={{ ...S.fieldLabel, marginTop: 22 }}>Select Debate Topic</p>
         <div style={S.searchBox}>
@@ -1335,7 +1355,10 @@ async function sendMessage() {
         {m.profiles?.avatar_url ? <img src={m.profiles.avatar_url} style={{ width: 28, height: 28, borderRadius: "50%" }} alt="" /> : <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#222", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>👤</div>}
         <div>
           <p style={{ fontSize: 13, color: "#fff", fontWeight: 500 }}>{m.profiles?.username || "Anonymous"}</p>
-          <p style={{ fontSize: 11, color: m.role === "judge" ? "#f5a623" : "#555" }}>{m.role}</p>
+          <p style={{ fontSize: 11, color: m.role === "judge" ? "#f5a623" : "#555" }}>
+  {m.role}
+  {m.is_host && <span style={{ marginLeft: 6, fontSize: 9, background: "#e63946", color: "#fff", padding: "1px 5px", borderRadius: 8 }}>🎙️ HOST</span>}
+</p>
         </div>
         {m.user_id === user?.id && <span style={{ marginLeft: "auto", fontSize: 10, color: "#444" }}>you</span>}
       </div>
@@ -1379,7 +1402,10 @@ async function sendMessage() {
             {m.profiles?.avatar_url ? <img src={m.profiles.avatar_url} style={{ width: 28, height: 28, borderRadius: "50%" }} alt="" /> : <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#222", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>👤</div>}
             <div>
               <p style={{ fontSize: 13, color: "#fff", fontWeight: 500 }}>{m.profiles?.username || "Anonymous"}</p>
-              <p style={{ fontSize: 11, color: m.role === "judge" ? "#f5a623" : "#555" }}>{m.role}</p>
+              <p style={{ fontSize: 11, color: m.role === "judge" ? "#f5a623" : "#555" }}>
+  {m.role}
+  {m.is_host && <span style={{ marginLeft: 6, fontSize: 9, background: "#e63946", color: "#fff", padding: "1px 5px", borderRadius: 8 }}>🎙️ HOST</span>}
+</p>
             </div>
             {m.user_id === user?.id && <span style={{ marginLeft: "auto", fontSize: 10, color: "#444" }}>you</span>}
           </div>
