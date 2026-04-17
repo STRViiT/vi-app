@@ -611,6 +611,14 @@ async function startDebate() {
   await supabase.from("room_members").delete().eq("room_id", room.id).eq("user_id", memberId);
 }
 
+async function kickMember(memberId) {
+  console.log("kickMember called", { memberId, isCreator, hostMode: room.host_mode, debateStarted });
+  if (!isCreator) { console.log("NOT CREATOR"); return; }
+  if (!room.host_mode && debateStarted) { console.log("BLOCKED: not host_mode"); return; }
+  const { error } = await supabase.from("room_members").delete().eq("room_id", room.id).eq("user_id", memberId);
+  console.log("kick result", { error });
+}
+
   const durationLabel = DURATIONS.find(d => d.id === room.duration)?.label || "Standard";
   const voteCount = {};
   votes.forEach(v => { voteCount[v.voted_for] = (voteCount[v.voted_for] || 0) + 1; });
