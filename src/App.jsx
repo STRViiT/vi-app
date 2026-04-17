@@ -617,6 +617,7 @@ async function kickMember(memberId) {
   if (!room.host_mode && debateStarted) { console.log("BLOCKED: not host_mode"); return; }
   const { error } = await supabase.from("room_members").delete().eq("room_id", room.id).eq("user_id", memberId);
   console.log("kick result", { error });
+  loadMembers();
 }
 
   const durationLabel = DURATIONS.find(d => d.id === room.duration)?.label || "Standard";
