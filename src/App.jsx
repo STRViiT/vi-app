@@ -523,7 +523,14 @@ function RoomScreen({ room, user, profile, myRole, setProfile }) {
         })
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "votes", filter: `room_id=eq.${room.id}` }, () => loadVotes())
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "room_members", filter: `room_id=eq.${room.id}` }, () => loadMembers())
-      .on("postgres_changes", { event: "DELETE", schema: "public", table: "room_members", filter: `room_id=eq.${room.id}` }, () => loadMembers())
+      .on("postgres_changes", { event: "DELETE", schema: "public", table: "room_members", filter: `room_id=eq.${room.id}` }, (payload) => {
+  if (payload.old?.user_id === user?.id) {
+    alert("You have been kicked from this room.");
+    window.location.reload();
+    return;
+  }
+  loadMembers();
+})
       .subscribe();
     return () => supabase.removeChannel(channel);
   }, [room.id]);
@@ -537,6 +544,13 @@ function RoomScreen({ room, user, profile, myRole, setProfile }) {
     const elapsed = Math.floor((Date.now() - new Date(timerStarted).getTime()) / 1000);
     if (elapsed >= totalSeconds) awardCoins();
   }, [timerStarted, votes, coinsAwarded]);
+
+  useEffect(() => {
+  if (members.length > 0 && !members.find(m => m.user_id === user?.id)) {
+    alert("You have been kicked from this room.");
+    window.location.reload();
+  }
+}, [members]);
 
   async function awardCoins() {
     if (coinsAwarded) return;
