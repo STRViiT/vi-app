@@ -624,7 +624,6 @@ async function startDebate() {
           <p style={{ fontSize: 12, color: "#555", marginTop: 2 }}>{room.format} • {durationLabel} • {debaters.length} debaters • {judges.length} judges</p>
         </div>
 
-)
 
 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
   <button 
