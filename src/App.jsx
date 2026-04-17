@@ -523,17 +523,19 @@ function RoomScreen({ room, user, profile, myRole, setProfile }) {
         })
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "votes", filter: `room_id=eq.${room.id}` }, () => loadVotes())
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "room_members", filter: `room_id=eq.${room.id}` }, () => loadMembers())
-      .on("postgres_changes", { event: "DELETE", schema: "public", table: "room_members", filter: `room_id=eq.${room.id}` }, (payload) => {
-  if (payload.old?.user_id === user?.id) {
-    alert("You have been kicked from this room.");
-    window.location.reload();
-    return;
-  }
-  loadMembers();
-})
+      .on("postgres_changes", { event: "DELETE", schema: "public", table: "room_members", filter: `room_id=eq.${room.id}` }, () => loadMembers())
       .subscribe();
     return () => supabase.removeChannel(channel);
   }, [room.id]);
+
+  useEffect(() => {
+  if (members.length === 0) return;
+  const meInRoom = members.find(m => m.user_id === user?.id);
+  if (!meInRoom) {
+    alert("You have been removed from this room.");
+    window.location.reload();
+  }
+}, [members]);
 
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
 
