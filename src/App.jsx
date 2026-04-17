@@ -462,13 +462,6 @@ function Timer({ duration, startedAt }) {
       {timeLeft === 0 ? "⏱ Time's up!" : `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`}
     </span>
   );
-  async function voteEnd() {
-  await supabase.from("room_members")
-    .update({ wants_end: true })
-    .eq("room_id", room.id)
-    .eq("user_id", user.id);
-  setWantsEnd(true);
-}
 }
 
 function RoomScreen({ room, user, profile, myRole, setProfile }) {
@@ -590,11 +583,6 @@ async function startDebate() {
   setDebateStarted(true);
   setTimerStarted(now);  // <-- добавляем
 }
-
-  async function startDebate() {
-    await supabase.from("rooms").update({ started: true, status: "active" }).eq("id", room.id);
-    setDebateStarted(true);
-  }
 
   async function kickMember(memberId) {
     if (!isCreator || debateStarted) return;
@@ -1218,12 +1206,6 @@ function LoungeRoom({ room, user, profile, onBack }) {
     const { data } = await supabase.from("room_members").select("*, profiles(username, avatar_url)").eq("room_id", room.id);
     if (data) setMembers(data);
   }
-  useEffect(() => {
-  const debaterMembers = members.filter(m => m.role === "debater");
-  const allWantEnd = debaterMembers.length >= 2 && 
-    debaterMembers.every(m => m.wants_end);
-  if (allWantEnd && debateStarted) endDebate();
-}, [members]);
  
 async function sendMessage() {
   console.log("sendMessage called, input:", input, "user:", user?.id);
@@ -1232,12 +1214,6 @@ async function sendMessage() {
   setInput(""); loadMessages();
 }
 
-async function voteEnd() {
-  await supabase.from("room_members")
-    .update({ wants_end: true })
-    .eq("room_id", room.id)
-    .eq("user_id", user.id);
-}
   async function updateTitle() {
     if (!newTitle.trim()) return;
     await supabase.from("rooms").update({ title: newTitle.trim() }).eq("id", room.id);
