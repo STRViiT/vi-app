@@ -610,7 +610,17 @@ async function startDebate() {
   const durationLabel = DURATIONS.find(d => d.id === room.duration)?.label || "Standard";
   const voteCount = {};
   votes.forEach(v => { voteCount[v.voted_for] = (voteCount[v.voted_for] || 0) + 1; });
+async function endDebate() {
+  await supabase.from("rooms").update({ status: "closed" }).eq("id", room.id);
+}
 
+async function voteEnd() {
+  await supabase.from("room_members")
+    .update({ wants_end: true })
+    .eq("room_id", room.id)
+    .eq("user_id", user.id);
+  setWantsEnd(true);
+}
   return (
    <div style={S.roomContainer}>
   <div style={S.roomHeader}>
