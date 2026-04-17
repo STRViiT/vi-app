@@ -623,10 +623,8 @@ async function startDebate() {
           </h2>
           <p style={{ fontSize: 12, color: "#555", marginTop: 2 }}>{room.format} • {durationLabel} • {debaters.length} debaters • {judges.length} judges</p>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-         {timerStarted && (
-  <Timer duration={room.duration} startedAt={timerStarted} />
-)}
+
+)
 
 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
   <button 
@@ -638,7 +636,7 @@ async function startDebate() {
   {timerStarted && (
     <Timer duration={room.duration} startedAt={timerStarted} />
   )}
-  
+
           {/* Mic toggle */}
           {!isJudge && (
             <button onClick={() => setMicOn(!micOn)} style={{ padding: "8px 12px", background: micOn ? "#e63946" : "#1a1a1a", color: micOn ? "#fff" : "#888", borderRadius: 8, fontSize: 13, border: "1px solid #333", cursor: "pointer" }}>
@@ -687,6 +685,25 @@ async function startDebate() {
 
         </div>
       </div>
+
+      {showMembers && (
+        <div style={{ position: "absolute", top: 60, right: 20, background: "#111", border: "1px solid #222", borderRadius: 12, padding: 16, zIndex: 20, minWidth: 200, boxShadow: "0 8px 32px rgba(0,0,0,0.5)" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+            <span style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>Players</span>
+            <button onClick={() => setShowMembers(false)} style={{ color: "#555", fontSize: 14 }}>✕</button>
+          </div>
+          {members.map(m => (
+            <div key={m.user_id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 0", borderBottom: "1px solid #1a1a1a" }}>
+              {m.profiles?.avatar_url ? <img src={m.profiles.avatar_url} style={{ width: 28, height: 28, borderRadius: "50%" }} alt="" /> : <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#222", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>👤</div>}
+              <div>
+                <p style={{ fontSize: 13, color: "#fff", fontWeight: 500 }}>{m.profiles?.username || "Anonymous"}</p>
+                <p style={{ fontSize: 11, color: m.role === "judge" ? "#f5a623" : "#555" }}>{m.role}</p>
+              </div>
+              {m.user_id === user?.id && <span style={{ marginLeft: "auto", fontSize: 10, color: "#444" }}>you</span>}
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Judge voting panel */}
       {isJudge && debaters.length > 0 && (
