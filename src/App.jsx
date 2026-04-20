@@ -614,7 +614,7 @@ function RoomScreen({ room, user, profile, myRole, setProfile }) {
     if (allWantEnd && debateStarted) endDebate();
   }, [members]);
 
- async function awardSigs() {
+async function awardSigs() {
   if (sigsAwarded) return;
   setSigsAwarded(true);
   const vc = {};
@@ -626,21 +626,39 @@ function RoomScreen({ room, user, profile, myRole, setProfile }) {
     const votesCast = vc[debater.user_id] || 0;
     const isWinner = votesCast === maxVotes && votesCast > 0;
     
-    let sigs = isWinner ? votesCast * 100 : 25;
+    // Get current profile
+    const { data: prof } = await supabase.from("profiles").select("sigs, deps, win_streak, last_debate_date").eq("id", debater.user_id).single();
     
+    // Daily bonus check
+    const today = new Date().toISOString().split("T")[0];
+    const isFirstToday = prof?.last_debate_date !== today;
+    const dailyBonus = isFirstToday ? 50 : 0;
+    
+    // Streak calculation
+    let newStreak = isWinner ? (prof?.win_streak || 0) + 1 : 0;
+    let streakMultiplier = 1;
+    if (isWinner && newStreak >= 3) streakMultiplier = 2;
+    else if (isWinner && newStreak >= 2) streakMultiplier = 1.5;
+    
+    // Sigs calculation
+    let sigs = isWinner ? Math.floor(votesCast * 100 * streakMultiplier) : 25;
+    sigs += dailyBonus;
+    
+    // Dep's drop — 8% chance on win
     let deps = 0;
     if (isWinner && Math.random() < 0.08) {
       deps = Math.floor(Math.random() * 11) + 5;
     }
     
-    const { data } = await supabase.from("profiles").select("sigs, deps").eq("id", debater.user_id).single();
     await supabase.from("profiles").update({ 
-      sigs: (data?.sigs || 0) + sigs,
-      deps: (data?.deps || 0) + deps,
+      sigs: (prof?.sigs || 0) + sigs,
+      deps: (prof?.deps || 0) + deps,
+      win_streak: newStreak,
+      last_debate_date: today,
     }).eq("id", debater.user_id);
     
     if (debater.user_id === user?.id) {
-      setProfile(prev => ({ ...prev, sigs: (prev?.sigs || 0) + sigs, deps: (prev?.deps || 0) + deps }));
+      setProfile(prev => ({ ...prev, sigs: (prev?.sigs || 0) + sigs, deps: (prev?.deps || 0) + deps, win_streak: newStreak }));
     }
   }
 }
