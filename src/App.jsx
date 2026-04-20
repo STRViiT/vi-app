@@ -294,9 +294,9 @@ export default function App() {
               setScreen("home"); setCurrentRoom(null); setMyRole("debater"); loadRooms();
             }}>← Back</button>
           ) : (
-            ["home", "lounge", "create", "settings"].map(s => (
+           ["home", "lounge", "create", "shop", "settings"].map(s => (
               <button key={s} className={`nav-btn ${screen === s ? "nav-sel" : ""}`} style={S.navBtn} onClick={() => setScreen(s)}>
-                {s === "home" ? "Home" : s === "lounge" ? "Lounge" : s === "create" ? "Create Room" : "Settings"}
+                {s === "home" ? "Home" : s === "lounge" ? "Lounge" : s === "create" ? "Create Room" : s === "shop" ? "Shop" : "Settings"}
               </button>
             ))
           )}
@@ -329,6 +329,7 @@ export default function App() {
         {screen === "room" && currentRoom && <RoomScreen room={currentRoom} user={user} profile={profile} myRole={myRole} setProfile={setProfile} />}
         {screen === "profile" && user && <ProfileScreen user={user} profile={profile} setProfile={setProfile} />}
         {screen === "lounge" && <LoungeScreen user={user} profile={profile} />}
+        {screen === "shop" && user && <ShopScreen user={user} profile={profile} setProfile={setProfile} />}
       </main>
     </div>
   );
@@ -1399,6 +1400,66 @@ function LoungeRoom({ room, user, profile, onBack }) {
             <input style={S.chatInputField} placeholder="Say something…" value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && sendMessage()} />
             <button className="send-btn" style={{ ...S.sendBtn, background: "#4caf50" }} onClick={sendMessage}>Send</button>
           </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ShopScreen({ user, profile, setProfile }) {
+  const [tab, setTab] = useState("sigs");
+  const [buying, setBuying] = useState(null);
+  const [owned, setOwned] = useState([]);
+
+  useEffect(() => {
+    supabase.from("user_items").select("item_id").eq("user_id", user.id)
+      .then(({ data }) => { if (data) setOwned(data.map(d => d.item_id)); });
+  }, [user.id]);
+
+  async function buyItem(item, currency) {
+    const balance = currency === "sigs" ? (profile?.sigs || 0) : (profile?.deps || 0);
+    if (balance < item.price) { alert("Not enough " + currency + "!"); return; }
+    if (owned.includes(item.id)) { alert("Already owned!"); return; }
+    setBuying(item.id);
+    await supabase.from("user_items").insert({ user_id: user.id, item_id: item.id });
+    await supabase.from("profiles").update({ [currency]: balance - item.price }).eq("id", user.id);
+    setProfile(prev => ({ ...prev, [currency]: (prev?.[currency] || 0) - item.price }));
+    setOwned(prev => [...prev, item.id]);
+    setBuying(null);
+  }
+
+  const items = SHOP[tab];
+
+  return (
+    <div style={{ maxWidth: 620, margin: "0 auto", width: "100%" }}>
+      <div style={S.card}>
+        <h2 style={S.cardTitle}>Shop</h2>
+        <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20 }}>
+          <span style={{ fontSize: 14, color: "#f5a623", fontWeight: 600 }}>🪙 {profile?.sigs || 0} Sig's</span>
+          <span style={{ fontSize: 14, color: "#9b59b6", fontWeight: 600 }}>💎 {profile?.deps || 0} Dep's</span>
+        </div>
+        <div style={{ display: "flex", gap: 10, marginBottom: 20 }}>
+          <button onClick={() => setTab("sigs")} style={{ flex: 1, padding: "10px 0", borderRadius: 10, border: `1px solid ${tab === "sigs" ? "#f5a623" : "#222"}`, background: tab === "sigs" ? "#1a1500" : "transparent", color: tab === "sigs" ? "#f5a623" : "#888", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>🪙 Sig's Shop</button>
+          <button onClick={() => setTab("deps")} style={{ flex: 1, padding: "10px 0", borderRadius: 10, border: `1px solid ${tab === "deps" ? "#9b59b6" : "#222"}`, background: tab === "deps" ? "#1a0a2a" : "transparent", color: tab === "deps" ? "#9b59b6" : "#888", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>💎 Dep's Shop</button>
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          {items.map(item => {
+            const isOwned = owned.includes(item.id);
+            const currency = tab;
+            const balance = currency === "sigs" ? (profile?.sigs || 0) : (profile?.deps || 0);
+            const canAfford = balance >= item.price;
+            return (
+              <div key={item.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 16px", background: "#0a0a0a", borderRadius: 12, border: `1px solid ${isOwned ? "#4caf50" : "#222"}` }}>
+                <div>
+                  <p style={{ fontSize: 14, fontWeight: 600, color: "#fff" }}>{item.name}</p>
+                  <p style={{ fontSize: 12, color: "#555", marginTop: 2 }}>{item.desc}</p>
+                </div>
+                <button onClick={() => !isOwned && buyItem(item, currency)} disabled={isOwned || buying === item.id} style={{ padding: "8px 18px", borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: isOwned ? "default" : "pointer", background: isOwned ? "#1a2a1a" : canAfford ? (tab === "sigs" ? "#f5a623" : "#9b59b6") : "#1a1a1a", color: isOwned ? "#4caf50" : canAfford ? "#000" : "#555", border: `1px solid ${isOwned ? "#4caf50" : canAfford ? "transparent" : "#333"}`, transition: "all 0.15s" }}>
+                  {isOwned ? "✓ Owned" : buying === item.id ? "..." : `${tab === "sigs" ? "🪙" : "💎"} ${item.price}`}
+                </button>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
