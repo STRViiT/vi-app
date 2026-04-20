@@ -523,10 +523,13 @@ function RoomScreen({ room, user, profile, myRole, setProfile }) {
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages", filter: `room_id=eq.${room.id}` },
         (payload) => setMessages(prev => [...prev, payload.new]))
       .on("postgres_changes", { event: "UPDATE", schema: "public", table: "rooms", filter: `id=eq.${room.id}` },
-        (payload) => {
-          if (payload.new.started_at) setTimerStarted(payload.new.started_at);
-          if (payload.new.started) setDebateStarted(true);
-        })
+  (payload) => {
+    if (payload.new.started_at) {
+      const sa = payload.new.started_at;
+      setTimerStarted(sa.endsWith('Z') ? sa : sa + 'Z');
+    }
+    if (payload.new.started) setDebateStarted(true);
+  })
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "votes", filter: `room_id=eq.${room.id}` }, () => loadVotes())
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "room_members", filter: `room_id=eq.${room.id}` }, () => loadMembers())
       .on("postgres_changes", { event: "DELETE", schema: "public", table: "room_members", filter: `room_id=eq.${room.id}` }, () => loadMembers())
