@@ -618,13 +618,14 @@ function RoomScreen({ room, user, profile, myRole, setProfile }) {
 
 async function startDebate() {
   const now = new Date().toISOString();
+  console.log("startDebate called, now:", now);
   await supabase.from("rooms").update({ 
     started: true, 
     status: "active",
-    started_at: now  // <-- добавляем
+    started_at: now
   }).eq("id", room.id);
   setDebateStarted(true);
-  setTimerStarted(now);  // <-- добавляем
+  setTimerStarted(now);
 }
 
  async function kickMember(memberId) {
@@ -1335,7 +1336,7 @@ async function sendMessage() {
       setLivekitToken(data.token); setLivekitUrl(data.url); setCallActive(true);
     } catch (e) { alert("Failed to start call."); }
   }
-
+console.log("RoomScreen render:", { roomStartedAt: room.started_at, timerStarted, debateStarted });
   return (
     <div style={S.roomContainer}>
       <div style={S.roomHeader}>
