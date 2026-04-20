@@ -465,6 +465,7 @@ function ProfileScreen({ user, profile, setProfile }) {
 
 function Timer({ duration, startedAt }) {
   const [timeLeft, setTimeLeft] = useState(null);
+  console.log("Timer props:", { duration, startedAt });
   useEffect(() => {
     if (!startedAt) return;
     const totalSeconds = duration * 60;
