@@ -484,6 +484,14 @@ function Timer({ duration, startedAt }) {
       {timeLeft === 0 ? "⏱ Time's up!" : `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`}
     </span>
   );
+  function update() {
+  const now = Date.now();
+  const start = new Date(startedAt).getTime();
+  const totalSeconds = duration * 60;
+  const elapsed = Math.floor((now - start) / 1000);
+  console.log("Timer calc:", { now, start, elapsed, totalSeconds, timeLeft: totalSeconds - elapsed });
+  setTimeLeft(Math.max(0, totalSeconds - elapsed));
+}
 }
 
 function RoomScreen({ room, user, profile, myRole, setProfile }) {
