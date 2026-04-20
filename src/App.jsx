@@ -124,6 +124,19 @@ const DURATIONS = [
   { id: 180, label: "Long", desc: "3 hrs" },
 ];
 
+const SHOP = {
+  sigs: [
+    { id: "boost_1h", name: "Room Boost", price: 200, desc: "Top of list for 1hr" },
+    { id: "color_red", name: "Red Chat", price: 300, desc: "Red message color" },
+    { id: "emoji_pack", name: "Emoji Pack", price: 200, desc: "Chat reactions" },
+  ],
+  deps: [
+    { id: "tag_debater", name: "Debater Tag", price: 100, desc: "Tag next to name" },
+    { id: "frame_gold", name: "Gold Frame", price: 500, desc: "Golden avatar frame" },
+    { id: "tag_custom", name: "Custom Tag", price: 1000, desc: "Your own tag text" },
+  ]
+};
+
 export default function App() {
   const [screen, setScreen] = useState("home");
   const [search, setSearch] = useState("");
@@ -296,7 +309,8 @@ export default function App() {
               <div style={{ display: "flex", gap: 8 }}>
                 <span style={{ fontSize: 11, color: "#e63946" }}>🏆 {profile?.wins || 0}W</span>
                 <span style={{ fontSize: 11, color: "#555" }}>{profile?.losses || 0}L</span>
-                <span style={{ fontSize: 11, color: "#f5a623" }}>🪙 {profile?.coins || 0}</span>
+                <span style={{ fontSize: 11, color: "#f5a623" }}>🪙 {profile?.sigs || 0}</span>
+<span style={{ fontSize: 11, color: "#9b59b6" }}>💎 {profile?.deps || 0}</span>
               </div>
             </div>
             <button className="signout-btn" onClick={signOut} style={{ fontSize: 13, color: "#555", fontFamily: "'Inter',sans-serif", transition: "color 0.15s" }}>Sign out</button>
@@ -363,7 +377,7 @@ function ProfileScreen({ user, profile, setProfile }) {
             { label: "Wins", value: profile?.wins || 0, color: "#e63946", icon: "🏆" },
             { label: "Losses", value: profile?.losses || 0, color: "#555", icon: "💀" },
             { label: "Points", value: profile?.points || 0, color: "#888", icon: "⭐" },
-            { label: "Coins", value: profile?.coins || 0, color: "#f5a623", icon: "🪙" },
+            { label: "sigs", value: profile?.sigs || 0, color: "#f5a623", icon: "🪙" },
           ].map(stat => (
             <div key={stat.label} style={{ background: "#0a0a0a", borderRadius: 12, padding: "14px 0", textAlign: "center", border: "1px solid #222" }}>
               <p style={{ fontSize: 18 }}>{stat.icon}</p>
@@ -434,7 +448,7 @@ function EndScreen({ room, debaters, votes, user, onBack }) {
   const winner = sorted[0];
   const isWinner = winner?.user_id === user?.id;
   const myVotes = voteCount[user?.id] || 0;
-  const myCoins = myVotes * 100;
+  const mysigs = myVotes * 100;
 
   useEffect(() => { setTimeout(() => setCoinAnim(true), 600); }, []);
 
@@ -483,11 +497,11 @@ function EndScreen({ room, debaters, votes, user, onBack }) {
           ))}
         </div>
 
-        {/* Coins earned animation */}
-        {myCoins > 0 && coinAnim && (
+        {/* sigs earned animation */}
+        {mysigs > 0 && coinAnim && (
           <div className="coin-animate" style={{ marginBottom: 24, padding: "16px 20px", background: "#1a1500", borderRadius: 12, border: "1px solid #f5a623" }}>
-            <p style={{ fontSize: 32, fontWeight: 800, color: "#f5a623", fontFamily: "'Syne',sans-serif" }}>🪙 +{myCoins}</p>
-            <p style={{ fontSize: 12, color: "#f5a623", marginTop: 4 }}>Coins earned!</p>
+            <p style={{ fontSize: 32, fontWeight: 800, color: "#f5a623", fontFamily: "'Syne',sans-serif" }}>🪙 +{mysigs}</p>
+            <p style={{ fontSize: 12, color: "#f5a623", marginTop: 4 }}>sigs earned!</p>
           </div>
         )}
 
@@ -531,7 +545,7 @@ function RoomScreen({ room, user, profile, myRole, setProfile }) {
   const [camOn, setCamOn] = useState(false);
   const [timerStarted, setTimerStarted] = useState(room.started_at);
   const [debateStarted, setDebateStarted] = useState(room.started || false);
-  const [coinsAwarded, setCoinsAwarded] = useState(false);
+  const [sigsAwarded, setsigsAwarded] = useState(false);
   const [showMembers, setShowMembers] = useState(false);
   const [wantsEnd, setWantsEnd] = useState(false);
   const [debateEnded, setDebateEnded] = useState(false);
@@ -585,13 +599,13 @@ function RoomScreen({ room, user, profile, myRole, setProfile }) {
     }
   }, [members]);
 
-  // Award coins when timer runs out
+  // Award sigs when timer runs out
   useEffect(() => {
-    if (!timerStarted || coinsAwarded || votes.length === 0) return;
+    if (!timerStarted || sigsAwarded || votes.length === 0) return;
     const totalSeconds = room.duration * 60;
     const elapsed = Math.floor((Date.now() - new Date(timerStarted).getTime()) / 1000);
-    if (elapsed >= totalSeconds) awardCoins();
-  }, [timerStarted, votes, coinsAwarded]);
+    if (elapsed >= totalSeconds) awardsigs();
+  }, [timerStarted, votes, sigsAwarded]);
 
   // Check if all debaters want to end
   useEffect(() => {
@@ -600,22 +614,36 @@ function RoomScreen({ room, user, profile, myRole, setProfile }) {
     if (allWantEnd && debateStarted) endDebate();
   }, [members]);
 
-  async function awardCoins() {
-    if (coinsAwarded) return;
-    setCoinsAwarded(true);
-    const vc = {};
-    votes.forEach(v => { vc[v.voted_for] = (vc[v.voted_for] || 0) + 1; });
-    for (const debater of debaters) {
-      const votesCast = vc[debater.user_id] || 0;
-      const coins = votesCast * 100;
-      if (coins > 0) {
-        const { data } = await supabase.from("profiles").select("coins").eq("id", debater.user_id).single();
-        const currentCoins = data?.coins || 0;
-        await supabase.from("profiles").update({ coins: currentCoins + coins }).eq("id", debater.user_id);
-        if (debater.user_id === user?.id) setProfile(prev => ({ ...prev, coins: (prev?.coins || 0) + coins }));
-      }
+ async function awardSigs() {
+  if (sigsAwarded) return;
+  setSigsAwarded(true);
+  const vc = {};
+  votes.forEach(v => { vc[v.voted_for] = (vc[v.voted_for] || 0) + 1; });
+  
+  const maxVotes = Math.max(...debaters.map(d => vc[d.user_id] || 0));
+  
+  for (const debater of debaters) {
+    const votesCast = vc[debater.user_id] || 0;
+    const isWinner = votesCast === maxVotes && votesCast > 0;
+    
+    let sigs = isWinner ? votesCast * 100 : 25;
+    
+    let deps = 0;
+    if (isWinner && Math.random() < 0.08) {
+      deps = Math.floor(Math.random() * 11) + 5;
+    }
+    
+    const { data } = await supabase.from("profiles").select("sigs, deps").eq("id", debater.user_id).single();
+    await supabase.from("profiles").update({ 
+      sigs: (data?.sigs || 0) + sigs,
+      deps: (data?.deps || 0) + deps,
+    }).eq("id", debater.user_id);
+    
+    if (debater.user_id === user?.id) {
+      setProfile(prev => ({ ...prev, sigs: (prev?.sigs || 0) + sigs, deps: (prev?.deps || 0) + deps }));
     }
   }
+}
 
   async function loadMessages() {
     const { data } = await supabase.from("messages").select("*, profiles(username, avatar_url)").eq("room_id", room.id).order("created_at", { ascending: true });
