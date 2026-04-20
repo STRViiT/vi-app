@@ -472,7 +472,6 @@ function Timer({ duration, startedAt }) {
       const now = Date.now();
       const start = new Date(startedAt).getTime();
       const elapsed = Math.floor((now - start) / 1000);
-      console.log("Timer calc:", { now, start, elapsed, totalSeconds, timeLeft: totalSeconds - elapsed });
       setTimeLeft(Math.max(0, totalSeconds - elapsed));
     }
     update();
@@ -621,7 +620,6 @@ function RoomScreen({ room, user, profile, myRole, setProfile }) {
 
 async function startDebate() {
   const now = new Date().toISOString();
-  console.log("startDebate called, now:", now);
   await supabase.from("rooms").update({ 
     started: true, 
     status: "active",
@@ -638,11 +636,9 @@ async function startDebate() {
 }
 
 async function kickMember(memberId) {
-  console.log("kickMember called", { memberId, isCreator, hostMode: room.host_mode, debateStarted });
   if (!isCreator) { console.log("NOT CREATOR"); return; }
   if (!room.host_mode && debateStarted) { console.log("BLOCKED: not host_mode"); return; }
   const { error } = await supabase.from("room_members").delete().eq("room_id", room.id).eq("user_id", memberId);
-  console.log("kick result", { error });
   loadMembers();
 }
 
@@ -1339,7 +1335,7 @@ async function sendMessage() {
       setLivekitToken(data.token); setLivekitUrl(data.url); setCallActive(true);
     } catch (e) { alert("Failed to start call."); }
   }
-console.log("RoomScreen render:", { roomStartedAt: room.started_at, timerStarted, debateStarted });
+
   return (
     <div style={S.roomContainer}>
       <div style={S.roomHeader}>
