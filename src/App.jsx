@@ -465,11 +465,16 @@ function ProfileScreen({ user, profile, setProfile }) {
 
 function Timer({ duration, startedAt }) {
   const [timeLeft, setTimeLeft] = useState(null);
-  console.log("Timer props:", { duration, startedAt });
   useEffect(() => {
     if (!startedAt) return;
     const totalSeconds = duration * 60;
-    function update() { setTimeLeft(Math.max(0, totalSeconds - Math.floor((Date.now() - new Date(startedAt).getTime()) / 1000))); }
+    function update() {
+      const now = Date.now();
+      const start = new Date(startedAt).getTime();
+      const elapsed = Math.floor((now - start) / 1000);
+      console.log("Timer calc:", { now, start, elapsed, totalSeconds, timeLeft: totalSeconds - elapsed });
+      setTimeLeft(Math.max(0, totalSeconds - elapsed));
+    }
     update();
     const interval = setInterval(update, 1000);
     return () => clearInterval(interval);
@@ -484,14 +489,6 @@ function Timer({ duration, startedAt }) {
       {timeLeft === 0 ? "⏱ Time's up!" : `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`}
     </span>
   );
-  function update() {
-  const now = Date.now();
-  const start = new Date(startedAt).getTime();
-  const totalSeconds = duration * 60;
-  const elapsed = Math.floor((now - start) / 1000);
-  console.log("Timer calc:", { now, start, elapsed, totalSeconds, timeLeft: totalSeconds - elapsed });
-  setTimeLeft(Math.max(0, totalSeconds - elapsed));
-}
 }
 
 function RoomScreen({ room, user, profile, myRole, setProfile }) {
