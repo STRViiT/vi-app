@@ -532,6 +532,15 @@ function RoomScreen({ room, user, profile, myRole, setProfile }) {
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "votes", filter: `room_id=eq.${room.id}` }, () => loadVotes())
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "room_members", filter: `room_id=eq.${room.id}` }, () => loadMembers())
       .on("postgres_changes", { event: "DELETE", schema: "public", table: "room_members", filter: `room_id=eq.${room.id}` }, () => loadMembers())
+     .on("postgres_changes", { event: "DELETE", schema: "public", table: "room_members", filter: `room_id=eq.${room.id}` }, (payload) => {
+        if (payload.old?.user_id === user?.id) {
+          alert("You have been removed from this room.");
+          window.location.reload();
+          return;
+        }
+        loadMembers();
+      })
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "room_members", filter: `room_id=eq.${room.id}` }, () => loadMembers())
       .subscribe();
     return () => supabase.removeChannel(channel);
   }, [room.id]);
@@ -560,6 +569,18 @@ function RoomScreen({ room, user, profile, myRole, setProfile }) {
     alert("You have been kicked from this room.");
     window.location.reload();
   }
+}, [members]);
+
+useEffect(() => {
+  const debaterMembers = members.filter(m => m.role === "debater");
+  const allWantEnd = debaterMembers.length >= 2 && debaterMembers.every(m => m.wants_end);
+  if (allWantEnd && debateStarted) endDebate();
+}, [members]);
+
+useEffect(() => {
+  const debaterMembers = members.filter(m => m.role === "debater");
+  const allWantEnd = debaterMembers.length >= 2 && debaterMembers.every(m => m.wants_end);
+  if (allWantEnd && debateStarted) endDebate();
 }, [members]);
 
   async function awardCoins() {
