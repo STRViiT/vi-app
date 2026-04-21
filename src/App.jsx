@@ -149,8 +149,6 @@ export default function App() {
   const [camEnabled, setCamEnabled] = useState(true);
   const [micEnabled, setMicEnabled] = useState(true);
   const [roomTopic, setRoomTopic] = useState("");
-  const [roomHashtags, setRoomHashtags] = useState([]);
-  const [hashtagInput, setHashtagInput] = useState("");
   const [isAdultOnly, setIsAdultOnly] = useState(false);
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
@@ -208,18 +206,6 @@ export default function App() {
     const matchCat = selectedCategory === "All" || t.category === selectedCategory;
     return matchCat && t.label.toLowerCase().includes(search.toLowerCase());
   });
-
-  function addHashtag() {
-    const tag = hashtagInput.trim().replace(/^#/, "");
-    if (tag && roomHashtags.length < 5 && !roomHashtags.includes(tag)) {
-      setRoomHashtags([...roomHashtags, tag]);
-      setHashtagInput("");
-    }
-  }
-
-  function removeHashtag(tag) {
-    setRoomHashtags(roomHashtags.filter((t) => t !== tag));
-  }
 
   return (
     <div style={S.root}>
@@ -325,7 +311,7 @@ export default function App() {
       <main style={S.main}>
         {screen === "home" && <HomeScreen search={search} setSearch={setSearch} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} filteredTopics={filteredTopics} selectedTopic={selectedTopic} setSelectedTopic={setSelectedTopic} selectedLang={selectedLang} setSelectedLang={setSelectedLang} selectedFormat={selectedFormat} setSelectedFormat={setSelectedFormat} selectedDuration={selectedDuration} setSelectedDuration={setSelectedDuration} isAdultOnly={isAdultOnly} setIsAdultOnly={setIsAdultOnly} findDebate={findDebate} rooms={rooms} joinRoom={joinRoom} />}
         {screen === "settings" && <SettingsScreen settingsLang={settingsLang} setSettingsLang={setSettingsLang} camEnabled={camEnabled} setCamEnabled={setCamEnabled} micEnabled={micEnabled} setMicEnabled={setMicEnabled} />}
-        {screen === "create" && <CreateScreen roomTopic={roomTopic} setRoomTopic={setRoomTopic} roomHashtags={roomHashtags} hashtagInput={hashtagInput} setHashtagInput={setHashtagInput} addHashtag={addHashtag} removeHashtag={removeHashtag} user={user} onCreated={(room) => { setMyRole("debater"); setCurrentRoom(room); setScreen("room"); }} />}
+        {screen === "create" && <CreateScreen roomTopic={roomTopic} setRoomTopic={setRoomTopic} user={user} onCreated={(room) => { setMyRole("debater"); setCurrentRoom(room); setScreen("room"); }} />}
         {screen === "room" && currentRoom && <RoomScreen room={currentRoom} user={user} profile={profile} myRole={myRole} setProfile={setProfile} />}
         {screen === "profile" && user && <ProfileScreen user={user} profile={profile} setProfile={setProfile} />}
         {screen === "lounge" && <LoungeScreen user={user} profile={profile} />}
@@ -1069,7 +1055,7 @@ function Toggle({ value, onChange }) {
   );
 }
 
-function CreateScreen({ roomTopic, setRoomTopic, roomHashtags, hashtagInput, setHashtagInput, addHashtag, removeHashtag, user, onCreated }) {
+function CreateScreen({ roomTopic, setRoomTopic, user, onCreated }) {
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedTopic, setSelectedTopic] = useState(null);
@@ -1083,21 +1069,39 @@ function CreateScreen({ roomTopic, setRoomTopic, roomHashtags, hashtagInput, set
     return matchCat && t.label.toLowerCase().includes(search.toLowerCase());
   });
 
-  async function createRoom() {
-    if (!user) { alert("Please sign in first!"); return; }
-    if (!roomTopic.trim()) { alert("Please enter a room title!"); return; }
-    setCreating(true);
-    const { data } = await supabase.from("rooms").insert({
-      title: roomTopic, topic: selectedTopic?.label, category: selectedTopic?.category,
-      hashtags: roomHashtags, duration: selectedDuration, is_adult_only: adultOnly,
-      host_mode: hostMode, created_by: user.id, status: "waiting",
-    }).select().single();
-    if (data) {
-      await supabase.from("room_members").upsert({ room_id: data.id, user_id: user.id, role: "debater", is_host: true }, { onConflict: "room_id,user_id" });
-      onCreated(data);
-    }
-    setCreating(false);
+async function createRoom() {
+  if (!user) { alert("Please sign in first!"); return; }
+  if (!roomTopic.trim()) { alert("Please enter a room title!"); return; }
+  setCreating(true);
+  const tags = await generateTags(roomTopic);
+  const { data } = await supabase.from("rooms").insert({
+    title: roomTopic, topic: selectedTopic?.label, category: selectedTopic?.category,
+    hashtags: tags, duration: selectedDuration, is_adult_only: adultOnly,
+    host_mode: hostMode, created_by: user.id, status: "waiting",
+  }).select().single();
+  if (data) {
+    await supabase.from("room_members").upsert({ room_id: data.id, user_id: user.id, role: "debater", is_host: true }, { onConflict: "room_id,user_id" });
+    onCreated(data);
   }
+  setCreating(false);
+}
+
+  async function generateTags(title) {
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1000,
+        messages: [{ role: "user", content: `Generate exactly 5 short hashtags (1-2 words each, no # symbol) for a debate room titled: "${title}". Reply ONLY with a JSON array of 5 strings, nothing else.` }]
+      })
+    });
+    const data = await res.json();
+    const text = data.content[0].text.replace(/```json|```/g, "").trim();
+    return JSON.parse(text);
+  } catch { return []; }
+}
 
   return (
     <div style={{ maxWidth: 620, margin: "0 auto", width: "100%" }}>
@@ -1153,20 +1157,9 @@ function CreateScreen({ roomTopic, setRoomTopic, roomHashtags, hashtagInput, set
             <button style={{ marginLeft: "auto", color: "#555" }} onClick={() => setSelectedTopic(null)}>✕</button>
           </div>
         )}
-        <p style={{ ...S.fieldLabel, marginTop: 22 }}>Hashtags <span style={{ color: "#555", fontWeight: 400 }}>({roomHashtags.length}/5)</span></p>
-        <div style={S.searchBox}>
-          <span style={S.searchIcon}>#</span>
-          <input style={S.searchInput} placeholder="Add hashtag…" value={hashtagInput} onChange={e => setHashtagInput(e.target.value)} onKeyDown={e => e.key === "Enter" && addHashtag()} />
-          <button className="hashtag-add" style={S.hashtagAdd} onClick={addHashtag}>Add</button>
-        </div>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 10 }}>
-          {roomHashtags.map(tag => (
-            <span key={tag} style={S.hashtagPill}>#{tag} <button style={{ marginLeft: 6, color: "#666" }} onClick={() => removeHashtag(tag)}>✕</button></span>
-          ))}
         </div>
         <button className="final-btn" style={S.finalBtn} onClick={createRoom} disabled={creating}>{creating ? "Creating…" : "Create Room"}</button>
       </div>
-    </div>
   );
 }
 
@@ -1444,7 +1437,7 @@ function ShopScreen({ user, profile, setProfile }) {
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {items.map(item => {
-            const isOwned = owned.includes(item.id);
+            const isOwned = owned.includes(item.id);CreateScreen
             const currency = tab;
             const balance = currency === "sigs" ? (profile?.sigs || 0) : (profile?.deps || 0);
             const canAfford = balance >= item.price;
