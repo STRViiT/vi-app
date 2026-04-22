@@ -935,6 +935,19 @@ function HomeScreen({ search, setSearch, selectedCategory, setSelectedCategory, 
           <p style={S.hint}>{selectedTopic ? <>Debating: <strong style={{ color: "#fff" }}>{selectedTopic.label}</strong></> : "No topic selected — any topic"}</p>
         </div>
       </div>
+
+      <div style={{ ...S.card, marginTop: 20 }}>
+        <h2 style={S.cardTitle}>Smart Search</h2>
+        <div style={S.searchBox}>
+          <span style={S.searchIcon}>✨</span>
+          <input style={S.searchInput} placeholder="What do you want to debate about?" value={aiSearch} onChange={e => setAiSearch(e.target.value)} onKeyDown={e => e.key === "Enter" && searchWithAI()} />
+          <button onClick={searchWithAI} style={{ padding: "4px 12px", borderRadius: 8, background: aiLoading ? "#333" : "#e63946", color: "#fff", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
+            {aiLoading ? "..." : "Search"}
+          </button>
+        </div>
+        {aiResults !== null && aiResults.length === 0 && <p style={{ fontSize: 12, color: "#555", marginTop: 8 }}>No matching rooms found.</p>}
+      </div>
+
       {(() => {
         const filtered = rooms.filter(r => {
           let score = 0;
@@ -944,7 +957,8 @@ function HomeScreen({ search, setSearch, selectedCategory, setSelectedCategory, 
           if (r.duration === selectedDuration) score += 1;
           return score > 0;
         });
-        const display = filtered.length > 0 ? filtered : rooms;
+        const aiFiltered = aiResults ? rooms.filter(r => aiResults.includes(r.id)) : null;
+const display = aiFiltered ? aiFiltered : (filtered.length > 0 ? filtered : rooms);
         return display.length > 0 ? (
           <div style={{ marginTop: 24 }}>
             <h2 style={{ ...S.cardTitle, marginBottom: 16 }}>
@@ -980,6 +994,31 @@ function HomeScreen({ search, setSearch, selectedCategory, setSelectedCategory, 
       })()}
     </div>
   );
+  const [aiSearch, setAiSearch] = useState("");
+const [aiResults, setAiResults] = useState(null);
+const [aiLoading, setAiLoading] = useState(false);
+
+async function searchWithAI() {
+  if (!aiSearch.trim()) return;
+  setAiLoading(true);
+  try {
+    const roomTitles = rooms.map(r => ({ id: r.id, title: r.title, hashtags: r.hashtags }));
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1000,
+        messages: [{ role: "user", content: `Given these debate rooms: ${JSON.stringify(roomTitles)}\n\nUser wants to debate about: "${aiSearch}"\n\nReturn ONLY a JSON array of room IDs (strings) that are most relevant, sorted by relevance. If none match, return empty array [].` }]
+      })
+    });
+    const data = await res.json();
+    const text = data.content[0].text.replace(/```json|```/g, "").trim();
+    const ids = JSON.parse(text);
+    setAiResults(ids);
+  } catch { setAiResults([]); }
+  setAiLoading(false);
+}
 }
 
 function SettingsScreen({ settingsLang, setSettingsLang, camEnabled, setCamEnabled, micEnabled, setMicEnabled }) {
