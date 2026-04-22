@@ -867,7 +867,8 @@ async function awardSigs() {
 }
 
 function HomeScreen({ search, setSearch, selectedCategory, setSelectedCategory, filteredTopics, selectedTopic, setSelectedTopic, selectedLang, setSelectedLang, selectedFormat, setSelectedFormat, selectedDuration, setSelectedDuration, isAdultOnly, setIsAdultOnly, findDebate, rooms, joinRoom }) {
-         const [aiSearch, setAiSearch] = useState("");
+
+const [aiSearch, setAiSearch] = useState("");
 const [aiResults, setAiResults] = useState(null);
 const [aiLoading, setAiLoading] = useState(false);
 
@@ -1020,27 +1021,6 @@ const display = aiFiltered ? aiFiltered : (filtered.length > 0 ? filtered : room
     </div>
   );
 
-async function searchWithAI() {
-  if (!aiSearch.trim()) return;
-  setAiLoading(true);
-  try {
-    const roomTitles = rooms.map(r => ({ id: r.id, title: r.title, hashtags: r.hashtags }));
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 1000,
-        messages: [{ role: "user", content: `Given these debate rooms: ${JSON.stringify(roomTitles)}\n\nUser wants to debate about: "${aiSearch}"\n\nReturn ONLY a JSON array of room IDs (strings) that are most relevant, sorted by relevance. If none match, return empty array [].` }]
-      })
-    });
-    const data = await res.json();
-    const text = data.content[0].text.replace(/```json|```/g, "").trim();
-    const ids = JSON.parse(text);
-    setAiResults(ids);
-  } catch { setAiResults([]); }
-  setAiLoading(false);
-}
 }
 
 function SettingsScreen({ settingsLang, setSettingsLang, camEnabled, setCamEnabled, micEnabled, setMicEnabled }) {
