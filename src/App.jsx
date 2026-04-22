@@ -877,7 +877,7 @@ async function searchWithAI() {
   setAiLoading(true);
   try {
     const roomTitles = rooms.map(r => ({ id: r.id, title: r.title, hashtags: r.hashtags }));
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
+    const res = await fetch("/api/ai", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -1129,7 +1129,7 @@ async function createRoom() {
 
   async function generateTags(title) {
   try {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
+    const res = await fetch("/api/ai", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
