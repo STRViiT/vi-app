@@ -137,6 +137,259 @@ const SHOP = {
   ]
 };
 
+// ---- SVG ICONS ----
+const Icons = {
+  Trophy: () => (
+    <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+      <path d="M8 11c-2.76 0-5-2.24-5-5V2h10v4c0 2.76-2.24 5-5 5z" stroke="#e63946" strokeWidth="1.4" fill="none"/>
+      <path d="M3 4H1.5C1.5 6.5 3 7.5 3 7.5M13 4h1.5c0 2.5-1.5 3.5-1.5 3.5M8 11v2M5 13h6" stroke="#e63946" strokeWidth="1.4" strokeLinecap="round"/>
+    </svg>
+  ),
+  Skull: () => (
+    <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+      <ellipse cx="8" cy="7" rx="5" ry="5.5" stroke="#555" strokeWidth="1.4"/>
+      <circle cx="6" cy="7" r="1.2" fill="#555"/>
+      <circle cx="10" cy="7" r="1.2" fill="#555"/>
+      <path d="M6 13h4M8 11v2M6 13l-.5 1.5M10 13l.5 1.5" stroke="#555" strokeWidth="1.2" strokeLinecap="round"/>
+    </svg>
+  ),
+  Star: () => (
+    <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+      <path d="M8 2l1.5 4h4l-3.3 2.4 1.3 4L8 10.3 4.5 12.4l1.3-4L2.5 6h4L8 2z" stroke="#888" strokeWidth="1.3" fill="none" strokeLinejoin="round"/>
+    </svg>
+  ),
+  Coin: () => (
+    <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+      <circle cx="8" cy="8" r="6" stroke="#f5a623" strokeWidth="1.4"/>
+      <text x="8" y="12" textAnchor="middle" fontSize="8" fill="#f5a623" fontWeight="700">S</text>
+    </svg>
+  ),
+  Diamond: () => (
+    <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+      <path d="M8 2L14 7l-6 7L2 7z" stroke="#9b59b6" strokeWidth="1.4" fill="none" strokeLinejoin="round"/>
+      <path d="M2 7h12M5 2l-3 5M11 2l3 5M5 2l3 5M11 2l-3 5" stroke="#9b59b6" strokeWidth="1" strokeLinecap="round"/>
+    </svg>
+  ),
+  Home: () => (
+    <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+      <path d="M2 7.5L8 2l6 5.5V14H10.5V10h-5v4H2V7.5z" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinejoin="round"/>
+    </svg>
+  ),
+  Plus: () => (
+    <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+      <rect x="2" y="2" width="12" height="12" rx="3" stroke="currentColor" strokeWidth="1.4" fill="none"/>
+      <path d="M8 5v6M5 8h6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+    </svg>
+  ),
+  Lounge: () => (
+    <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+      <path d="M2 10.5C2 9.1 3.1 8 4.5 8h7c1.4 0 2.5 1.1 2.5 2.5V12H2v-1.5z" stroke="currentColor" strokeWidth="1.4" fill="none"/>
+      <circle cx="5" cy="5" r="2" stroke="currentColor" strokeWidth="1.4" fill="none"/>
+      <circle cx="11" cy="5" r="2" stroke="currentColor" strokeWidth="1.4" fill="none"/>
+    </svg>
+  ),
+  Shop: () => (
+    <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+      <path d="M2 2h2l2.5 7h5L14 4H5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+      <circle cx="7" cy="13.5" r="1" fill="currentColor"/>
+      <circle cx="11" cy="13.5" r="1" fill="currentColor"/>
+    </svg>
+  ),
+  Settings: () => (
+    <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+      <circle cx="8" cy="8" r="2.5" stroke="currentColor" strokeWidth="1.4" fill="none"/>
+      <path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2M3.2 3.2l1.4 1.4M11.4 11.4l1.4 1.4M3.2 12.8l1.4-1.4M11.4 4.6l1.4-1.4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+    </svg>
+  ),
+  Mic: (p) => (
+    <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+      <rect x="5.5" y="1.5" width="5" height="8" rx="2.5" stroke="currentColor" strokeWidth="1.4" fill="none"/>
+      {p?.off && <path d="M2 2l12 12" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>}
+      <path d="M3 8c0 2.76 2.24 5 5 5s5-2.24 5-5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" fill="none"/>
+      <path d="M8 13v2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+    </svg>
+  ),
+  Camera: (p) => (
+    <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+      {p?.off
+        ? <><path d="M2 2l12 12" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/><rect x="1" y="4" width="10" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.4" fill="none"/><path d="M11 6l4-2v8l-4-2" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" fill="none"/></>
+        : <><rect x="1" y="4" width="10" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.4" fill="none"/><path d="M11 6l4-2v8l-4-2" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" fill="none"/></>
+      }
+    </svg>
+  ),
+  Users: () => (
+    <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+      <circle cx="6" cy="5" r="2.5" stroke="currentColor" strokeWidth="1.4" fill="none"/>
+      <path d="M1 14c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" fill="none"/>
+      <circle cx="12" cy="5" r="2" stroke="currentColor" strokeWidth="1.2" fill="none"/>
+      <path d="M12 10c1.66 0 3 1.34 3 3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" fill="none"/>
+    </svg>
+  ),
+  Eye: () => (
+    <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+      <path d="M1 8C2.5 4.5 5 3 8 3s5.5 1.5 7 5c-1.5 3.5-4 5-7 5S2.5 11.5 1 8z" stroke="currentColor" strokeWidth="1.4" fill="none"/>
+      <circle cx="8" cy="8" r="2" stroke="currentColor" strokeWidth="1.4" fill="none"/>
+    </svg>
+  ),
+  Send: () => (
+    <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+      <path d="M14 2L1 7.5 6 8.5M14 2L9 15 6 8.5M14 2L6 8.5" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/>
+    </svg>
+  ),
+  Play: () => (
+    <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+      <path d="M4 2l10 6-10 6V2z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" fill="none"/>
+    </svg>
+  ),
+  Scale: () => (
+    <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+      <path d="M8 2v12M2 2h12" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+      <path d="M2 2l3 6-3 .5M14 2l-3 6 3 .5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M2 8.5c0 1.38 1.34 2.5 3 2.5s3-1.12 3-2.5M8 8.5c0 1.38 1.34 2.5 3 2.5s3-1.12 3-2.5" stroke="currentColor" strokeWidth="1.3" fill="none"/>
+    </svg>
+  ),
+  Flag: () => (
+    <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+      <path d="M3 2v12M3 2h9l-2 4 2 4H3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+    </svg>
+  ),
+  Hash: () => (
+    <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+      <path d="M4 2l-2 12M14 2l-2 12M1 6h14M1 10h14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+    </svg>
+  ),
+  Search: () => (
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+      <circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" strokeWidth="1.5"/>
+      <path d="M10 10l4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+    </svg>
+  ),
+  Sparkle: () => (
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+      <path d="M8 1v3M8 12v3M1 8h3M12 8h3M3.5 3.5l2 2M10.5 10.5l2 2M10.5 3.5l-2 2M5.5 10.5l-2 2" stroke="#e63946" strokeWidth="1.5" strokeLinecap="round"/>
+      <circle cx="8" cy="8" r="2" stroke="#e63946" strokeWidth="1.3" fill="none"/>
+    </svg>
+  ),
+  Back: () => (
+    <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+      <path d="M10 3L5 8l5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  ),
+  Close: () => (
+    <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+      <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+    </svg>
+  ),
+  Edit: () => (
+    <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+      <path d="M11 2l3 3-9 9H2v-3L11 2z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" fill="none"/>
+    </svg>
+  ),
+  Lock: () => (
+    <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+      <rect x="3" y="7" width="10" height="8" rx="2" stroke="currentColor" strokeWidth="1.4" fill="none"/>
+      <path d="M5 7V5a3 3 0 016 0v2" stroke="currentColor" strokeWidth="1.4" fill="none"/>
+    </svg>
+  ),
+  Kick: () => (
+    <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+      <circle cx="6" cy="5" r="3" stroke="currentColor" strokeWidth="1.4" fill="none"/>
+      <path d="M1 14c0-2.76 2.24-5 5-5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" fill="none"/>
+      <path d="M11 10l4-2M11 10l4 2M11 10h3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+    </svg>
+  ),
+  ExternalLink: () => (
+    <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+      <path d="M7 3H3a1 1 0 00-1 1v9a1 1 0 001 1h9a1 1 0 001-1V9" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" fill="none"/>
+      <path d="M10 2h4v4M9 7l5-5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  ),
+};
+
+// ---- PLAYER PROFILE POPUP ----
+function PlayerProfilePopup({ userId, onClose }) {
+  const [data, setData] = useState(null);
+  const [history, setHistory] = useState([]);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    supabase.from("profiles").select("*").eq("id", userId).single().then(({ data }) => { if (data) setData(data); });
+    supabase.from("debate_history").select("*").eq("user_id", userId).order("created_at", { ascending: false }).limit(10).then(({ data }) => { if (data) setHistory(data); });
+    function handleClick(e) { if (ref.current && !ref.current.contains(e.target)) onClose(); }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [userId]);
+
+  const winRate = data && (data.wins || data.losses)
+    ? Math.round((data.wins || 0) / ((data.wins || 0) + (data.losses || 0)) * 100)
+    : 0;
+
+  return (
+    <div ref={ref} style={{
+      position: "fixed", top: "50%", left: "50%", transform: "translate(-50%,-50%)",
+      background: "#131a21", border: "1px solid #2a3a4a", borderRadius: 12, padding: 0,
+      zIndex: 1000, width: 340, boxShadow: "0 20px 60px rgba(0,0,0,0.8)",
+      overflow: "hidden", fontFamily: "'Inter',sans-serif"
+    }}>
+      {/* Steam-style banner */}
+      <div style={{ background: "linear-gradient(135deg,#1b2838,#2a475e)", padding: "20px 20px 0", position: "relative" }}>
+        <button onClick={onClose} style={{ position: "absolute", top: 12, right: 12, color: "#8ba3b4", background: "none", cursor: "pointer" }}>
+          <Icons.Close />
+        </button>
+        <div style={{ display: "flex", gap: 14, alignItems: "flex-end", paddingBottom: 0 }}>
+          {data?.avatar_url
+            ? <img src={data.avatar_url} style={{ width: 64, height: 64, borderRadius: 4, border: "3px solid #66c0f4", flexShrink: 0 }} alt="" />
+            : <div style={{ width: 64, height: 64, borderRadius: 4, background: "#2a475e", border: "3px solid #66c0f4", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26, flexShrink: 0 }}>?</div>
+          }
+          <div style={{ paddingBottom: 14 }}>
+            <p style={{ fontSize: 18, fontWeight: 700, color: "#fff", letterSpacing: "0.5px" }}>{data?.username || "Anonymous"}</p>
+            <div style={{ display: "flex", gap: 6, marginTop: 4 }}>
+              <span style={{ fontSize: 11, background: "#c6d4df22", color: "#66c0f4", padding: "2px 8px", borderRadius: 3, border: "1px solid #66c0f455" }}>
+                {winRate > 60 ? "Expert" : winRate > 40 ? "Regular" : "Newcomer"}
+              </span>
+              {winRate > 0 && <span style={{ fontSize: 11, color: "#8ba3b4" }}>{winRate}% WR</span>}
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* Stats bar */}
+      <div style={{ background: "#1b2838", padding: "12px 20px", borderBottom: "1px solid #2a3a4a", display: "flex", gap: 0 }}>
+        {[
+          { icon: <Icons.Trophy />, val: data?.wins || 0, label: "Wins", color: "#e63946" },
+          { icon: <Icons.Skull />, val: data?.losses || 0, label: "Losses", color: "#8ba3b4" },
+          { icon: <Icons.Coin />, val: data?.sigs || 0, label: "Sigs", color: "#f5a623" },
+          { icon: <Icons.Diamond />, val: data?.deps || 0, label: "Deps", color: "#9b59b6" },
+        ].map((s, i) => (
+          <div key={i} style={{ flex: 1, textAlign: "center", padding: "6px 0", borderRight: i < 3 ? "1px solid #2a3a4a" : "none" }}>
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: 3 }}>{s.icon}</div>
+            <p style={{ fontSize: 16, fontWeight: 700, color: s.color, fontFamily: "'Inter',sans-serif" }}>{s.val}</p>
+            <p style={{ fontSize: 10, color: "#8ba3b4", textTransform: "uppercase", letterSpacing: "0.06em" }}>{s.label}</p>
+          </div>
+        ))}
+      </div>
+      {/* Recent debates */}
+      <div style={{ background: "#131a21", padding: "12px 20px", maxHeight: 180, overflowY: "auto" }}>
+        <p style={{ fontSize: 11, color: "#8ba3b4", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Recent Debates</p>
+        {history.length === 0
+          ? <p style={{ fontSize: 12, color: "#4a6178" }}>No debates yet.</p>
+          : history.slice(0, 6).map(h => (
+            <div key={h.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "5px 0", borderBottom: "1px solid #1e2d3d" }}>
+              <span style={{ fontSize: 12, color: "#c6d4df", flex: 1, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis", maxWidth: 200 }}>{h.topic || "Open Debate"}</span>
+              <span style={{ fontSize: 11, fontWeight: 600, color: h.result === "win" ? "#4caf50" : "#666", marginLeft: 10 }}>{h.result === "win" ? "W" : "L"}</span>
+            </div>
+          ))
+        }
+      </div>
+      {/* Open on new page */}
+      <div style={{ background: "#1b2838", padding: "12px 20px", display: "flex", justifyContent: "flex-end" }}>
+        <button onClick={() => window.open(`/profile/${userId}`, "_blank")} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "#66c0f4", background: "none", cursor: "pointer", fontFamily: "'Inter',sans-serif" }}>
+          <Icons.ExternalLink /> Open full profile
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   const [screen, setScreen] = useState("home");
   const [search, setSearch] = useState("");
@@ -155,6 +408,8 @@ export default function App() {
   const [currentRoom, setCurrentRoom] = useState(null);
   const [myRole, setMyRole] = useState("debater");
   const [rooms, setRooms] = useState([]);
+  const [hashtagFilter, setHashtagFilter] = useState(null);
+  const [profilePopupId, setProfilePopupId] = useState(null);
 
   async function loadProfile(userId) {
     const { data } = await supabase.from("profiles").select("*").eq("id", userId).single();
@@ -207,39 +462,50 @@ export default function App() {
     return matchCat && t.label.toLowerCase().includes(search.toLowerCase());
   });
 
+  // Nav order: Home, Create Room, Lounge, Shop, Settings
+  const NAV_ITEMS = [
+    { id: "home", label: "Home", Icon: Icons.Home },
+    { id: "create", label: "Create Room", Icon: Icons.Plus },
+    { id: "lounge", label: "Lounge", Icon: Icons.Lounge },
+    { id: "shop", label: "Shop", Icon: Icons.Shop },
+    { id: "settings", label: "Settings", Icon: Icons.Settings },
+  ];
+
   return (
     <div style={S.root}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
         ::-webkit-scrollbar { width: 3px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #2a3a4a; border-radius: 4px; }
         input:focus { outline: none; }
         button { cursor: pointer; border: none; background: none; font-family: inherit; }
+
         .chip:hover { background: #fff !important; color: #0a0a0a !important; }
         .chip-sel { background: #fff !important; color: #0a0a0a !important; }
-        .topic-row:hover { background: #1a1a1a !important; }
-        .topic-row-sel { background: #1c1c1c !important; border-left: 2px solid #e63946 !important; }
-        .fmt-btn:hover { background: #1a1a1a !important; border-color: #555 !important; }
+        .topic-row:hover { background: #1a2634 !important; }
+        .topic-row-sel { background: #1a2634 !important; border-left: 2px solid #e63946 !important; }
+        .fmt-btn:hover { background: #1a2634 !important; border-color: #3a5268 !important; }
         .fmt-sel { background: #fff !important; color: #0a0a0a !important; border-color: #fff !important; }
-        .dur-btn:hover { background: #1a1a1a !important; border-color: #555 !important; }
+        .dur-btn:hover { background: #1a2634 !important; border-color: #3a5268 !important; }
         .dur-sel { background: #e63946 !important; color: #fff !important; border-color: #e63946 !important; }
-        .lang-btn:hover { border-color: #555 !important; background: #1a1a1a !important; }
-        .lang-sel { border-color: #e63946 !important; background: #1a0a0b !important; color: #e63946 !important; }
-        .connect-btn:hover { background: #e63946 !important; transform: translateY(-1px); }
-        .nav-btn { transition: color 0.15s; }
-        .nav-btn:hover { color: #fff !important; }
-        .nav-sel { color: #fff !important; }
-        .hashtag-add:hover { background: #e63946 !important; color: #fff !important; }
-        .final-btn:hover { background: #e63946 !important; }
-        .toggle-track { transition: background 0.2s; }
-        .toggle-thumb { transition: left 0.2s; }
-        .signin-btn:hover { background: #f0f0f0 !important; }
-        .signout-btn:hover { color: #ff6b6b !important; }
-        .profile-avatar { border-radius: 50%; width: 32px; height: 32px; object-fit: cover; border: 2px solid #333; cursor: pointer; transition: border-color 0.15s; }
-        .profile-avatar:hover { border-color: #e63946 !important; }
-        .room-card:hover { border-color: #333 !important; background: #161616 !important; }
+        .lang-btn:hover { border-color: #3a5268 !important; background: #1a2634 !important; }
+        .lang-sel { border-color: #e63946 !important; background: #2a1520 !important; color: #e63946 !important; }
+        .connect-btn:hover { background: #e63946 !important; color: #fff !important; transform: translateY(-1px); }
+        .hashtag-pill:hover { border-color: #e63946 !important; color: #e63946 !important; cursor: pointer; }
+        .hashtag-pill-active { border-color: #e63946 !important; color: #e63946 !important; background: #2a1520 !important; }
+        .nav-item { transition: all 0.15s; position: relative; }
+        .nav-item:hover .nav-label { color: #c6d4df !important; }
+        .nav-item:hover .nav-icon { color: #c6d4df !important; }
+        .nav-sel .nav-label { color: #fff !important; }
+        .nav-sel .nav-icon { color: #e63946 !important; }
+        .nav-sel::after { content: ''; position: absolute; bottom: -16px; left: 50%; transform: translateX(-50%); width: 20px; height: 2px; background: #e63946; border-radius: 2px; }
+        .signin-btn:hover { background: #c6d4df !important; }
+        .signout-btn:hover { color: #e63946 !important; }
+        .profile-avatar { border-radius: 4px; width: 34px; height: 34px; object-fit: cover; border: 2px solid #2a475e; cursor: pointer; transition: border-color 0.15s; }
+        .profile-avatar:hover { border-color: #66c0f4 !important; }
+        .room-card:hover { border-color: #2a3a4a !important; background: #131a21 !important; }
         .join-btn:hover { background: #e63946 !important; color: #fff !important; border-color: #e63946 !important; }
         .judge-btn:hover { background: #f5a623 !important; color: #000 !important; border-color: #f5a623 !important; }
         .send-btn:hover { background: #c0303a !important; }
@@ -248,6 +514,7 @@ export default function App() {
         .vote-btn:hover { opacity: 0.85; }
         .timer-urgent { animation: pulse 1s infinite; }
         .save-btn:hover { background: #c0303a !important; }
+        .player-name-btn:hover { color: #66c0f4 !important; text-decoration: underline; cursor: pointer; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         @keyframes msgIn { from { opacity: 0; transform: translateY(8px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
         .msg-animate { animation: msgIn 0.18s ease-out; }
@@ -255,6 +522,8 @@ export default function App() {
         .coin-animate { animation: coinPop 0.6s ease-out; }
         @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .fade-up { animation: fadeSlideUp 0.4s ease-out; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+        .slide-down { animation: slideDown 0.2s ease-out; }
         @media (max-width: 768px) {
           .mobile-grid { grid-template-columns: 1fr !important; }
           .mobile-header { padding: 12px 16px !important; flex-wrap: wrap; gap: 8px; }
@@ -264,68 +533,109 @@ export default function App() {
         }
       `}</style>
 
+      {/* HEADER — Discord/gaming style */}
       <header style={S.header}>
-        <div style={S.logo}><span style={S.logoVi}>Vi</span></div>
+        {/* Logo */}
+        <div style={S.logo}>
+          <span style={S.logoVi}>Vi</span>
+          <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#e63946", marginLeft: 4, alignSelf: "flex-start", marginTop: 4 }} />
+        </div>
+
+        {/* Nav */}
         <nav style={S.nav}>
           {screen === "room" ? (
-            <button className="nav-btn" style={S.navBtn} onClick={async () => {
-              if (currentRoom && user) {
-                await supabase.from("room_members").delete().eq("room_id", currentRoom.id).eq("user_id", user.id);
-                await new Promise(r => setTimeout(r, 300));
-                const { data: remaining } = await supabase.from("room_members").select("user_id").eq("room_id", currentRoom.id);
-                if (!remaining || remaining.length === 0) {
-                  await supabase.from("rooms").update({ status: "closed" }).eq("id", currentRoom.id);
+            <button className="nav-item" style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 13, color: "#8ba3b4", fontFamily: "'Inter',sans-serif", padding: "6px 10px", background: "#1b2838", borderRadius: 6, border: "1px solid #2a3a4a" }}
+              onClick={async () => {
+                if (currentRoom && user) {
+                  await supabase.from("room_members").delete().eq("room_id", currentRoom.id).eq("user_id", user.id);
+                  await new Promise(r => setTimeout(r, 300));
+                  const { data: remaining } = await supabase.from("room_members").select("user_id").eq("room_id", currentRoom.id);
+                  if (!remaining || remaining.length === 0) {
+                    await supabase.from("rooms").update({ status: "closed" }).eq("id", currentRoom.id);
+                  }
                 }
-              }
-              setScreen("home"); setCurrentRoom(null); setMyRole("debater"); loadRooms();
-            }}>← Back</button>
+                setScreen("home"); setCurrentRoom(null); setMyRole("debater"); loadRooms();
+              }}>
+              <Icons.Back /> <span>Back</span>
+            </button>
           ) : (
-           ["home", "lounge", "create", "shop", "settings"].map(s => (
-              <button key={s} className={`nav-btn ${screen === s ? "nav-sel" : ""}`} style={S.navBtn} onClick={() => setScreen(s)}>
-                {s === "home" ? "Home" : s === "lounge" ? "Lounge" : s === "create" ? "Create Room" : s === "shop" ? "Shop" : "Settings"}
+            NAV_ITEMS.map(({ id, label, Icon }) => (
+              <button key={id} className={`nav-item ${screen === id ? "nav-sel" : ""}`}
+                style={{ display: "flex", alignItems: "center", gap: 7, padding: "6px 2px", background: "none", fontFamily: "'Inter',sans-serif" }}
+                onClick={() => setScreen(id)}>
+                <span className="nav-icon" style={{ color: screen === id ? "#e63946" : "#8ba3b4", display: "flex", transition: "color 0.15s" }}>
+                  <Icon />
+                </span>
+                <span className="nav-label" style={{ fontSize: 13, fontWeight: 500, color: screen === id ? "#fff" : "#8ba3b4", transition: "color 0.15s" }}>
+                  {label}
+                </span>
               </button>
             ))
           )}
         </nav>
+
+        {/* User area */}
         {user ? (
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {profile?.avatar_url && <img src={profile.avatar_url} className="profile-avatar" alt="avatar" onClick={() => setScreen("profile")} />}
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            {profile?.avatar_url && (
+              <img src={profile.avatar_url} className="profile-avatar" alt="avatar" onClick={() => setScreen("profile")} />
+            )}
             <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", cursor: "pointer" }} onClick={() => setScreen("profile")}>
-              <span style={{ fontSize: 13, color: "#fff", fontWeight: 600 }}>{profile?.username || user.email}</span>
-              <div style={{ display: "flex", gap: 8 }}>
-                <span style={{ fontSize: 11, color: "#e63946" }}>🏆 {profile?.wins || 0}W</span>
-                <span style={{ fontSize: 11, color: "#555" }}>{profile?.losses || 0}L</span>
-                <span style={{ fontSize: 11, color: "#f5a623" }}>🪙 {profile?.sigs || 0}</span>
-<span style={{ fontSize: 11, color: "#9b59b6" }}>💎 {profile?.deps || 0}</span>
+              <span style={{ fontSize: 13, color: "#c6d4df", fontWeight: 600, fontFamily: "'Inter',sans-serif" }}>
+                {profile?.username || user.email}
+              </span>
+              {/* Stats — basic clean font */}
+              <div style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 2 }}>
+                <span style={{ display: "flex", alignItems: "center", gap: 3, fontSize: 11, color: "#e63946", fontFamily: "'Inter',sans-serif" }}>
+                  <Icons.Trophy /> {profile?.wins || 0}W
+                </span>
+                <span style={{ display: "flex", alignItems: "center", gap: 3, fontSize: 11, color: "#666", fontFamily: "'Inter',sans-serif" }}>
+                  <Icons.Skull /> {profile?.losses || 0}L
+                </span>
+                <span style={{ display: "flex", alignItems: "center", gap: 3, fontSize: 11, color: "#f5a623", fontFamily: "'Inter',sans-serif" }}>
+                  <Icons.Coin /> {profile?.sigs || 0}
+                </span>
+                <span style={{ display: "flex", alignItems: "center", gap: 3, fontSize: 11, color: "#9b59b6", fontFamily: "'Inter',sans-serif" }}>
+                  <Icons.Diamond /> {profile?.deps || 0}
+                </span>
               </div>
             </div>
-            <button className="signout-btn" onClick={signOut} style={{ fontSize: 13, color: "#555", fontFamily: "'Inter',sans-serif", transition: "color 0.15s" }}>Sign out</button>
+            <button className="signout-btn" onClick={signOut} style={{ fontSize: 12, color: "#4a6178", fontFamily: "'Inter',sans-serif", transition: "color 0.15s", padding: "0 4px" }}>Sign out</button>
           </div>
         ) : (
-          <button className="signin-btn" onClick={signInWithGoogle} style={{ padding: "8px 18px", background: "#fff", color: "#0a0a0a", borderRadius: 8, fontSize: 13, fontWeight: 600, fontFamily: "'Inter',sans-serif" }}>
+          <button className="signin-btn" onClick={signInWithGoogle} style={{ padding: "8px 18px", background: "#c6d4df", color: "#0a0a0a", borderRadius: 6, fontSize: 13, fontWeight: 600, fontFamily: "'Inter',sans-serif", transition: "background 0.15s" }}>
             Sign in with Google
           </button>
         )}
       </header>
 
       <main style={S.main}>
-        {screen === "home" && <HomeScreen search={search} setSearch={setSearch} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} filteredTopics={filteredTopics} selectedTopic={selectedTopic} setSelectedTopic={setSelectedTopic} selectedLang={selectedLang} setSelectedLang={setSelectedLang} selectedFormat={selectedFormat} setSelectedFormat={setSelectedFormat} selectedDuration={selectedDuration} setSelectedDuration={setSelectedDuration} isAdultOnly={isAdultOnly} setIsAdultOnly={setIsAdultOnly} findDebate={findDebate} rooms={rooms} joinRoom={joinRoom} />}
+        {screen === "home" && <HomeScreen search={search} setSearch={setSearch} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} filteredTopics={filteredTopics} selectedTopic={selectedTopic} setSelectedTopic={setSelectedTopic} selectedLang={selectedLang} setSelectedLang={setSelectedLang} selectedFormat={selectedFormat} setSelectedFormat={setSelectedFormat} selectedDuration={selectedDuration} setSelectedDuration={setSelectedDuration} isAdultOnly={isAdultOnly} setIsAdultOnly={setIsAdultOnly} findDebate={findDebate} rooms={rooms} joinRoom={joinRoom} hashtagFilter={hashtagFilter} setHashtagFilter={setHashtagFilter} />}
         {screen === "settings" && <SettingsScreen settingsLang={settingsLang} setSettingsLang={setSettingsLang} camEnabled={camEnabled} setCamEnabled={setCamEnabled} micEnabled={micEnabled} setMicEnabled={setMicEnabled} />}
         {screen === "create" && <CreateScreen roomTopic={roomTopic} setRoomTopic={setRoomTopic} user={user} onCreated={(room) => { setMyRole("debater"); setCurrentRoom(room); setScreen("room"); }} />}
-        {screen === "room" && currentRoom && <RoomScreen room={currentRoom} user={user} profile={profile} myRole={myRole} setProfile={setProfile} />}
+        {screen === "room" && currentRoom && <RoomScreen room={currentRoom} user={user} profile={profile} myRole={myRole} setProfile={setProfile} onViewProfile={(uid) => setProfilePopupId(uid)} />}
         {screen === "profile" && user && <ProfileScreen user={user} profile={profile} setProfile={setProfile} />}
         {screen === "lounge" && <LoungeScreen user={user} profile={profile} />}
         {screen === "shop" && user && <ShopScreen user={user} profile={profile} setProfile={setProfile} />}
       </main>
+
+      {/* Player profile popup overlay */}
+      {profilePopupId && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 999 }}>
+          <PlayerProfilePopup userId={profilePopupId} onClose={() => setProfilePopupId(null)} />
+        </div>
+      )}
     </div>
   );
 }
 
+// ===================== STEAM-STYLE PROFILE SCREEN =====================
 function ProfileScreen({ user, profile, setProfile }) {
   const [username, setUsername] = useState(profile?.username || "");
   const [saving, setSaving] = useState(false);
   const [history, setHistory] = useState([]);
   const [saved, setSaved] = useState(false);
+  const [activeTab, setActiveTab] = useState("overview");
 
   useEffect(() => {
     supabase.from("debate_history").select("*").eq("user_id", user.id).order("created_at", { ascending: false }).limit(20).then(({ data }) => { if (data) setHistory(data); });
@@ -342,55 +652,125 @@ function ProfileScreen({ user, profile, setProfile }) {
     setSaving(false);
   }
 
-  const winRate = (profile?.wins || profile?.losses) ? Math.round(((profile?.wins || 0) / ((profile?.wins || 0) + (profile?.losses || 0))) * 100) : 0;
+  const winRate = (profile?.wins || profile?.losses)
+    ? Math.round(((profile?.wins || 0) / ((profile?.wins || 0) + (profile?.losses || 0))) * 100)
+    : 0;
+
+  const totalDebates = (profile?.wins || 0) + (profile?.losses || 0);
+  const level = Math.floor(totalDebates / 5) + 1;
+  const levelProgress = (totalDebates % 5) / 5 * 100;
+  const rankLabel = winRate >= 70 ? "Grandmaster" : winRate >= 55 ? "Diamond" : winRate >= 45 ? "Gold" : winRate >= 35 ? "Silver" : "Bronze";
+  const rankColor = winRate >= 70 ? "#f5a623" : winRate >= 55 ? "#66c0f4" : winRate >= 45 ? "#f5a623" : winRate >= 35 ? "#aaa" : "#cd7f32";
 
   return (
-    <div style={{ maxWidth: 580, margin: "0 auto", width: "100%" }}>
-      <div style={S.card}>
-        <div style={{ display: "flex", alignItems: "center", gap: 20, marginBottom: 28 }}>
-          {profile?.avatar_url ? (
-            <img src={profile.avatar_url} style={{ width: 80, height: 80, borderRadius: "50%", border: "3px solid #e63946" }} alt="avatar" />
-          ) : (
-            <div style={{ width: 80, height: 80, borderRadius: "50%", background: "#222", border: "3px solid #333", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 32 }}>👤</div>
-          )}
-          <div>
-            <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: 24, fontWeight: 700, color: "#fff" }}>{profile?.username || "Anonymous"}</h2>
-            <p style={{ fontSize: 12, color: "#555", marginTop: 4 }}>{user.email}</p>
-            {winRate > 0 && <p style={{ fontSize: 12, color: "#f5a623", marginTop: 4 }}>Win rate: {winRate}%</p>}
+    <div style={{ maxWidth: 860, margin: "0 auto", width: "100%", fontFamily: "'Inter',sans-serif" }}>
+      {/* Steam-style profile banner */}
+      <div style={{ background: "linear-gradient(160deg, #1b2838 0%, #2a475e 50%, #1b2838 100%)", borderRadius: "12px 12px 0 0", padding: "32px 32px 0", border: "1px solid #2a3a4a", borderBottom: "none", position: "relative", overflow: "hidden" }}>
+        {/* Decorative grid lines */}
+        <div style={{ position: "absolute", inset: 0, backgroundImage: "repeating-linear-gradient(0deg,transparent,transparent 40px,#ffffff08 40px,#ffffff08 41px),repeating-linear-gradient(90deg,transparent,transparent 40px,#ffffff08 40px,#ffffff08 41px)", pointerEvents: "none" }} />
+        <div style={{ display: "flex", gap: 24, alignItems: "flex-end", position: "relative" }}>
+          {/* Avatar */}
+          <div style={{ flexShrink: 0 }}>
+            {profile?.avatar_url
+              ? <img src={profile.avatar_url} style={{ width: 96, height: 96, borderRadius: 6, border: "3px solid #66c0f4", display: "block" }} alt="avatar" />
+              : <div style={{ width: 96, height: 96, borderRadius: 6, background: "#2a475e", border: "3px solid #66c0f4", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 40 }}>?</div>
+            }
+            {/* Online indicator */}
+            <div style={{ width: 12, height: 12, borderRadius: "50%", background: "#4caf50", border: "2px solid #1b2838", marginTop: -6, marginLeft: 82 }} />
+          </div>
+          <div style={{ paddingBottom: 20, flex: 1 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <h1 style={{ fontSize: 28, fontWeight: 700, color: "#fff", letterSpacing: "-0.5px" }}>{profile?.username || "Anonymous"}</h1>
+              <span style={{ fontSize: 11, background: rankColor + "22", color: rankColor, padding: "3px 10px", borderRadius: 4, border: `1px solid ${rankColor}55`, fontWeight: 600, letterSpacing: "0.06em" }}>{rankLabel}</span>
+            </div>
+            <p style={{ fontSize: 12, color: "#8ba3b4", marginTop: 4 }}>{user.email}</p>
+            {/* Level bar */}
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 12 }}>
+              <span style={{ fontSize: 11, color: "#66c0f4", fontWeight: 600 }}>Lvl {level}</span>
+              <div style={{ flex: 1, height: 6, background: "#2a475e", borderRadius: 3, maxWidth: 180 }}>
+                <div style={{ height: "100%", width: `${levelProgress}%`, background: "linear-gradient(90deg,#e63946,#f5a623)", borderRadius: 3, transition: "width 0.5s" }} />
+              </div>
+              <span style={{ fontSize: 10, color: "#4a6178" }}>{totalDebates % 5}/5 to Lvl {level + 1}</span>
+            </div>
           </div>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 12, marginBottom: 28 }}>
-          {[
-            { label: "Wins", value: profile?.wins || 0, color: "#e63946", icon: "🏆" },
-            { label: "Losses", value: profile?.losses || 0, color: "#555", icon: "💀" },
-            { label: "Points", value: profile?.points || 0, color: "#888", icon: "⭐" },
-            { label: "sigs", value: profile?.sigs || 0, color: "#f5a623", icon: "🪙" },
-          ].map(stat => (
-            <div key={stat.label} style={{ background: "#0a0a0a", borderRadius: 12, padding: "14px 0", textAlign: "center", border: "1px solid #222" }}>
-              <p style={{ fontSize: 18 }}>{stat.icon}</p>
-              <p style={{ fontSize: 22, fontWeight: 800, fontFamily: "'Syne',sans-serif", color: stat.color, marginTop: 4 }}>{stat.value}</p>
-              <p style={{ fontSize: 10, color: "#555", marginTop: 4, textTransform: "uppercase", letterSpacing: "0.08em" }}>{stat.label}</p>
-            </div>
+        {/* Tab bar */}
+        <div style={{ display: "flex", gap: 0, marginTop: 16, position: "relative" }}>
+          {["overview", "history", "settings"].map(tab => (
+            <button key={tab} onClick={() => setActiveTab(tab)} style={{ padding: "10px 20px", fontSize: 13, fontWeight: 500, color: activeTab === tab ? "#fff" : "#8ba3b4", background: activeTab === tab ? "#131a21" : "transparent", borderBottom: activeTab === tab ? "2px solid #e63946" : "2px solid transparent", fontFamily: "'Inter',sans-serif", transition: "all 0.15s", textTransform: "capitalize" }}>
+              {tab}
+            </button>
           ))}
         </div>
-        <p style={S.fieldLabel}>Username</p>
-        <div style={{ display: "flex", gap: 10 }}>
-          <input style={{ ...S.textInput, flex: 1 }} value={username} onChange={e => setUsername(e.target.value)} placeholder="Enter username (max 15)" maxLength={15} onKeyDown={e => e.key === "Enter" && saveUsername()} />
-          <button className="save-btn" onClick={saveUsername} disabled={saving} style={{ padding: "10px 20px", background: saved ? "#4caf50" : "#e63946", color: "#fff", borderRadius: 10, fontSize: 13, fontWeight: 600, fontFamily: "'Inter',sans-serif", cursor: "pointer", transition: "background 0.2s", minWidth: 70 }}>
-            {saving ? "…" : saved ? "✓" : "Save"}
-          </button>
-        </div>
-        <p style={{ ...S.fieldLabel, marginTop: 28 }}>Debate History {history.length > 0 && <span style={{ color: "#444", fontWeight: 400 }}>({history.length})</span>}</p>
-        {history.length === 0 ? (
-          <p style={{ fontSize: 13, color: "#444", padding: "12px 0" }}>No debates yet — join your first debate!</p>
-        ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            {history.map(h => (
-              <div key={h.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", background: "#0a0a0a", borderRadius: 10, border: "1px solid #222" }}>
-                <span style={{ fontSize: 13, color: "#ccc" }}>{h.topic || "Open Debate"}</span>
-                <span style={{ fontSize: 12, color: h.result === "win" ? "#e63946" : "#555", fontWeight: 600 }}>{h.result === "win" ? "🏆 Win" : "💀 Loss"}</span>
+      </div>
+
+      {/* Tab content */}
+      <div style={{ background: "#131a21", border: "1px solid #2a3a4a", borderTop: "none", borderRadius: "0 0 12px 12px", padding: 28 }}>
+        {activeTab === "overview" && (
+          <div>
+            {/* Stats grid */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12, marginBottom: 28 }}>
+              {[
+                { icon: <Icons.Trophy />, val: profile?.wins || 0, label: "Wins", color: "#e63946", bg: "#2a1520" },
+                { icon: <Icons.Skull />, val: profile?.losses || 0, label: "Losses", color: "#8ba3b4", bg: "#1b2838" },
+                { icon: <Icons.Coin />, val: profile?.sigs || 0, label: "Sigs", color: "#f5a623", bg: "#241f0f" },
+                { icon: <Icons.Diamond />, val: profile?.deps || 0, label: "Deps", color: "#9b59b6", bg: "#1e1228" },
+              ].map(stat => (
+                <div key={stat.label} style={{ background: stat.bg, borderRadius: 8, padding: "16px 12px", textAlign: "center", border: "1px solid #2a3a4a" }}>
+                  <div style={{ display: "flex", justifyContent: "center", marginBottom: 6 }}>{stat.icon}</div>
+                  <p style={{ fontSize: 24, fontWeight: 700, color: stat.color, fontFamily: "'Inter',sans-serif" }}>{stat.val}</p>
+                  <p style={{ fontSize: 10, color: "#4a6178", marginTop: 4, textTransform: "uppercase", letterSpacing: "0.08em" }}>{stat.label}</p>
+                </div>
+              ))}
+            </div>
+            {/* Win rate bar */}
+            {totalDebates > 0 && (
+              <div style={{ background: "#1b2838", borderRadius: 8, padding: "16px 20px", border: "1px solid #2a3a4a", marginBottom: 20 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                  <span style={{ fontSize: 12, color: "#8ba3b4", fontWeight: 600 }}>Win Rate</span>
+                  <span style={{ fontSize: 18, fontWeight: 700, color: winRate >= 50 ? "#4caf50" : "#e63946", fontFamily: "'Inter',sans-serif" }}>{winRate}%</span>
+                </div>
+                <div style={{ height: 8, background: "#2a3a4a", borderRadius: 4 }}>
+                  <div style={{ height: "100%", width: `${winRate}%`, background: winRate >= 50 ? "linear-gradient(90deg,#4caf50,#66bb6a)" : "linear-gradient(90deg,#e63946,#ef5350)", borderRadius: 4, transition: "width 0.5s" }} />
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6 }}>
+                  <span style={{ fontSize: 10, color: "#4a6178" }}>{profile?.wins || 0} wins</span>
+                  <span style={{ fontSize: 10, color: "#4a6178" }}>{totalDebates} total</span>
+                  <span style={{ fontSize: 10, color: "#4a6178" }}>{profile?.losses || 0} losses</span>
+                </div>
               </div>
-            ))}
+            )}
+          </div>
+        )}
+        {activeTab === "history" && (
+          <div>
+            <p style={{ fontSize: 11, color: "#8ba3b4", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 16 }}>Debate History ({history.length})</p>
+            {history.length === 0
+              ? <p style={{ fontSize: 13, color: "#4a6178", padding: "12px 0" }}>No debates yet.</p>
+              : (
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {history.map(h => (
+                    <div key={h.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", background: "#1b2838", borderRadius: 8, border: "1px solid #2a3a4a" }}>
+                      <span style={{ fontSize: 13, color: "#c6d4df" }}>{h.topic || "Open Debate"}</span>
+                      <span style={{ fontSize: 12, color: h.result === "win" ? "#4caf50" : "#e63946", fontWeight: 600, background: h.result === "win" ? "#0d2a0d" : "#2a0d0d", padding: "2px 10px", borderRadius: 4 }}>
+                        {h.result === "win" ? "WIN" : "LOSS"}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )
+            }
+          </div>
+        )}
+        {activeTab === "settings" && (
+          <div>
+            <p style={{ fontSize: 11, color: "#8ba3b4", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 16 }}>Username</p>
+            <div style={{ display: "flex", gap: 10 }}>
+              <input style={{ ...S.textInput, flex: 1 }} value={username} onChange={e => setUsername(e.target.value)} placeholder="Enter username (max 15)" maxLength={15} onKeyDown={e => e.key === "Enter" && saveUsername()} />
+              <button className="save-btn" onClick={saveUsername} disabled={saving} style={{ padding: "10px 20px", background: saved ? "#4caf50" : "#e63946", color: "#fff", borderRadius: 8, fontSize: 13, fontWeight: 600, fontFamily: "'Inter',sans-serif", cursor: "pointer", transition: "background 0.2s", minWidth: 70 }}>
+                {saving ? "…" : saved ? "Saved" : "Save"}
+              </button>
+            </div>
           </div>
         )}
       </div>
@@ -419,8 +799,8 @@ function Timer({ duration, startedAt }) {
   const secs = timeLeft % 60;
   const isUrgent = timeLeft < 60;
   return (
-    <span className={isUrgent ? "timer-urgent" : ""} style={{ fontFamily: "'Syne',sans-serif", fontSize: 18, fontWeight: 700, color: isUrgent ? "#e63946" : "#fff" }}>
-      {timeLeft === 0 ? "⏱ Time's up!" : `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`}
+    <span className={isUrgent ? "timer-urgent" : ""} style={{ fontFamily: "'Rajdhani',sans-serif", fontSize: 20, fontWeight: 700, color: isUrgent ? "#e63946" : "#c6d4df", letterSpacing: "2px" }}>
+      {timeLeft === 0 ? "TIME'S UP" : `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`}
     </span>
   );
 }
@@ -430,88 +810,54 @@ function EndScreen({ room, debaters, votes, user, onBack }) {
   const [coinAnim, setCoinAnim] = useState(false);
   const voteCount = {};
   votes.forEach(v => { voteCount[v.voted_for] = (voteCount[v.voted_for] || 0) + 1; });
-
   const sorted = [...debaters].sort((a, b) => (voteCount[b.user_id] || 0) - (voteCount[a.user_id] || 0));
   const winner = sorted[0];
-  const isWinner = winner?.user_id === user?.id;
   const myVotes = voteCount[user?.id] || 0;
   const mysigs = myVotes * 100;
-
   useEffect(() => { setTimeout(() => setCoinAnim(true), 600); }, []);
 
   return (
     <div style={{ maxWidth: 500, margin: "0 auto", width: "100%", padding: "40px 20px" }}>
       <div className="fade-up" style={{ ...S.card, textAlign: "center" }}>
-        <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: 28, fontWeight: 800, color: "#fff", marginBottom: 8 }}>
-          Debate Over
-        </h2>
-        <p style={{ fontSize: 13, color: "#555", marginBottom: 28 }}>{room.title}</p>
-
-        {/* Winner announcement */}
+        <h2 style={{ fontFamily: "'Rajdhani',sans-serif", fontSize: 32, fontWeight: 700, color: "#fff", marginBottom: 8, letterSpacing: "1px" }}>DEBATE OVER</h2>
+        <p style={{ fontSize: 13, color: "#8ba3b4", marginBottom: 28 }}>{room.title}</p>
         {votes.length > 0 && winner && (
           <div className="fade-up" style={{ marginBottom: 28 }}>
-            <p style={{ fontSize: 12, color: "#f5a623", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>Winner</p>
+            <p style={{ fontSize: 11, color: "#f5a623", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 8 }}>Winner</p>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12 }}>
-              {winner.profiles?.avatar_url ? <img src={winner.profiles.avatar_url} style={{ width: 48, height: 48, borderRadius: "50%", border: "3px solid #f5a623" }} alt="" /> : <div style={{ width: 48, height: 48, borderRadius: "50%", background: "#222", border: "3px solid #f5a623", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22 }}>👤</div>}
+              {winner.profiles?.avatar_url ? <img src={winner.profiles.avatar_url} style={{ width: 52, height: 52, borderRadius: 4, border: "3px solid #f5a623" }} alt="" /> : <div style={{ width: 52, height: 52, borderRadius: 4, background: "#2a3a4a", border: "3px solid #f5a623", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24 }}>?</div>}
               <div>
-                <p style={{ fontSize: 20, fontWeight: 700, color: "#fff", fontFamily: "'Syne',sans-serif" }}>{winner.profiles?.username || "Anonymous"}</p>
-                <p style={{ fontSize: 13, color: "#f5a623" }}>🏆 {voteCount[winner.user_id] || 0} votes</p>
+                <p style={{ fontSize: 22, fontWeight: 700, color: "#fff", fontFamily: "'Rajdhani',sans-serif", letterSpacing: "0.5px" }}>{winner.profiles?.username || "Anonymous"}</p>
+                <p style={{ fontSize: 13, color: "#f5a623", display: "flex", alignItems: "center", gap: 4 }}><Icons.Scale /> {voteCount[winner.user_id] || 0} votes</p>
               </div>
             </div>
           </div>
         )}
-
-        {votes.length === 0 && (
-          <p style={{ fontSize: 14, color: "#555", marginBottom: 28 }}>No judges voted in this debate.</p>
-        )}
-
-        {/* All debaters stats */}
+        {votes.length === 0 && <p style={{ fontSize: 14, color: "#8ba3b4", marginBottom: 28 }}>No judges voted in this debate.</p>}
         <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 28 }}>
           {sorted.map((m, i) => (
-            <div key={m.user_id} className="fade-up" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", background: m.user_id === user?.id ? "#1a1a2a" : "#0a0a0a", borderRadius: 12, border: `1px solid ${i === 0 && votes.length > 0 ? "#f5a623" : "#222"}`, animationDelay: `${i * 0.15}s` }}>
+            <div key={m.user_id} className="fade-up" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", background: m.user_id === user?.id ? "#1b2838" : "#131a21", borderRadius: 8, border: `1px solid ${i === 0 && votes.length > 0 ? "#f5a623" : "#2a3a4a"}`, animationDelay: `${i * 0.15}s` }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                {m.profiles?.avatar_url ? <img src={m.profiles.avatar_url} style={{ width: 32, height: 32, borderRadius: "50%" }} alt="" /> : <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#222", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>👤</div>}
+                {m.profiles?.avatar_url ? <img src={m.profiles.avatar_url} style={{ width: 32, height: 32, borderRadius: 4 }} alt="" /> : <div style={{ width: 32, height: 32, borderRadius: 4, background: "#2a3a4a", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>?</div>}
                 <div>
-                  <p style={{ fontSize: 14, color: "#fff", fontWeight: 600 }}>{m.profiles?.username || "Anonymous"} {m.user_id === user?.id && <span style={{ fontSize: 10, color: "#444" }}>(you)</span>}</p>
-                  <p style={{ fontSize: 11, color: "#555" }}>{m.is_host ? "🎙️ Host" : "Debater"}</p>
+                  <p style={{ fontSize: 14, color: "#c6d4df", fontWeight: 600 }}>{m.profiles?.username || "Anonymous"} {m.user_id === user?.id && <span style={{ fontSize: 10, color: "#4a6178" }}>(you)</span>}</p>
+                  <p style={{ fontSize: 11, color: "#8ba3b4" }}>{m.is_host ? "HOST" : "Debater"}</p>
                 </div>
               </div>
               <div style={{ textAlign: "right" }}>
-                <p style={{ fontSize: 18, fontWeight: 800, color: i === 0 && votes.length > 0 ? "#f5a623" : "#888", fontFamily: "'Syne',sans-serif" }}>{voteCount[m.user_id] || 0}</p>
-                <p style={{ fontSize: 10, color: "#555" }}>votes</p>
+                <p style={{ fontSize: 22, fontWeight: 700, color: i === 0 && votes.length > 0 ? "#f5a623" : "#4a6178", fontFamily: "'Rajdhani',sans-serif" }}>{voteCount[m.user_id] || 0}</p>
+                <p style={{ fontSize: 10, color: "#4a6178" }}>votes</p>
               </div>
             </div>
           ))}
         </div>
-
-        {/* sigs earned animation */}
         {mysigs > 0 && coinAnim && (
-          <div className="coin-animate" style={{ marginBottom: 24, padding: "16px 20px", background: "#1a1500", borderRadius: 12, border: "1px solid #f5a623" }}>
-            <p style={{ fontSize: 32, fontWeight: 800, color: "#f5a623", fontFamily: "'Syne',sans-serif" }}>🪙 +{mysigs}</p>
-            <p style={{ fontSize: 12, color: "#f5a623", marginTop: 4 }}>sigs earned!</p>
+          <div className="coin-animate" style={{ marginBottom: 24, padding: "16px 20px", background: "#241f0f", borderRadius: 8, border: "1px solid #f5a623" }}>
+            <p style={{ fontSize: 32, fontWeight: 700, color: "#f5a623", fontFamily: "'Rajdhani',sans-serif", letterSpacing: "1px" }}>+{mysigs} SIGS</p>
           </div>
         )}
-
-        {/* Judge votes breakdown */}
-        {votes.length > 0 && (
-          <div style={{ marginBottom: 24 }}>
-            <p style={{ fontSize: 11, color: "#555", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10 }}>Judge Votes ({votes.length})</p>
-            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              {votes.map((v, i) => {
-                const votedFor = debaters.find(d => d.user_id === v.voted_for);
-                return (
-                  <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "6px 12px", background: "#0a0a0a", borderRadius: 8, border: "1px solid #1a1a1a" }}>
-                    <span style={{ fontSize: 12, color: "#888" }}>⚖️ Judge</span>
-                    <span style={{ fontSize: 12, color: "#f5a623" }}>→ {votedFor?.profiles?.username || "Unknown"}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        <button onClick={onBack} style={{ width: "100%", padding: "14px 0", background: "#fff", color: "#0a0a0a", borderRadius: 12, fontSize: 15, fontWeight: 700, fontFamily: "'Syne',sans-serif", cursor: "pointer", transition: "all 0.15s" }}>
-          Back to Home
+        <button onClick={onBack} style={{ width: "100%", padding: "14px 0", background: "#e63946", color: "#fff", borderRadius: 8, fontSize: 15, fontWeight: 700, fontFamily: "'Rajdhani',sans-serif", cursor: "pointer", letterSpacing: "1px" }}>
+          BACK TO HOME
         </button>
       </div>
     </div>
@@ -519,7 +865,7 @@ function EndScreen({ room, debaters, votes, user, onBack }) {
 }
 
 /* ===================== ROOM SCREEN ===================== */
-function RoomScreen({ room, user, profile, myRole, setProfile }) {
+function RoomScreen({ room, user, profile, myRole, setProfile, onViewProfile }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [members, setMembers] = useState([]);
@@ -543,29 +889,19 @@ function RoomScreen({ room, user, profile, myRole, setProfile }) {
   const debaters = members.filter(m => m.role === "debater");
   const judges = members.filter(m => m.role === "judge");
 
-  // Realtime subscriptions
   useEffect(() => {
     loadMessages(); loadMembers(); loadVotes();
     const channel = supabase.channel(`room-${room.id}`)
-      .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages", filter: `room_id=eq.${room.id}` },
-        (payload) => setMessages(prev => [...prev, payload.new]))
-      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "rooms", filter: `id=eq.${room.id}` },
-        (payload) => {
-          if (payload.new.started_at) {
-            const sa = payload.new.started_at;
-            setTimerStarted(sa.endsWith('Z') ? sa : sa + 'Z');
-          }
-          if (payload.new.started) setDebateStarted(true);
-          if (payload.new.status === "closed") setDebateEnded(true);
-        })
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages", filter: `room_id=eq.${room.id}` }, (payload) => setMessages(prev => [...prev, payload.new]))
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "rooms", filter: `id=eq.${room.id}` }, (payload) => {
+        if (payload.new.started_at) { const sa = payload.new.started_at; setTimerStarted(sa.endsWith('Z') ? sa : sa + 'Z'); }
+        if (payload.new.started) setDebateStarted(true);
+        if (payload.new.status === "closed") setDebateEnded(true);
+      })
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "votes", filter: `room_id=eq.${room.id}` }, () => loadVotes())
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "room_members", filter: `room_id=eq.${room.id}` }, () => loadMembers())
       .on("postgres_changes", { event: "DELETE", schema: "public", table: "room_members", filter: `room_id=eq.${room.id}` }, (payload) => {
-        if (payload.old?.user_id === user?.id) {
-          alert("You have been removed from this room.");
-          window.location.reload();
-          return;
-        }
+        if (payload.old?.user_id === user?.id) { alert("You have been removed from this room."); window.location.reload(); return; }
         loadMembers();
       })
       .on("postgres_changes", { event: "UPDATE", schema: "public", table: "room_members", filter: `room_id=eq.${room.id}` }, () => loadMembers())
@@ -573,110 +909,75 @@ function RoomScreen({ room, user, profile, myRole, setProfile }) {
     return () => supabase.removeChannel(channel);
   }, [room.id]);
 
-  // Auto-scroll chat
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
 
-  // Check if kicked
   useEffect(() => {
     if (members.length === 0 || debateEnded) return;
     const meInRoom = members.find(m => m.user_id === user?.id);
-    if (!meInRoom) {
-      alert("You have been removed from this room.");
-      window.location.reload();
-    }
+    if (!meInRoom) { alert("You have been removed from this room."); window.location.reload(); }
   }, [members]);
 
-  // Award sigs when timer runs out
   useEffect(() => {
     if (!timerStarted || sigsAwarded || votes.length === 0) return;
     const totalSeconds = room.duration * 60;
     const elapsed = Math.floor((Date.now() - new Date(timerStarted).getTime()) / 1000);
-    if (elapsed >= totalSeconds) awardsigs();
+    if (elapsed >= totalSeconds) awardSigs();
   }, [timerStarted, votes, sigsAwarded]);
 
-  // Check if all debaters want to end
   useEffect(() => {
     const debaterMembers = members.filter(m => m.role === "debater");
     const allWantEnd = debaterMembers.length >= 2 && debaterMembers.every(m => m.wants_end);
     if (allWantEnd && debateStarted) endDebate();
   }, [members]);
 
-async function awardSigs() {
-  if (sigsAwarded) return;
-  setSigsAwarded(true);
-  const vc = {};
-  votes.forEach(v => { vc[v.voted_for] = (vc[v.voted_for] || 0) + 1; });
-  
-  const maxVotes = Math.max(...debaters.map(d => vc[d.user_id] || 0));
-  
-  for (const debater of debaters) {
-    const votesCast = vc[debater.user_id] || 0;
-    const isWinner = votesCast === maxVotes && votesCast > 0;
-    
-    // Get current profile
-    const { data: prof } = await supabase.from("profiles").select("sigs, deps, win_streak, last_debate_date").eq("id", debater.user_id).single();
-    
-    // Daily bonus check
-    const today = new Date().toISOString().split("T")[0];
-    const isFirstToday = prof?.last_debate_date !== today;
-    const dailyBonus = isFirstToday ? 50 : 0;
-    
-    // Streak calculation
-    let newStreak = isWinner ? (prof?.win_streak || 0) + 1 : 0;
-    let streakMultiplier = 1;
-    if (isWinner && newStreak >= 3) streakMultiplier = 2;
-    else if (isWinner && newStreak >= 2) streakMultiplier = 1.5;
-    
-    // Sigs calculation
-    let sigs = isWinner ? Math.floor(votesCast * 100 * streakMultiplier) : 25;
-    sigs += dailyBonus;
-    
-    // Dep's drop — 8% chance on win
-    let deps = 0;
-    if (isWinner && Math.random() < 0.08) {
-      deps = Math.floor(Math.random() * 11) + 5;
-    }
-    
-    await supabase.from("profiles").update({ 
-      sigs: (prof?.sigs || 0) + sigs,
-      deps: (prof?.deps || 0) + deps,
-      win_streak: newStreak,
-      last_debate_date: today,
-    }).eq("id", debater.user_id);
-    
-    if (debater.user_id === user?.id) {
-      setProfile(prev => ({ ...prev, sigs: (prev?.sigs || 0) + sigs, deps: (prev?.deps || 0) + deps, win_streak: newStreak }));
+  async function awardSigs() {
+    if (sigsAwarded) return;
+    setsigsAwarded(true);
+    const vc = {};
+    votes.forEach(v => { vc[v.voted_for] = (vc[v.voted_for] || 0) + 1; });
+    const maxVotes = Math.max(...debaters.map(d => vc[d.user_id] || 0));
+    for (const debater of debaters) {
+      const votesCast = vc[debater.user_id] || 0;
+      const isWinner = votesCast === maxVotes && votesCast > 0;
+      const { data: prof } = await supabase.from("profiles").select("sigs, deps, win_streak, last_debate_date").eq("id", debater.user_id).single();
+      const today = new Date().toISOString().split("T")[0];
+      const isFirstToday = prof?.last_debate_date !== today;
+      const dailyBonus = isFirstToday ? 50 : 0;
+      let newStreak = isWinner ? (prof?.win_streak || 0) + 1 : 0;
+      let streakMultiplier = 1;
+      if (isWinner && newStreak >= 3) streakMultiplier = 2;
+      else if (isWinner && newStreak >= 2) streakMultiplier = 1.5;
+      let sigs = isWinner ? Math.floor(votesCast * 100 * streakMultiplier) : 25;
+      sigs += dailyBonus;
+      let deps = 0;
+      if (isWinner && Math.random() < 0.08) deps = Math.floor(Math.random() * 11) + 5;
+      await supabase.from("profiles").update({ sigs: (prof?.sigs || 0) + sigs, deps: (prof?.deps || 0) + deps, win_streak: newStreak, last_debate_date: today }).eq("id", debater.user_id);
+      if (debater.user_id === user?.id) setProfile(prev => ({ ...prev, sigs: (prev?.sigs || 0) + sigs, deps: (prev?.deps || 0) + deps, win_streak: newStreak }));
     }
   }
-}
 
   async function loadMessages() {
     const { data } = await supabase.from("messages").select("*, profiles(username, avatar_url)").eq("room_id", room.id).order("created_at", { ascending: true });
     if (data) setMessages(data);
   }
-
   async function loadMembers() {
     const { data } = await supabase.from("room_members").select("*, profiles(username, avatar_url)").eq("room_id", room.id);
     if (data) setMembers(data);
   }
-
   async function loadVotes() {
     const { data } = await supabase.from("votes").select("*").eq("room_id", room.id);
     if (data) { setVotes(data); const mine = data.find(v => v.judge_id === user?.id); if (mine) setMyVote(mine.voted_for); }
   }
-
   async function sendMessage() {
     if (!input.trim() || !user || isJudge) return;
     await supabase.from("messages").insert({ room_id: room.id, user_id: user.id, content: input.trim() });
     setInput("");
   }
-
   async function castVote(debaterId) {
     if (!user || !isJudge || myVote) return;
     await supabase.from("votes").insert({ room_id: room.id, judge_id: user.id, voted_for: debaterId });
     setMyVote(debaterId);
   }
-
   async function toggleCall() {
     if (callActive) { setCallActive(false); setLivekitToken(null); return; }
     try {
@@ -685,35 +986,27 @@ async function awardSigs() {
       setLivekitToken(data.token); setLivekitUrl(data.url); setCallActive(true);
     } catch (e) { alert("Failed to start call."); }
   }
-
   async function startDebate() {
     const now = new Date().toISOString();
     await supabase.from("rooms").update({ started: true, status: "active", started_at: now }).eq("id", room.id);
-    setDebateStarted(true);
-    setTimerStarted(now);
+    setDebateStarted(true); setTimerStarted(now);
   }
-
   async function kickMember(memberId) {
     if (!isCreator) return;
     if (!room.host_mode && debateStarted) return;
     await supabase.from("room_members").delete().eq("room_id", room.id).eq("user_id", memberId);
     loadMembers();
   }
-
   async function endDebate() {
     await supabase.from("rooms").update({ status: "closed" }).eq("id", room.id);
     setDebateEnded(true);
   }
-
   async function voteEnd() {
     await supabase.from("room_members").update({ wants_end: true }).eq("room_id", room.id).eq("user_id", user.id);
     setWantsEnd(true);
   }
 
-  // Show End Screen
-  if (debateEnded) {
-    return <EndScreen room={room} debaters={debaters} votes={votes} user={user} onBack={() => window.location.reload()} />;
-  }
+  if (debateEnded) return <EndScreen room={room} debaters={debaters} votes={votes} user={user} onBack={() => window.location.reload()} />;
 
   const durationLabel = DURATIONS.find(d => d.id === room.duration)?.label || "Standard";
   const voteCount = {};
@@ -723,42 +1016,42 @@ async function awardSigs() {
     <div style={S.roomContainer}>
       <div style={S.roomHeader}>
         <div>
-          <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: 20, fontWeight: 700, color: "#fff", display: "flex", alignItems: "center", gap: 10 }}>
+          <h2 style={{ fontFamily: "'Rajdhani',sans-serif", fontSize: 20, fontWeight: 700, color: "#c6d4df", letterSpacing: "0.5px", display: "flex", alignItems: "center", gap: 10 }}>
             {room.title}
-            {room.is_adult_only && <span style={{ fontSize: 11, background: "#e63946", color: "#fff", padding: "2px 8px", borderRadius: 20, fontFamily: "'Inter',sans-serif" }}>18+</span>}
-            {room.host_mode && <span style={{ fontSize: 11, background: "#e63946", color: "#fff", padding: "2px 8px", borderRadius: 20, fontFamily: "'Inter',sans-serif" }}>🎙️ HOST</span>}
-            {isJudge && <span style={{ fontSize: 11, background: "#f5a623", color: "#000", padding: "2px 8px", borderRadius: 20, fontFamily: "'Inter',sans-serif" }}>⚖️ Judge</span>}
+            {room.is_adult_only && <span style={{ fontSize: 10, background: "#e63946", color: "#fff", padding: "2px 8px", borderRadius: 4, fontFamily: "'Inter',sans-serif", letterSpacing: "0.05em" }}>18+</span>}
+            {room.host_mode && <span style={{ fontSize: 10, background: "#e63946", color: "#fff", padding: "2px 8px", borderRadius: 4, fontFamily: "'Inter',sans-serif" }}>HOST</span>}
+            {isJudge && <span style={{ fontSize: 10, background: "#f5a623", color: "#000", padding: "2px 8px", borderRadius: 4, fontFamily: "'Inter',sans-serif", display: "flex", alignItems: "center", gap: 4 }}><Icons.Scale /> Judge</span>}
           </h2>
-          <p style={{ fontSize: 12, color: "#555", marginTop: 2 }}>{room.format} • {durationLabel} • {debaters.length} debaters • {judges.length} judges</p>
+          <p style={{ fontSize: 11, color: "#4a6178", marginTop: 2 }}>{room.format} · {durationLabel} · {debaters.length} debaters · {judges.length} judges</p>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <button onClick={() => setShowMembers(!showMembers)} style={{ padding: "8px 12px", background: showMembers ? "#222" : "#1a1a1a", color: "#888", borderRadius: 8, fontSize: 13, border: "1px solid #333", cursor: "pointer" }}>
-            👥 {members.length}
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <button onClick={() => setShowMembers(!showMembers)} style={{ ...S.iconBtn, background: showMembers ? "#2a3a4a" : "#1b2838" }}>
+            <Icons.Users /> <span style={{ fontSize: 12, marginLeft: 4 }}>{members.length}</span>
           </button>
           {timerStarted && <Timer duration={room.duration} startedAt={timerStarted} />}
           {!isJudge && (
-            <button onClick={() => setMicOn(!micOn)} style={{ padding: "8px 12px", background: micOn ? "#e63946" : "#1a1a1a", color: micOn ? "#fff" : "#888", borderRadius: 8, fontSize: 13, border: "1px solid #333", cursor: "pointer" }}>
-              {micOn ? "🎙️" : "🔇"}
+            <button onClick={() => setMicOn(!micOn)} style={{ ...S.iconBtn, background: micOn ? "#e63946" : "#1b2838", color: micOn ? "#fff" : "#8ba3b4" }}>
+              <Icons.Mic off={!micOn} />
             </button>
           )}
           {!isJudge && (
-            <button onClick={() => { setCamOn(!camOn); if (!callActive) toggleCall(); }} style={{ padding: "8px 12px", background: camOn ? "#e63946" : "#1a1a1a", color: camOn ? "#fff" : "#888", borderRadius: 8, fontSize: 13, border: "1px solid #333", cursor: "pointer" }}>
-              {camOn ? "📹" : "📷"}
+            <button onClick={() => { setCamOn(!camOn); if (!callActive) toggleCall(); }} style={{ ...S.iconBtn, background: camOn ? "#e63946" : "#1b2838", color: camOn ? "#fff" : "#8ba3b4" }}>
+              <Icons.Camera off={!camOn} />
             </button>
           )}
           {isJudge && (
-            <button onClick={toggleCall} style={{ padding: "8px 14px", background: callActive ? "#333" : "#1a1a1a", color: "#888", borderRadius: 8, fontSize: 12, border: "1px solid #333", cursor: "pointer" }}>
-              {callActive ? "👁 Watching" : "👁 Watch"}
+            <button onClick={toggleCall} style={{ ...S.iconBtn, background: callActive ? "#2a3a4a" : "#1b2838", gap: 6 }}>
+              <Icons.Eye /> <span style={{ fontSize: 12 }}>{callActive ? "Watching" : "Watch"}</span>
             </button>
           )}
           {isCreator && !debateStarted && (
-            <button className="start-debate-btn" onClick={debaters.length >= 2 ? startDebate : null} style={{ padding: "8px 16px", background: debaters.length >= 2 ? "#1a3a1a" : "#1a1a1a", color: debaters.length >= 2 ? "#4caf50" : "#555", borderRadius: 8, fontSize: 13, fontWeight: 600, border: `1px solid ${debaters.length >= 2 ? "#4caf50" : "#333"}`, cursor: debaters.length >= 2 ? "pointer" : "default", transition: "background 0.15s" }}>
-              {debaters.length >= 2 ? "▶ Start" : `▶ Start (${debaters.length}/2)`}
+            <button className="start-debate-btn" onClick={startDebate} style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", background: debaters.length >= 2 ? "#1a3a1a" : "#1b2838", color: debaters.length >= 2 ? "#4caf50" : "#4a6178", borderRadius: 6, fontSize: 12, fontWeight: 600, border: `1px solid ${debaters.length >= 2 ? "#4caf50" : "#2a3a4a"}`, cursor: debaters.length >= 2 ? "pointer" : "default", fontFamily: "'Inter',sans-serif", transition: "background 0.15s" }}>
+              <Icons.Play /> {debaters.length >= 2 ? "Start" : `Start (${debaters.length}/2)`}
             </button>
           )}
           {!isJudge && debateStarted && (
-            <button onClick={voteEnd} style={{ padding: "8px 16px", background: wantsEnd ? "#333" : "#1a0a0a", color: wantsEnd ? "#555" : "#e63946", borderRadius: 8, fontSize: 13, fontWeight: 600, border: "1px solid #e63946", cursor: wantsEnd ? "default" : "pointer" }}>
-              {wantsEnd ? "⏳ Waiting…" : "🏁 End"}
+            <button onClick={voteEnd} style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", background: wantsEnd ? "#2a3a4a" : "#2a1520", color: wantsEnd ? "#4a6178" : "#e63946", borderRadius: 6, fontSize: 12, fontWeight: 600, border: "1px solid #e63946", cursor: wantsEnd ? "default" : "pointer", fontFamily: "'Inter',sans-serif" }}>
+              <Icons.Flag /> {wantsEnd ? "Waiting…" : "End"}
             </button>
           )}
         </div>
@@ -766,22 +1059,23 @@ async function awardSigs() {
 
       {/* Players popup */}
       {showMembers && (
-        <div style={{ position: "absolute", top: 60, right: 20, background: "#111", border: "1px solid #222", borderRadius: 12, padding: 16, zIndex: 20, minWidth: 200, boxShadow: "0 8px 32px rgba(0,0,0,0.5)" }}>
+        <div className="slide-down" style={{ position: "absolute", top: 64, right: 16, background: "#131a21", border: "1px solid #2a3a4a", borderRadius: 10, padding: 16, zIndex: 20, minWidth: 220, boxShadow: "0 12px 40px rgba(0,0,0,0.7)" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-            <span style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>Players</span>
-            <button onClick={() => setShowMembers(false)} style={{ color: "#555", fontSize: 14 }}>✕</button>
+            <span style={{ fontSize: 12, fontWeight: 600, color: "#c6d4df", textTransform: "uppercase", letterSpacing: "0.08em" }}>Players</span>
+            <button onClick={() => setShowMembers(false)} style={{ color: "#4a6178" }}><Icons.Close /></button>
           </div>
           {members.map(m => (
-            <div key={m.user_id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 0", borderBottom: "1px solid #1a1a1a" }}>
-              {m.profiles?.avatar_url ? <img src={m.profiles.avatar_url} style={{ width: 28, height: 28, borderRadius: "50%" }} alt="" /> : <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#222", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>👤</div>}
-              <div>
-                <p style={{ fontSize: 13, color: "#fff", fontWeight: 500 }}>{m.profiles?.username || "Anonymous"}</p>
-                <p style={{ fontSize: 11, color: m.role === "judge" ? "#f5a623" : "#555" }}>
-                  {m.role}
-                  {m.is_host && <span style={{ marginLeft: 6, fontSize: 9, background: "#e63946", color: "#fff", padding: "1px 5px", borderRadius: 8 }}>🎙️ HOST</span>}
+            <div key={m.user_id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "7px 0", borderBottom: "1px solid #1b2838" }}>
+              {m.profiles?.avatar_url ? <img src={m.profiles.avatar_url} style={{ width: 28, height: 28, borderRadius: 4, flexShrink: 0 }} alt="" /> : <div style={{ width: 28, height: 28, borderRadius: 4, background: "#2a3a4a", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, flexShrink: 0 }}>?</div>}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <button className="player-name-btn" onClick={() => onViewProfile && onViewProfile(m.user_id)} style={{ fontSize: 13, color: "#c6d4df", fontWeight: 500, fontFamily: "'Inter',sans-serif", textAlign: "left", transition: "color 0.15s", display: "block", maxWidth: "100%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                  {m.profiles?.username || "Anonymous"}
+                </button>
+                <p style={{ fontSize: 10, color: m.role === "judge" ? "#f5a623" : "#4a6178" }}>
+                  {m.role}{m.is_host && <span style={{ marginLeft: 6, fontSize: 9, background: "#e63946", color: "#fff", padding: "1px 5px", borderRadius: 3 }}>HOST</span>}
                 </p>
               </div>
-              {m.user_id === user?.id && <span style={{ marginLeft: "auto", fontSize: 10, color: "#444" }}>you</span>}
+              {m.user_id === user?.id && <span style={{ fontSize: 10, color: "#4a6178" }}>you</span>}
             </div>
           ))}
         </div>
@@ -789,41 +1083,46 @@ async function awardSigs() {
 
       {/* Judge voting panel */}
       {isJudge && debaters.length > 0 && (
-        <div style={{ padding: "12px 20px", borderBottom: "1px solid #1a1a1a", background: "#0f0f00", display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-          <span style={{ fontSize: 12, color: "#f5a623", fontWeight: 600 }}>⚖️ Vote for winner:</span>
+        <div style={{ padding: "10px 20px", borderBottom: "1px solid #1b2838", background: "#131a21", display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+          <span style={{ fontSize: 11, color: "#f5a623", fontWeight: 600, display: "flex", alignItems: "center", gap: 5 }}><Icons.Scale /> Vote for winner:</span>
           {debaters.map(m => (
             <button key={m.user_id} className="vote-btn" onClick={() => castVote(m.user_id)} disabled={!!myVote}
-              style={{ padding: "6px 16px", borderRadius: 20, fontSize: 13, fontWeight: 600, background: myVote === m.user_id ? "#f5a623" : myVote ? "#1a1a1a" : "#222", color: myVote === m.user_id ? "#000" : myVote ? "#555" : "#fff", border: `1px solid ${myVote === m.user_id ? "#f5a623" : "#333"}`, cursor: myVote ? "default" : "pointer", transition: "all 0.15s", display: "flex", alignItems: "center", gap: 6 }}>
-              {m.profiles?.avatar_url && <img src={m.profiles.avatar_url} style={{ width: 18, height: 18, borderRadius: "50%" }} alt="" />}
-              {m.profiles?.username || "Debater"} <span style={{ fontSize: 11, opacity: 0.7 }}>({voteCount[m.user_id] || 0})</span>
+              style={{ padding: "5px 14px", borderRadius: 6, fontSize: 12, fontWeight: 600, background: myVote === m.user_id ? "#f5a623" : myVote ? "#1b2838" : "#2a3a4a", color: myVote === m.user_id ? "#000" : myVote ? "#4a6178" : "#c6d4df", border: `1px solid ${myVote === m.user_id ? "#f5a623" : "#2a3a4a"}`, cursor: myVote ? "default" : "pointer", transition: "all 0.15s", display: "flex", alignItems: "center", gap: 6, fontFamily: "'Inter',sans-serif" }}>
+              {m.profiles?.avatar_url && <img src={m.profiles.avatar_url} style={{ width: 18, height: 18, borderRadius: 3 }} alt="" />}
+              <button className="player-name-btn" onClick={(e) => { e.stopPropagation(); onViewProfile && onViewProfile(m.user_id); }} style={{ color: "inherit", fontSize: 12, fontFamily: "'Inter',sans-serif" }}>
+                {m.profiles?.username || "Debater"}
+              </button>
+              <span style={{ fontSize: 10, opacity: 0.7 }}>({voteCount[m.user_id] || 0})</span>
             </button>
           ))}
-          {myVote && <span style={{ fontSize: 12, color: "#f5a623" }}>✓ Voted!</span>}
+          {myVote && <span style={{ fontSize: 11, color: "#f5a623" }}>Voted!</span>}
         </div>
       )}
 
       {/* Waiting room with kick */}
       {isCreator && (!debateStarted || room.host_mode) && (
-        <div style={{ padding: "10px 20px", borderBottom: "1px solid #1a1a1a", display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-          <span style={{ fontSize: 11, color: "#555" }}>Waiting room:</span>
+        <div style={{ padding: "8px 20px", borderBottom: "1px solid #1b2838", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+          <span style={{ fontSize: 11, color: "#4a6178" }}>Waiting room:</span>
           {members.filter(m => m.user_id !== user.id).map(m => (
-            <div key={m.user_id} style={{ display: "flex", alignItems: "center", gap: 6, background: "#1a1a1a", borderRadius: 20, padding: "4px 10px" }}>
-              {m.profiles?.avatar_url && <img src={m.profiles.avatar_url} style={{ width: 20, height: 20, borderRadius: "50%" }} alt="" />}
-              <span style={{ fontSize: 12, color: "#ccc" }}>{m.profiles?.username || "User"}</span>
-              <span style={{ fontSize: 10, color: "#555" }}>{m.role}</span>
-              <button className="kick-btn" onClick={() => kickMember(m.user_id)} style={{ fontSize: 11, color: "#555", padding: "2px 6px", borderRadius: 10, border: "1px solid #333", transition: "all 0.15s" }}>✕</button>
+            <div key={m.user_id} style={{ display: "flex", alignItems: "center", gap: 6, background: "#1b2838", borderRadius: 6, padding: "3px 10px 3px 6px", border: "1px solid #2a3a4a" }}>
+              {m.profiles?.avatar_url && <img src={m.profiles.avatar_url} style={{ width: 18, height: 18, borderRadius: 3 }} alt="" />}
+              <button className="player-name-btn" onClick={() => onViewProfile && onViewProfile(m.user_id)} style={{ fontSize: 12, color: "#c6d4df", fontFamily: "'Inter',sans-serif", transition: "color 0.15s" }}>
+                {m.profiles?.username || "User"}
+              </button>
+              <span style={{ fontSize: 10, color: "#4a6178" }}>{m.role}</span>
+              <button className="kick-btn" onClick={() => kickMember(m.user_id)} style={{ display: "flex", alignItems: "center", color: "#4a6178", padding: "1px 4px", borderRadius: 4, border: "1px solid #2a3a4a", transition: "all 0.15s" }}><Icons.Kick /></button>
             </div>
           ))}
-          {members.length < 2 && <span style={{ fontSize: 11, color: "#444" }}>Waiting for opponent…</span>}
+          {members.length < 2 && <span style={{ fontSize: 11, color: "#2a3a4a" }}>Waiting for opponent…</span>}
         </div>
       )}
 
       {/* Votes display */}
       {!isJudge && votes.length > 0 && (
-        <div style={{ padding: "8px 20px", borderBottom: "1px solid #1a1a1a", display: "flex", alignItems: "center", gap: 12 }}>
-          <span style={{ fontSize: 12, color: "#555" }}>⚖️ Votes:</span>
+        <div style={{ padding: "7px 20px", borderBottom: "1px solid #1b2838", display: "flex", alignItems: "center", gap: 12 }}>
+          <span style={{ fontSize: 11, color: "#4a6178", display: "flex", alignItems: "center", gap: 4 }}><Icons.Scale /> Votes:</span>
           {debaters.map(m => (
-            <span key={m.user_id} style={{ fontSize: 12, color: "#888" }}>
+            <span key={m.user_id} style={{ fontSize: 12, color: "#8ba3b4" }}>
               {m.profiles?.username || "Debater"}: <strong style={{ color: "#f5a623" }}>{voteCount[m.user_id] || 0}</strong>
             </span>
           ))}
@@ -832,7 +1131,7 @@ async function awardSigs() {
 
       <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
         {callActive && livekitToken && livekitUrl && (
-          <div style={{ width: "55%", borderRight: "1px solid #1a1a1a", overflow: "hidden" }}>
+          <div style={{ width: "55%", borderRight: "1px solid #1b2838", overflow: "hidden" }}>
             <LiveKitRoom token={livekitToken} serverUrl={livekitUrl} video={camOn && !isJudge} audio={micOn && !isJudge} onDisconnected={() => setCallActive(false)} style={{ height: "100%" }}>
               <VideoConference />
             </LiveKitRoom>
@@ -840,14 +1139,18 @@ async function awardSigs() {
         )}
         <div style={{ display: "flex", flexDirection: "column", flex: 1, overflow: "hidden" }}>
           <div style={S.chatArea}>
-            {isJudge && <div style={{ textAlign: "center", padding: "8px 16px", background: "#0f0f00", borderRadius: 8, fontSize: 12, color: "#f5a623", marginBottom: 8 }}>⚖️ Judge mode — watch and vote only</div>}
-            {!debateStarted && !isJudge && <div style={{ textAlign: "center", padding: "8px 16px", background: "#0a1a0a", borderRadius: 8, fontSize: 12, color: "#4caf50", marginBottom: 8 }}>Waiting for host to start the debate…</div>}
-            {messages.length === 0 && <div style={{ textAlign: "center", color: "#333", fontSize: 13, marginTop: 20 }}>No messages yet.</div>}
+            {isJudge && <div style={{ textAlign: "center", padding: "7px 14px", background: "#131a21", borderRadius: 6, fontSize: 11, color: "#f5a623", marginBottom: 8, border: "1px solid #2a1500" }}>Judge mode — watch and vote only</div>}
+            {!debateStarted && !isJudge && <div style={{ textAlign: "center", padding: "7px 14px", background: "#0d2a0d", borderRadius: 6, fontSize: 11, color: "#4caf50", marginBottom: 8, border: "1px solid #1a3a1a" }}>Waiting for host to start…</div>}
+            {messages.length === 0 && <div style={{ textAlign: "center", color: "#2a3a4a", fontSize: 13, marginTop: 20 }}>No messages yet.</div>}
             {messages.map(msg => (
               <div key={msg.id} className="msg-animate" style={{ ...S.msgRow, flexDirection: msg.user_id === user?.id ? "row-reverse" : "row" }}>
-                {msg.profiles?.avatar_url && <img src={msg.profiles.avatar_url} style={{ width: 28, height: 28, borderRadius: "50%", flexShrink: 0 }} alt="" />}
-                <div style={{ ...S.msgBubble, background: msg.user_id === user?.id ? "#e63946" : "#1a1a1a" }}>
-                  {msg.user_id !== user?.id && <span style={{ fontSize: 11, color: "#888", marginBottom: 2 }}>{msg.profiles?.username || "Anonymous"}</span>}
+                {msg.profiles?.avatar_url && <img src={msg.profiles.avatar_url} style={{ width: 26, height: 26, borderRadius: 4, flexShrink: 0 }} alt="" />}
+                <div style={{ ...S.msgBubble, background: msg.user_id === user?.id ? "#e63946" : "#1b2838" }}>
+                  {msg.user_id !== user?.id && (
+                    <button className="player-name-btn" onClick={() => onViewProfile && onViewProfile(msg.user_id)} style={{ fontSize: 10, color: "#8ba3b4", marginBottom: 2, fontFamily: "'Inter',sans-serif", textAlign: "left", transition: "color 0.15s" }}>
+                      {msg.profiles?.username || "Anonymous"}
+                    </button>
+                  )}
                   <span style={{ fontSize: 14, color: "#fff" }}>{msg.content}</span>
                 </div>
               </div>
@@ -857,7 +1160,9 @@ async function awardSigs() {
           {!isJudge && (
             <div style={S.chatInput}>
               <input style={S.chatInputField} placeholder={debateStarted ? "Type your argument…" : "Waiting for debate to start…"} value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && debateStarted && sendMessage()} disabled={!debateStarted} />
-              <button className="send-btn" style={{ ...S.sendBtn, opacity: debateStarted ? 1 : 0.5 }} onClick={sendMessage} disabled={!debateStarted}>Send</button>
+              <button className="send-btn" style={{ ...S.sendBtn, opacity: debateStarted ? 1 : 0.5, display: "flex", alignItems: "center", gap: 6 }} onClick={sendMessage} disabled={!debateStarted}>
+                <Icons.Send /> <span>Send</span>
+              </button>
             </div>
           )}
         </div>
@@ -866,42 +1171,47 @@ async function awardSigs() {
   );
 }
 
-function HomeScreen({ search, setSearch, selectedCategory, setSelectedCategory, filteredTopics, selectedTopic, setSelectedTopic, selectedLang, setSelectedLang, selectedFormat, setSelectedFormat, selectedDuration, setSelectedDuration, isAdultOnly, setIsAdultOnly, findDebate, rooms, joinRoom }) {
+function HomeScreen({ search, setSearch, selectedCategory, setSelectedCategory, filteredTopics, selectedTopic, setSelectedTopic, selectedLang, setSelectedLang, selectedFormat, setSelectedFormat, selectedDuration, setSelectedDuration, isAdultOnly, setIsAdultOnly, findDebate, rooms, joinRoom, hashtagFilter, setHashtagFilter }) {
+  const [aiSearch, setAiSearch] = useState("");
+  const [aiResults, setAiResults] = useState(null);
+  const [aiLoading, setAiLoading] = useState(false);
 
-const [aiSearch, setAiSearch] = useState("");
-const [aiResults, setAiResults] = useState(null);
-const [aiLoading, setAiLoading] = useState(false);
+  async function searchWithAI() {
+    if (!aiSearch.trim() || rooms.length === 0) return;
+    setAiLoading(true);
+    try {
+      const roomList = rooms.map((r, i) => `${i}: "${r.title}"`).join(", ");
+      const res = await fetch("/api/ai", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: [{ role: "user", content: `Here are debate rooms: [${roomList}]. User wants: "${aiSearch}". Return ONLY a JSON array of index numbers that match, sorted by relevance. Example: [0,2,3]. If none match, return [].` }] })
+      });
+      const data = await res.json();
+      if (data.error) { setAiResults([]); setAiLoading(false); return; }
+      const text = data.content[0].text.replace(/```json|```/g, "").trim();
+      const indices = JSON.parse(text);
+      setAiResults(indices.map(i => rooms[i]?.id).filter(Boolean));
+    } catch (e) { setAiResults([]); }
+    setAiLoading(false);
+  }
 
-async function searchWithAI() {
-  if (!aiSearch.trim() || rooms.length === 0) return;
-  setAiLoading(true);
-  console.log("searchWithAI called", aiSearch, rooms.length);
-  try {
-    const roomList = rooms.map((r, i) => `${i}: "${r.title}"`).join(", ");
-    const res = await fetch("/api/ai", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        messages: [{ role: "user", content: `Here are debate rooms: [${roomList}]. User wants: "${aiSearch}". Return ONLY a JSON array of index numbers that match, sorted by relevance. Example: [0,2,3]. If none match, return [].` }]
-      })
-    });
-const data = await res.json();
-console.log("AI response:", data);
-if (data.error) { console.error("API error:", data.error); setAiResults([]); setAiLoading(false); return; }
-const text = data.content[0].text.replace(/```json|```/g, "").trim();
-    const indices = JSON.parse(text);
-    console.log("Parsed indices:", indices);
-    setAiResults(indices.map(i => rooms[i]?.id).filter(Boolean));
-  } catch (e) { console.error("AI error:", e); setAiResults([]); }
-  setAiLoading(false);
-}
+  // Collect all hashtags from rooms
+  const allHashtags = [...new Set(rooms.flatMap(r => r.hashtags || []))].slice(0, 20);
+
+  // Filter rooms by hashtag
+  const hashtagFilteredRooms = hashtagFilter
+    ? rooms.filter(r => r.hashtags && r.hashtags.includes(hashtagFilter))
+    : null;
+
   return (
     <div>
+      {/* LAYOUT: Topic + Connect side by side */}
       <div style={S.grid}>
+        {/* Topic card */}
         <div style={S.card}>
           <h2 style={S.cardTitle}>Topic</h2>
           <div style={S.searchBox}>
-            <span style={S.searchIcon}>⌕</span>
+            <span style={S.searchIcon}><Icons.Search /></span>
             <input style={S.searchInput} placeholder="Search topics…" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
           <div style={S.chips}>
@@ -919,12 +1229,14 @@ const text = data.content[0].text.replace(/```json|```/g, "").trim();
           </div>
           {selectedTopic && (
             <div style={S.selectedBadge}>
-              <span style={{ color: "#e63946" }}>▶</span>
-              <span style={{ fontWeight: 600, fontSize: 13 }}>{selectedTopic.label}</span>
-              <button style={{ marginLeft: "auto", color: "#555" }} onClick={() => setSelectedTopic(null)}>✕</button>
+              <span style={{ color: "#e63946" }}><Icons.Play /></span>
+              <span style={{ fontWeight: 600, fontSize: 13, color: "#c6d4df" }}>{selectedTopic.label}</span>
+              <button style={{ marginLeft: "auto", color: "#4a6178" }} onClick={() => setSelectedTopic(null)}><Icons.Close /></button>
             </div>
           )}
         </div>
+
+        {/* Connect card */}
         <div style={S.card}>
           <h2 style={S.cardTitle}>Connect</h2>
           <p style={S.fieldLabel}>Size</p>
@@ -951,31 +1263,52 @@ const text = data.content[0].text.replace(/```json|```/g, "").trim();
               </button>
             ))}
           </div>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 18, padding: "10px 14px", background: "#0a0a0a", borderRadius: 10, border: `1px solid ${isAdultOnly ? "#e63946" : "#222"}` }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 18, padding: "10px 14px", background: "#0f1923", borderRadius: 8, border: `1px solid ${isAdultOnly ? "#e63946" : "#2a3a4a"}` }}>
             <div>
-              <p style={{ fontSize: 13, color: isAdultOnly ? "#e63946" : "#888", fontWeight: 600 }}>🔞 18+ Only</p>
-              <p style={{ fontSize: 11, color: "#444", marginTop: 2 }}>Restrict room to adults</p>
+              <p style={{ fontSize: 13, color: isAdultOnly ? "#e63946" : "#8ba3b4", fontWeight: 600 }}>18+ Only</p>
+              <p style={{ fontSize: 11, color: "#4a6178", marginTop: 2 }}>Restrict room to adults</p>
             </div>
             <Toggle value={isAdultOnly} onChange={setIsAdultOnly} />
           </div>
-          <button onClick={() => { setSelectedTopic(null); setSelectedFormat("1v1"); setSelectedDuration(40); setSelectedLang("en"); setIsAdultOnly(false); }} style={{ width: "100%", padding: "10px 0", background: "transparent", color: "#555", borderRadius: 12, fontSize: 13, border: "1px solid #222", marginTop: 12, cursor: "pointer" }}>Reset Filters</button>
+          <button onClick={() => { setSelectedTopic(null); setSelectedFormat("1v1"); setSelectedDuration(40); setSelectedLang("en"); setIsAdultOnly(false); }} style={{ width: "100%", padding: "9px 0", background: "transparent", color: "#4a6178", borderRadius: 8, fontSize: 12, border: "1px solid #2a3a4a", marginTop: 12, cursor: "pointer", fontFamily: "'Inter',sans-serif" }}>Reset Filters</button>
           <button className="connect-btn" style={S.connectBtn} onClick={findDebate}>Find Debate</button>
-          <p style={S.hint}>{selectedTopic ? <>Debating: <strong style={{ color: "#fff" }}>{selectedTopic.label}</strong></> : "No topic selected — any topic"}</p>
+          <p style={S.hint}>{selectedTopic ? <>Debating: <strong style={{ color: "#c6d4df" }}>{selectedTopic.label}</strong></> : "No topic selected — any topic"}</p>
         </div>
       </div>
 
+      {/* Smart Search */}
       <div style={{ ...S.card, marginTop: 20 }}>
         <h2 style={S.cardTitle}>Smart Search</h2>
         <div style={S.searchBox}>
-          <span style={S.searchIcon}>✨</span>
+          <span style={S.searchIcon}><Icons.Sparkle /></span>
           <input style={S.searchInput} placeholder="What do you want to debate about?" value={aiSearch} onChange={e => setAiSearch(e.target.value)} onKeyDown={e => e.key === "Enter" && searchWithAI()} />
-          <button onClick={searchWithAI} style={{ padding: "4px 12px", borderRadius: 8, background: aiLoading ? "#333" : "#e63946", color: "#fff", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
-            {aiLoading ? "..." : "Search"}
+          <button onClick={searchWithAI} style={{ padding: "4px 14px", borderRadius: 6, background: aiLoading ? "#2a3a4a" : "#e63946", color: "#fff", fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "'Inter',sans-serif" }}>
+            {aiLoading ? "…" : "Search"}
           </button>
         </div>
-        {aiResults !== null && aiResults.length === 0 && <p style={{ fontSize: 12, color: "#555", marginTop: 8 }}>No matching rooms found.</p>}
+        {aiResults !== null && aiResults.length === 0 && <p style={{ fontSize: 12, color: "#4a6178", marginTop: 8 }}>No matching rooms found.</p>}
       </div>
 
+      {/* Hashtag filter strip */}
+      {allHashtags.length > 0 && (
+        <div style={{ marginTop: 16, display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+          <span style={{ fontSize: 11, color: "#4a6178", display: "flex", alignItems: "center", gap: 4 }}><Icons.Hash /> Filter:</span>
+          {hashtagFilter && (
+            <button onClick={() => setHashtagFilter(null)} style={{ display: "flex", alignItems: "center", gap: 4, padding: "3px 10px", borderRadius: 20, border: "1px solid #e63946", background: "#2a1520", color: "#e63946", fontSize: 11, cursor: "pointer", fontFamily: "'Inter',sans-serif" }}>
+              <Icons.Close /> Clear
+            </button>
+          )}
+          {allHashtags.map(tag => (
+            <button key={tag} className={`hashtag-pill ${hashtagFilter === tag ? "hashtag-pill-active" : ""}`}
+              onClick={() => setHashtagFilter(hashtagFilter === tag ? null : tag)}
+              style={{ padding: "3px 10px", borderRadius: 20, border: "1px solid #2a3a4a", background: "#1b2838", color: "#8ba3b4", fontSize: 11, fontFamily: "'Inter',sans-serif", transition: "all 0.15s" }}>
+              #{tag}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Active Rooms */}
       {(() => {
         const filtered = rooms.filter(r => {
           let score = 0;
@@ -986,32 +1319,47 @@ const text = data.content[0].text.replace(/```json|```/g, "").trim();
           return score > 0;
         });
         const aiFiltered = aiResults ? rooms.filter(r => aiResults.includes(r.id)) : null;
-const display = aiFiltered ? aiFiltered : (filtered.length > 0 ? filtered : rooms);
+        const hashFiltered = hashtagFilteredRooms;
+        const display = hashFiltered || aiFiltered || (filtered.length > 0 ? filtered : rooms);
         return display.length > 0 ? (
           <div style={{ marginTop: 24 }}>
             <h2 style={{ ...S.cardTitle, marginBottom: 16 }}>
               Active Rooms
-              {filtered.length > 0 && filtered.length < rooms.length && <span style={{ fontSize: 13, color: "#555", fontWeight: 400, marginLeft: 10 }}>{filtered.length} matching</span>}
+              {hashtagFilter && <span style={{ fontSize: 12, color: "#e63946", fontWeight: 400, marginLeft: 10 }}>#{hashtagFilter}</span>}
+              {!hashtagFilter && filtered.length > 0 && filtered.length < rooms.length && <span style={{ fontSize: 13, color: "#4a6178", fontWeight: 400, marginLeft: 10 }}>{filtered.length} matching</span>}
             </h2>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 12 }}>
               {display.map(room => (
-                <div key={room.id} className="room-card" style={{ ...S.roomCard, opacity: filtered.length > 0 && !filtered.includes(room) ? 0.4 : 1 }}>
+                <div key={room.id} className="room-card" style={{ ...S.roomCard }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                    <div>
-                      <p style={{ fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 4, display: "flex", alignItems: "center", gap: 6 }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <p style={{ fontSize: 14, fontWeight: 600, color: "#c6d4df", marginBottom: 4, display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
                         {room.title}
-                        {room.is_adult_only && <span style={{ fontSize: 10, background: "#e63946", color: "#fff", padding: "1px 6px", borderRadius: 10 }}>18+</span>}
-                        {room.host_mode && <span style={{ fontSize: 10, background: "#e63946", color: "#fff", padding: "1px 6px", borderRadius: 10, marginLeft: 4 }}>🎙️ HOST</span>}
+                        {room.is_adult_only && <span style={{ fontSize: 10, background: "#e63946", color: "#fff", padding: "1px 6px", borderRadius: 4 }}>18+</span>}
+                        {room.host_mode && <span style={{ fontSize: 10, background: "#e63946", color: "#fff", padding: "1px 6px", borderRadius: 4 }}>HOST</span>}
                       </p>
                       {room.category && <span style={S.roomTag}>{room.category}</span>}
+                      {/* Hashtags — clickable filters */}
+                      {room.hashtags && room.hashtags.length > 0 && (
+                        <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginTop: 6 }}>
+                          {room.hashtags.map(tag => (
+                            <button key={tag} onClick={(e) => { e.stopPropagation(); setHashtagFilter(hashtagFilter === tag ? null : tag); }}
+                              style={{ fontSize: 10, color: hashtagFilter === tag ? "#e63946" : "#4a6178", background: hashtagFilter === tag ? "#2a1520" : "transparent", border: `1px solid ${hashtagFilter === tag ? "#e63946" : "#2a3a4a"}`, padding: "1px 6px", borderRadius: 10, cursor: "pointer", fontFamily: "'Inter',sans-serif", transition: "all 0.15s" }}>
+                              #{tag}
+                            </button>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                    <span style={{ fontSize: 11, color: room.status === "active" ? "#4caf50" : "#555" }}>{room.status === "active" ? "🔴 Live" : "waiting"}</span>
+                    <span style={{ fontSize: 11, color: room.status === "active" ? "#4caf50" : "#4a6178", whiteSpace: "nowrap", marginLeft: 8 }}>{room.status === "active" ? "● Live" : "waiting"}</span>
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 12 }}>
-                    <span style={{ fontSize: 12, color: "#555" }}>{room.format} • {DURATIONS.find(d => d.id === room.duration)?.label || "Standard"}</span>
+                    <span style={{ fontSize: 11, color: "#4a6178" }}>{room.format} · {DURATIONS.find(d => d.id === room.duration)?.label || "Standard"}</span>
                     <div style={{ display: "flex", gap: 6 }}>
                       <button className="join-btn" style={S.joinBtn} onClick={() => joinRoom(room, "debater")}>Join</button>
-                      <button className="judge-btn" style={S.judgeBtn} onClick={() => joinRoom(room, "judge")}>⚖️</button>
+                      <button className="judge-btn" style={S.judgeBtn} onClick={() => joinRoom(room, "judge")} title="Join as Judge">
+                        <Icons.Scale />
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -1022,7 +1370,6 @@ const display = aiFiltered ? aiFiltered : (filtered.length > 0 ? filtered : room
       })()}
     </div>
   );
-
 }
 
 function SettingsScreen({ settingsLang, setSettingsLang, camEnabled, setCamEnabled, micEnabled, setMicEnabled }) {
@@ -1076,14 +1423,14 @@ function SettingsScreen({ settingsLang, setSettingsLang, camEnabled, setCamEnabl
         <p style={S.fieldLabel}>Camera Preview</p>
         <div style={S.camPreview}>
           {camEnabled && !camError ? <video ref={videoRef} autoPlay muted playsInline style={S.video} /> : (
-            <div style={S.camOff}><span style={{ fontSize: 32 }}>📷</span><span style={{ color: "#555", fontSize: 13, marginTop: 8 }}>{camError ? "Not available" : "Off"}</span></div>
+            <div style={S.camOff}><span style={{ color: "#4a6178", fontSize: 13, marginTop: 8 }}>{camError ? "Not available" : "Off"}</span></div>
           )}
         </div>
-        <div style={S.toggleRow}><span style={{ fontSize: 14, color: "#ccc" }}>Enable Camera</span><Toggle value={camEnabled} onChange={setCamEnabled} /></div>
+        <div style={S.toggleRow}><span style={{ fontSize: 14, color: "#c6d4df" }}>Enable Camera</span><Toggle value={camEnabled} onChange={setCamEnabled} /></div>
         {devices.video.length > 0 && <select style={S.select} value={selectedCam} onChange={e => setSelectedCam(e.target.value)}>{devices.video.map(d => <option key={d.deviceId} value={d.deviceId}>{d.label || "Camera"}</option>)}</select>}
         <div style={S.divider} />
         <p style={S.fieldLabel}>Microphone</p>
-        <div style={S.toggleRow}><span style={{ fontSize: 14, color: "#ccc" }}>Enable Microphone</span><Toggle value={micEnabled} onChange={setMicEnabled} /></div>
+        <div style={S.toggleRow}><span style={{ fontSize: 14, color: "#c6d4df" }}>Enable Microphone</span><Toggle value={micEnabled} onChange={setMicEnabled} /></div>
         {devices.audio.length > 0 && <select style={S.select} value={selectedMic} onChange={e => setSelectedMic(e.target.value)}>{devices.audio.map(d => <option key={d.deviceId} value={d.deviceId}>{d.label || "Microphone"}</option>)}</select>}
       </div>
     </div>
@@ -1092,8 +1439,8 @@ function SettingsScreen({ settingsLang, setSettingsLang, camEnabled, setCamEnabl
 
 function Toggle({ value, onChange }) {
   return (
-    <button onClick={() => onChange(!value)} className="toggle-track" style={{ width: 46, height: 26, borderRadius: 13, background: value ? "#e63946" : "#333", position: "relative", flexShrink: 0 }}>
-      <span className="toggle-thumb" style={{ position: "absolute", top: 3, left: value ? 23 : 3, width: 20, height: 20, borderRadius: "50%", background: "#fff", boxShadow: "0 1px 4px rgba(0,0,0,0.4)" }} />
+    <button onClick={() => onChange(!value)} style={{ width: 44, height: 24, borderRadius: 12, background: value ? "#e63946" : "#2a3a4a", position: "relative", flexShrink: 0, transition: "background 0.2s" }}>
+      <span style={{ position: "absolute", top: 3, left: value ? 22 : 3, width: 18, height: 18, borderRadius: "50%", background: "#fff", boxShadow: "0 1px 4px rgba(0,0,0,0.4)", transition: "left 0.2s" }} />
     </button>
   );
 }
@@ -1112,39 +1459,39 @@ function CreateScreen({ roomTopic, setRoomTopic, user, onCreated }) {
     return matchCat && t.label.toLowerCase().includes(search.toLowerCase());
   });
 
-async function createRoom() {
-  if (!user) { alert("Please sign in first!"); return; }
-  if (!roomTopic.trim()) { alert("Please enter a room title!"); return; }
-  setCreating(true);
-  const tags = await generateTags(roomTopic);
-  const { data } = await supabase.from("rooms").insert({
-    title: roomTopic, topic: selectedTopic?.label, category: selectedTopic?.category,
-    hashtags: tags, duration: selectedDuration, is_adult_only: adultOnly,
-    host_mode: hostMode, created_by: user.id, status: "waiting",
-  }).select().single();
-  if (data) {
-    await supabase.from("room_members").upsert({ room_id: data.id, user_id: user.id, role: "debater", is_host: true }, { onConflict: "room_id,user_id" });
-    onCreated(data);
+  async function createRoom() {
+    if (!user) { alert("Please sign in first!"); return; }
+    if (!roomTopic.trim()) { alert("Please enter a room title!"); return; }
+    setCreating(true);
+    const tags = await generateTags(roomTopic);
+    const { data } = await supabase.from("rooms").insert({
+      title: roomTopic, topic: selectedTopic?.label, category: selectedTopic?.category,
+      hashtags: tags, duration: selectedDuration, is_adult_only: adultOnly,
+      host_mode: hostMode, created_by: user.id, status: "waiting",
+    }).select().single();
+    if (data) {
+      await supabase.from("room_members").upsert({ room_id: data.id, user_id: user.id, role: "debater", is_host: true }, { onConflict: "room_id,user_id" });
+      onCreated(data);
+    }
+    setCreating(false);
   }
-  setCreating(false);
-}
 
   async function generateTags(title) {
-  try {
-    const res = await fetch("/api/ai", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 1000,
-        messages: [{ role: "user", content: `Generate exactly 5 short hashtags (1-2 words each, no # symbol) for a debate room titled: "${title}". Reply ONLY with a JSON array of 5 strings, nothing else.` }]
-      })
-    });
-    const data = await res.json();
-    const text = data.content[0].text.replace(/```json|```/g, "").trim();
-    return JSON.parse(text);
-  } catch { return []; }
-}
+    try {
+      const res = await fetch("/api/ai", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514",
+          max_tokens: 1000,
+          messages: [{ role: "user", content: `Generate exactly 5 short hashtags (1-2 words each, no # symbol) for a debate room titled: "${title}". Reply ONLY with a JSON array of 5 strings, nothing else.` }]
+        })
+      });
+      const data = await res.json();
+      const text = data.content[0].text.replace(/```json|```/g, "").trim();
+      return JSON.parse(text);
+    } catch { return []; }
+  }
 
   return (
     <div style={{ maxWidth: 620, margin: "0 auto", width: "100%" }}>
@@ -1161,23 +1508,23 @@ async function createRoom() {
             </button>
           ))}
         </div>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 18, padding: "10px 14px", background: "#0a0a0a", borderRadius: 10, border: `1px solid ${adultOnly ? "#e63946" : "#222"}` }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 18, padding: "10px 14px", background: "#0f1923", borderRadius: 8, border: `1px solid ${adultOnly ? "#e63946" : "#2a3a4a"}` }}>
           <div>
-            <p style={{ fontSize: 13, color: adultOnly ? "#e63946" : "#888", fontWeight: 600 }}>🔞 18+ Only</p>
-            <p style={{ fontSize: 11, color: "#444", marginTop: 2 }}>You can kick underage players before starting</p>
+            <p style={{ fontSize: 13, color: adultOnly ? "#e63946" : "#8ba3b4", fontWeight: 600 }}>18+ Only</p>
+            <p style={{ fontSize: 11, color: "#4a6178", marginTop: 2 }}>You can kick underage players before starting</p>
           </div>
           <Toggle value={adultOnly} onChange={setAdultOnly} />
         </div>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 12, padding: "10px 14px", background: "#0a0a0a", borderRadius: 10, border: `1px solid ${hostMode ? "#e63946" : "#222"}` }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 12, padding: "10px 14px", background: "#0f1923", borderRadius: 8, border: `1px solid ${hostMode ? "#e63946" : "#2a3a4a"}` }}>
           <div>
-            <p style={{ fontSize: 13, color: hostMode ? "#e63946" : "#888", fontWeight: 600 }}>🎙️ Host Mode</p>
-            <p style={{ fontSize: 11, color: "#444", marginTop: 2 }}>Streamer-style: kick & swap opponents anytime</p>
+            <p style={{ fontSize: 13, color: hostMode ? "#e63946" : "#8ba3b4", fontWeight: 600 }}>Host Mode</p>
+            <p style={{ fontSize: 11, color: "#4a6178", marginTop: 2 }}>Streamer-style: kick & swap opponents anytime</p>
           </div>
           <Toggle value={hostMode} onChange={setHostMode} />
         </div>
         <p style={{ ...S.fieldLabel, marginTop: 22 }}>Select Debate Topic</p>
         <div style={S.searchBox}>
-          <span style={S.searchIcon}>⌕</span>
+          <span style={S.searchIcon}><Icons.Search /></span>
           <input style={S.searchInput} placeholder="Search topics…" value={search} onChange={e => setSearch(e.target.value)} />
         </div>
         <div style={S.chips}>
@@ -1195,14 +1542,15 @@ async function createRoom() {
         </div>
         {selectedTopic && (
           <div style={S.selectedBadge}>
-            <span style={{ color: "#e63946" }}>▶</span>
-            <span style={{ fontWeight: 600, fontSize: 13 }}>{selectedTopic.label}</span>
-            <button style={{ marginLeft: "auto", color: "#555" }} onClick={() => setSelectedTopic(null)}>✕</button>
+            <span style={{ color: "#e63946" }}><Icons.Play /></span>
+            <span style={{ fontWeight: 600, fontSize: 13, color: "#c6d4df" }}>{selectedTopic.label}</span>
+            <button style={{ marginLeft: "auto", color: "#4a6178" }} onClick={() => setSelectedTopic(null)}><Icons.Close /></button>
           </div>
         )}
-        </div>
-        <button className="final-btn" style={S.finalBtn} onClick={createRoom} disabled={creating}>{creating ? "Creating…" : "Create Room"}</button>
+        <p style={{ fontSize: 11, color: "#4a6178", marginTop: 12 }}>AI-generated hashtags will be added automatically to help players find your room.</p>
       </div>
+      <button className="final-btn" style={S.finalBtn} onClick={createRoom} disabled={creating}>{creating ? "Creating…" : "Create Room"}</button>
+    </div>
   );
 }
 
@@ -1260,24 +1608,27 @@ function LoungeScreen({ user, profile }) {
           <p style={S.fieldLabel}>Max Members</p>
           <div style={{ display: "flex", gap: 8 }}>
             {[2, 5, 10].map(n => (
-              <button key={n} onClick={() => setMaxMembers(n)} style={{ flex: 1, padding: "10px 0", borderRadius: 10, border: `1px solid ${maxMembers === n ? "#fff" : "#222"}`, background: maxMembers === n ? "#fff" : "transparent", color: maxMembers === n ? "#0a0a0a" : "#888", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>{n}</button>
+              <button key={n} onClick={() => setMaxMembers(n)} style={{ flex: 1, padding: "10px 0", borderRadius: 8, border: `1px solid ${maxMembers === n ? "#c6d4df" : "#2a3a4a"}`, background: maxMembers === n ? "#c6d4df" : "transparent", color: maxMembers === n ? "#0a0a0a" : "#8ba3b4", fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "'Inter',sans-serif" }}>{n}</button>
             ))}
           </div>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 18, padding: "10px 14px", background: "#0a0a0a", borderRadius: 10, border: `1px solid ${isPrivate ? "#f5a623" : "#222"}` }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 18, padding: "10px 14px", background: "#0f1923", borderRadius: 8, border: `1px solid ${isPrivate ? "#f5a623" : "#2a3a4a"}` }}>
             <div>
-              <p style={{ fontSize: 13, color: isPrivate ? "#f5a623" : "#888", fontWeight: 600 }}>🔒 Private</p>
-              <p style={{ fontSize: 11, color: "#444", marginTop: 2 }}>Only invite-link access</p>
+              <p style={{ fontSize: 13, color: isPrivate ? "#f5a623" : "#8ba3b4", fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}><Icons.Lock /> Private</p>
+              <p style={{ fontSize: 11, color: "#4a6178", marginTop: 2 }}>Only invite-link access</p>
             </div>
             <Toggle value={isPrivate} onChange={setIsPrivate} />
           </div>
-          <button onClick={createLounge} disabled={creating} style={{ marginTop: 20, width: "100%", padding: "15px 0", background: "#fff", color: "#0a0a0a", borderRadius: 12, fontSize: 15, fontWeight: 700, fontFamily: "'Syne',sans-serif", cursor: "pointer" }}>{creating ? "Creating…" : "Create Lounge"}</button>
+          <button onClick={createLounge} disabled={creating} style={{ marginTop: 20, width: "100%", padding: "13px 0", background: "#c6d4df", color: "#0a0a0a", borderRadius: 8, fontSize: 14, fontWeight: 700, fontFamily: "'Rajdhani',sans-serif", cursor: "pointer", letterSpacing: "0.5px" }}>{creating ? "Creating…" : "Create Lounge"}</button>
         </div>
         <div style={S.card}>
           <h2 style={S.cardTitle}>About Lounge</h2>
-          <p style={{ fontSize: 14, color: "#888", lineHeight: 1.6, marginTop: 8 }}>Lounges are calm discussion rooms — no debates, no judges, no timers. Just open conversation with up to 10 people.</p>
+          <p style={{ fontSize: 13, color: "#8ba3b4", lineHeight: 1.7, marginTop: 8 }}>Lounges are calm discussion rooms — no debates, no judges, no timers. Just open conversation.</p>
           <div style={{ marginTop: 20, display: "flex", flexDirection: "column", gap: 10 }}>
-            {[["💬", "Free-form chat"], ["🎙️", "Voice & video"], ["🔒", "Private rooms with invite link"], ["✏️", "Change topic anytime"], ["👥", "Up to 10 members"]].map(([icon, text]) => (
-              <div key={text} style={{ display: "flex", alignItems: "center", gap: 10 }}><span style={{ fontSize: 18 }}>{icon}</span><span style={{ fontSize: 13, color: "#ccc" }}>{text}</span></div>
+            {[["Free-form chat", Icons.Send], ["Voice & video", Icons.Camera], ["Private rooms with invite link", Icons.Lock], ["Up to 10 members", Icons.Users]].map(([text, Icon]) => (
+              <div key={text} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <span style={{ color: "#4a6178" }}><Icon /></span>
+                <span style={{ fontSize: 13, color: "#c6d4df" }}>{text}</span>
+              </div>
             ))}
           </div>
         </div>
@@ -1289,11 +1640,11 @@ function LoungeScreen({ user, profile }) {
             {rooms.map(room => (
               <div key={room.id} className="room-card" style={S.roomCard}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                  <p style={{ fontSize: 14, fontWeight: 600, color: "#fff" }}>{room.title}</p>
-                  <span style={{ fontSize: 11, color: "#555" }}>👥 {room.max_members || 10}</span>
+                  <p style={{ fontSize: 14, fontWeight: 600, color: "#c6d4df" }}>{room.title}</p>
+                  <span style={{ fontSize: 11, color: "#4a6178", display: "flex", alignItems: "center", gap: 4 }}><Icons.Users /> {room.max_members || 10}</span>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 12 }}>
-                  <span style={{ fontSize: 12, color: "#555" }}>discussion</span>
+                  <span style={{ fontSize: 11, color: "#4a6178" }}>discussion</span>
                   <button className="join-btn" style={S.joinBtn} onClick={() => joinLounge(room)}>Join</button>
                 </div>
               </div>
@@ -1338,24 +1689,20 @@ function LoungeRoom({ room, user, profile, onBack }) {
     const { data } = await supabase.from("messages").select("*, profiles(username, avatar_url)").eq("room_id", room.id).order("created_at", { ascending: true });
     if (data) setMessages(data);
   }
-
   async function loadMembers() {
     const { data } = await supabase.from("room_members").select("*, profiles(username, avatar_url)").eq("room_id", room.id);
     if (data) setMembers(data);
   }
-
   async function sendMessage() {
     if (!input.trim() || !user) return;
     await supabase.from("messages").insert({ room_id: room.id, user_id: user.id, content: input.trim() });
     setInput(""); loadMessages();
   }
-
   async function updateTitle() {
     if (!newTitle.trim()) return;
     await supabase.from("rooms").update({ title: newTitle.trim() }).eq("id", room.id);
     setCurrentTitle(newTitle.trim()); setEditingTitle(false);
   }
-
   async function toggleCall() {
     if (callActive) { setCallActive(false); setLivekitToken(null); return; }
     try {
@@ -1371,42 +1718,44 @@ function LoungeRoom({ room, user, profile, onBack }) {
         <div style={{ flex: 1 }}>
           {editingTitle && isCreator ? (
             <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-              <input style={{ ...S.chatInputField, fontSize: 16, fontWeight: 600, flex: 1 }} value={newTitle} onChange={e => setNewTitle(e.target.value)} onKeyDown={e => e.key === "Enter" && updateTitle()} autoFocus />
-              <button onClick={updateTitle} style={{ padding: "6px 14px", background: "#e63946", color: "#fff", borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: "pointer" }}>Save</button>
-              <button onClick={() => setEditingTitle(false)} style={{ padding: "6px 10px", color: "#555", borderRadius: 8, fontSize: 12, cursor: "pointer" }}>✕</button>
+              <input style={{ ...S.chatInputField, fontSize: 15, fontWeight: 600, flex: 1 }} value={newTitle} onChange={e => setNewTitle(e.target.value)} onKeyDown={e => e.key === "Enter" && updateTitle()} autoFocus />
+              <button onClick={updateTitle} style={{ padding: "6px 14px", background: "#e63946", color: "#fff", borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "'Inter',sans-serif" }}>Save</button>
+              <button onClick={() => setEditingTitle(false)} style={{ padding: "6px 10px", color: "#4a6178", borderRadius: 6, fontSize: 12, cursor: "pointer" }}><Icons.Close /></button>
             </div>
           ) : (
-            <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: 20, fontWeight: 700, color: "#fff", display: "flex", alignItems: "center", gap: 8 }}>
+            <h2 style={{ fontFamily: "'Rajdhani',sans-serif", fontSize: 20, fontWeight: 700, color: "#c6d4df", letterSpacing: "0.5px", display: "flex", alignItems: "center", gap: 8 }}>
               {currentTitle}
-              <span style={{ fontSize: 11, background: "#1a2a1a", color: "#4caf50", padding: "2px 8px", borderRadius: 20 }}>lounge</span>
-              {isCreator && <button onClick={() => setEditingTitle(true)} style={{ fontSize: 12, color: "#555", cursor: "pointer" }}>✏️</button>}
+              <span style={{ fontSize: 10, background: "#0d2a0d", color: "#4caf50", padding: "2px 8px", borderRadius: 4, fontFamily: "'Inter',sans-serif" }}>lounge</span>
+              {isCreator && <button onClick={() => setEditingTitle(true)} style={{ color: "#4a6178", cursor: "pointer" }}><Icons.Edit /></button>}
             </h2>
           )}
-          <p style={{ fontSize: 12, color: "#555", marginTop: 2 }}>{members.length} members</p>
+          <p style={{ fontSize: 11, color: "#4a6178", marginTop: 2 }}>{members.length} members</p>
         </div>
-        <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-          {room.is_private && room.invite_code && <span style={{ fontSize: 11, color: "#f5a623", background: "#1a1500", padding: "4px 10px", borderRadius: 20, border: "1px solid #f5a623" }}>🔒 {room.invite_code}</span>}
-          <button onClick={() => setShowMembers(!showMembers)} style={{ padding: "8px 12px", background: showMembers ? "#222" : "#1a1a1a", color: "#888", borderRadius: 8, fontSize: 13, border: "1px solid #333", cursor: "pointer" }}>👥 {members.length}</button>
-          <button onClick={() => setMicOn(!micOn)} style={{ padding: "8px 12px", background: micOn ? "#e63946" : "#1a1a1a", color: micOn ? "#fff" : "#888", borderRadius: 8, fontSize: 13, border: "1px solid #333", cursor: "pointer" }}>{micOn ? "🎙️" : "🔇"}</button>
-          <button onClick={() => { setCamOn(!camOn); if (!callActive) toggleCall(); }} style={{ padding: "8px 12px", background: camOn ? "#e63946" : "#1a1a1a", color: camOn ? "#fff" : "#888", borderRadius: 8, fontSize: 13, border: "1px solid #333", cursor: "pointer" }}>{camOn ? "📹" : "📷"}</button>
-          <button onClick={onBack} style={{ padding: "8px 14px", background: "#1a1a1a", color: "#888", borderRadius: 8, fontSize: 12, border: "1px solid #333", cursor: "pointer" }}>← Leave</button>
+        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+          {room.is_private && room.invite_code && <span style={{ fontSize: 11, color: "#f5a623", background: "#241f0f", padding: "3px 10px", borderRadius: 6, border: "1px solid #f5a623", display: "flex", alignItems: "center", gap: 4 }}><Icons.Lock /> {room.invite_code}</span>}
+          <button onClick={() => setShowMembers(!showMembers)} style={{ ...S.iconBtn, background: showMembers ? "#2a3a4a" : "#1b2838" }}>
+            <Icons.Users /> <span style={{ fontSize: 12, marginLeft: 4 }}>{members.length}</span>
+          </button>
+          <button onClick={() => setMicOn(!micOn)} style={{ ...S.iconBtn, background: micOn ? "#e63946" : "#1b2838", color: micOn ? "#fff" : "#8ba3b4" }}><Icons.Mic off={!micOn} /></button>
+          <button onClick={() => { setCamOn(!camOn); if (!callActive) toggleCall(); }} style={{ ...S.iconBtn, background: camOn ? "#e63946" : "#1b2838", color: camOn ? "#fff" : "#8ba3b4" }}><Icons.Camera off={!camOn} /></button>
+          <button onClick={onBack} style={{ ...S.iconBtn, gap: 6 }}><Icons.Back /> <span style={{ fontSize: 12 }}>Leave</span></button>
         </div>
       </div>
 
       {showMembers && (
-        <div style={{ position: "absolute", top: 60, right: 20, background: "#111", border: "1px solid #222", borderRadius: 12, padding: 16, zIndex: 20, minWidth: 200, boxShadow: "0 8px 32px rgba(0,0,0,0.5)" }}>
+        <div className="slide-down" style={{ position: "absolute", top: 64, right: 16, background: "#131a21", border: "1px solid #2a3a4a", borderRadius: 10, padding: 16, zIndex: 20, minWidth: 200, boxShadow: "0 12px 40px rgba(0,0,0,0.7)" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-            <span style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>Members</span>
-            <button onClick={() => setShowMembers(false)} style={{ color: "#555", fontSize: 14 }}>✕</button>
+            <span style={{ fontSize: 12, fontWeight: 600, color: "#c6d4df", textTransform: "uppercase", letterSpacing: "0.08em" }}>Members</span>
+            <button onClick={() => setShowMembers(false)} style={{ color: "#4a6178" }}><Icons.Close /></button>
           </div>
           {members.map(m => (
-            <div key={m.user_id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 0", borderBottom: "1px solid #1a1a1a" }}>
-              {m.profiles?.avatar_url ? <img src={m.profiles.avatar_url} style={{ width: 28, height: 28, borderRadius: "50%" }} alt="" /> : <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#222", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>👤</div>}
+            <div key={m.user_id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 0", borderBottom: "1px solid #1b2838" }}>
+              {m.profiles?.avatar_url ? <img src={m.profiles.avatar_url} style={{ width: 28, height: 28, borderRadius: 4 }} alt="" /> : <div style={{ width: 28, height: 28, borderRadius: 4, background: "#2a3a4a", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>?</div>}
               <div>
-                <p style={{ fontSize: 13, color: "#fff", fontWeight: 500 }}>{m.profiles?.username || "Anonymous"}</p>
-                <p style={{ fontSize: 11, color: "#555" }}>{m.role}</p>
+                <p style={{ fontSize: 13, color: "#c6d4df", fontWeight: 500 }}>{m.profiles?.username || "Anonymous"}</p>
+                <p style={{ fontSize: 11, color: "#4a6178" }}>{m.role}</p>
               </div>
-              {m.user_id === user?.id && <span style={{ marginLeft: "auto", fontSize: 10, color: "#444" }}>you</span>}
+              {m.user_id === user?.id && <span style={{ marginLeft: "auto", fontSize: 10, color: "#4a6178" }}>you</span>}
             </div>
           ))}
         </div>
@@ -1414,18 +1763,18 @@ function LoungeRoom({ room, user, profile, onBack }) {
 
       <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
         {callActive && livekitToken && livekitUrl && (
-          <div style={{ width: "55%", borderRight: "1px solid #1a1a1a", overflow: "hidden" }}>
+          <div style={{ width: "55%", borderRight: "1px solid #1b2838", overflow: "hidden" }}>
             <LiveKitRoom token={livekitToken} serverUrl={livekitUrl} video={camOn} audio={micOn} onDisconnected={() => setCallActive(false)} style={{ height: "100%" }}><VideoConference /></LiveKitRoom>
           </div>
         )}
         <div style={{ display: "flex", flexDirection: "column", flex: 1, overflow: "hidden" }}>
           <div style={S.chatArea}>
-            {messages.length === 0 && <div style={{ textAlign: "center", color: "#333", fontSize: 13, marginTop: 20 }}>No messages yet. Start the conversation!</div>}
+            {messages.length === 0 && <div style={{ textAlign: "center", color: "#2a3a4a", fontSize: 13, marginTop: 20 }}>No messages yet.</div>}
             {messages.map(msg => (
               <div key={msg.id} className="msg-animate" style={{ ...S.msgRow, flexDirection: msg.user_id === user?.id ? "row-reverse" : "row" }}>
-                {msg.profiles?.avatar_url && <img src={msg.profiles.avatar_url} style={{ width: 28, height: 28, borderRadius: "50%", flexShrink: 0 }} alt="" />}
-                <div style={{ ...S.msgBubble, background: msg.user_id === user?.id ? "#4caf50" : "#1a1a1a" }}>
-                  {msg.user_id !== user?.id && <span style={{ fontSize: 11, color: "#888", marginBottom: 2 }}>{msg.profiles?.username || "Anonymous"}</span>}
+                {msg.profiles?.avatar_url && <img src={msg.profiles.avatar_url} style={{ width: 26, height: 26, borderRadius: 4, flexShrink: 0 }} alt="" />}
+                <div style={{ ...S.msgBubble, background: msg.user_id === user?.id ? "#1a4a2a" : "#1b2838" }}>
+                  {msg.user_id !== user?.id && <span style={{ fontSize: 10, color: "#8ba3b4", marginBottom: 2 }}>{msg.profiles?.username || "Anonymous"}</span>}
                   <span style={{ fontSize: 14, color: "#fff" }}>{msg.content}</span>
                 </div>
               </div>
@@ -1434,7 +1783,7 @@ function LoungeRoom({ room, user, profile, onBack }) {
           </div>
           <div style={S.chatInput}>
             <input style={S.chatInputField} placeholder="Say something…" value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && sendMessage()} />
-            <button className="send-btn" style={{ ...S.sendBtn, background: "#4caf50" }} onClick={sendMessage}>Send</button>
+            <button className="send-btn" style={{ ...S.sendBtn, background: "#4caf50", display: "flex", alignItems: "center", gap: 6 }} onClick={sendMessage}><Icons.Send /> Send</button>
           </div>
         </div>
       </div>
@@ -1448,8 +1797,7 @@ function ShopScreen({ user, profile, setProfile }) {
   const [owned, setOwned] = useState([]);
 
   useEffect(() => {
-    supabase.from("user_items").select("item_id").eq("user_id", user.id)
-      .then(({ data }) => { if (data) setOwned(data.map(d => d.item_id)); });
+    supabase.from("user_items").select("item_id").eq("user_id", user.id).then(({ data }) => { if (data) setOwned(data.map(d => d.item_id)); });
   }, [user.id]);
 
   async function buyItem(item, currency) {
@@ -1471,27 +1819,27 @@ function ShopScreen({ user, profile, setProfile }) {
       <div style={S.card}>
         <h2 style={S.cardTitle}>Shop</h2>
         <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20 }}>
-          <span style={{ fontSize: 14, color: "#f5a623", fontWeight: 600 }}>🪙 {profile?.sigs || 0} Sig's</span>
-          <span style={{ fontSize: 14, color: "#9b59b6", fontWeight: 600 }}>💎 {profile?.deps || 0} Dep's</span>
+          <span style={{ fontSize: 13, color: "#f5a623", fontWeight: 600, display: "flex", alignItems: "center", gap: 5 }}><Icons.Coin /> {profile?.sigs || 0} Sigs</span>
+          <span style={{ fontSize: 13, color: "#9b59b6", fontWeight: 600, display: "flex", alignItems: "center", gap: 5 }}><Icons.Diamond /> {profile?.deps || 0} Deps</span>
         </div>
-        <div style={{ display: "flex", gap: 10, marginBottom: 20 }}>
-          <button onClick={() => setTab("sigs")} style={{ flex: 1, padding: "10px 0", borderRadius: 10, border: `1px solid ${tab === "sigs" ? "#f5a623" : "#222"}`, background: tab === "sigs" ? "#1a1500" : "transparent", color: tab === "sigs" ? "#f5a623" : "#888", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>🪙 Sig's Shop</button>
-          <button onClick={() => setTab("deps")} style={{ flex: 1, padding: "10px 0", borderRadius: 10, border: `1px solid ${tab === "deps" ? "#9b59b6" : "#222"}`, background: tab === "deps" ? "#1a0a2a" : "transparent", color: tab === "deps" ? "#9b59b6" : "#888", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>💎 Dep's Shop</button>
+        <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
+          <button onClick={() => setTab("sigs")} style={{ flex: 1, padding: "10px 0", borderRadius: 8, border: `1px solid ${tab === "sigs" ? "#f5a623" : "#2a3a4a"}`, background: tab === "sigs" ? "#241f0f" : "transparent", color: tab === "sigs" ? "#f5a623" : "#8ba3b4", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "'Inter',sans-serif", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}><Icons.Coin /> Sigs Shop</button>
+          <button onClick={() => setTab("deps")} style={{ flex: 1, padding: "10px 0", borderRadius: 8, border: `1px solid ${tab === "deps" ? "#9b59b6" : "#2a3a4a"}`, background: tab === "deps" ? "#1e1228" : "transparent", color: tab === "deps" ? "#9b59b6" : "#8ba3b4", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "'Inter',sans-serif", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}><Icons.Diamond /> Deps Shop</button>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {items.map(item => {
-            const isOwned = owned.includes(item.id);CreateScreen
+            const isOwned = owned.includes(item.id);
             const currency = tab;
             const balance = currency === "sigs" ? (profile?.sigs || 0) : (profile?.deps || 0);
             const canAfford = balance >= item.price;
             return (
-              <div key={item.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 16px", background: "#0a0a0a", borderRadius: 12, border: `1px solid ${isOwned ? "#4caf50" : "#222"}` }}>
+              <div key={item.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 16px", background: "#0f1923", borderRadius: 8, border: `1px solid ${isOwned ? "#4caf50" : "#2a3a4a"}` }}>
                 <div>
-                  <p style={{ fontSize: 14, fontWeight: 600, color: "#fff" }}>{item.name}</p>
-                  <p style={{ fontSize: 12, color: "#555", marginTop: 2 }}>{item.desc}</p>
+                  <p style={{ fontSize: 14, fontWeight: 600, color: "#c6d4df" }}>{item.name}</p>
+                  <p style={{ fontSize: 12, color: "#4a6178", marginTop: 2 }}>{item.desc}</p>
                 </div>
-                <button onClick={() => !isOwned && buyItem(item, currency)} disabled={isOwned || buying === item.id} style={{ padding: "8px 18px", borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: isOwned ? "default" : "pointer", background: isOwned ? "#1a2a1a" : canAfford ? (tab === "sigs" ? "#f5a623" : "#9b59b6") : "#1a1a1a", color: isOwned ? "#4caf50" : canAfford ? "#000" : "#555", border: `1px solid ${isOwned ? "#4caf50" : canAfford ? "transparent" : "#333"}`, transition: "all 0.15s" }}>
-                  {isOwned ? "✓ Owned" : buying === item.id ? "..." : `${tab === "sigs" ? "🪙" : "💎"} ${item.price}`}
+                <button onClick={() => !isOwned && buyItem(item, currency)} disabled={isOwned || buying === item.id} style={{ padding: "8px 18px", borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: isOwned ? "default" : "pointer", background: isOwned ? "#0d2a0d" : canAfford ? (tab === "sigs" ? "#241f0f" : "#1e1228") : "#1b2838", color: isOwned ? "#4caf50" : canAfford ? (tab === "sigs" ? "#f5a623" : "#9b59b6") : "#4a6178", border: `1px solid ${isOwned ? "#4caf50" : canAfford ? (tab === "sigs" ? "#f5a623" : "#9b59b6") : "#2a3a4a"}`, fontFamily: "'Inter',sans-serif", transition: "all 0.15s", display: "flex", alignItems: "center", gap: 5 }}>
+                  {isOwned ? "Owned" : buying === item.id ? "…" : <>{tab === "sigs" ? <Icons.Coin /> : <Icons.Diamond />} {item.price}</>}
                 </button>
               </div>
             );
@@ -1502,54 +1850,60 @@ function ShopScreen({ user, profile, setProfile }) {
   );
 }
 
+// ---- STYLES ----
 const S = {
-  root: { minHeight: "100vh", background: "#0a0a0a", width: "100%", fontFamily: "'Inter', sans-serif", color: "#e0e0e0" },
-  header: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 20px", flexWrap: "wrap", gap: 8, borderBottom: "1px solid #1a1a1a", background: "#0a0a0a", position: "sticky", top: 0, zIndex: 10 },
+  root: { minHeight: "100vh", background: "#0e1521", width: "100%", fontFamily: "'Inter', sans-serif", color: "#c6d4df" },
+  header: {
+    display: "flex", alignItems: "center", justifyContent: "space-between",
+    padding: "0 24px", height: 56, flexWrap: "wrap", gap: 8,
+    borderBottom: "1px solid #1b2838",
+    background: "linear-gradient(180deg, #1b2838 0%, #131a21 100%)",
+    position: "sticky", top: 0, zIndex: 10,
+    boxShadow: "0 2px 8px rgba(0,0,0,0.4)"
+  },
   logo: { display: "flex", alignItems: "center" },
-  logoVi: { fontFamily: "'Syne', sans-serif", fontSize: 26, fontWeight: 800, color: "#fff", letterSpacing: "-1px" },
-  nav: { display: "flex", gap: 28 },
-  navBtn: { fontSize: 14, color: "#555", fontWeight: 500, padding: "4px 0" },
+  logoVi: { fontFamily: "'Rajdhani', sans-serif", fontSize: 28, fontWeight: 700, color: "#fff", letterSpacing: "2px" },
+  nav: { display: "flex", gap: 20, alignItems: "center" },
   main: { padding: "24px 16px", maxWidth: 980, margin: "0 auto", width: "100%" },
   grid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20 },
-  card: { background: "#111", borderRadius: 16, padding: 24, border: "1px solid #1e1e1e" },
-  cardTitle: { fontFamily: "'Syne', sans-serif", fontSize: 22, fontWeight: 700, color: "#fff", marginBottom: 18, letterSpacing: "-0.5px" },
-  searchBox: { display: "flex", alignItems: "center", gap: 8, background: "#0a0a0a", borderRadius: 10, padding: "9px 12px", border: "1px solid #222", marginBottom: 12 },
-  searchIcon: { color: "#444", fontSize: 18 },
-  searchInput: { background: "none", border: "none", fontSize: 13, color: "#e0e0e0", flex: 1, fontFamily: "'Inter', sans-serif" },
+  card: { background: "#1b2838", borderRadius: 12, padding: 24, border: "1px solid #2a3a4a" },
+  cardTitle: { fontFamily: "'Rajdhani', sans-serif", fontSize: 22, fontWeight: 700, color: "#c6d4df", marginBottom: 18, letterSpacing: "0.5px" },
+  searchBox: { display: "flex", alignItems: "center", gap: 8, background: "#131a21", borderRadius: 8, padding: "8px 12px", border: "1px solid #2a3a4a", marginBottom: 12 },
+  searchIcon: { color: "#4a6178", display: "flex", alignItems: "center" },
+  searchInput: { background: "none", border: "none", fontSize: 13, color: "#c6d4df", flex: 1, fontFamily: "'Inter', sans-serif" },
   chips: { display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 12 },
-  chip: { fontSize: 11, padding: "4px 10px", borderRadius: 20, background: "#1a1a1a", color: "#888", fontFamily: "'Inter', sans-serif", fontWeight: 500, transition: "all 0.15s" },
+  chip: { fontSize: 11, padding: "4px 10px", borderRadius: 20, background: "#131a21", color: "#8ba3b4", fontFamily: "'Inter', sans-serif", fontWeight: 500, transition: "all 0.15s", border: "1px solid #2a3a4a" },
   topicScroll: { overflowY: "auto", maxHeight: 220, display: "flex", flexDirection: "column" },
-  topicRow: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "9px 10px", borderRadius: 8, width: "100%", textAlign: "left", borderLeft: "2px solid transparent", transition: "all 0.12s", fontFamily: "'Inter', sans-serif", background: "transparent" },
-  topicLabel: { fontSize: 13, color: "#ccc" },
-  topicCat: { fontSize: 11, color: "#444", fontStyle: "italic" },
-  selectedBadge: { display: "flex", alignItems: "center", gap: 8, marginTop: 12, background: "#161616", borderRadius: 10, padding: "8px 12px", border: "1px solid #222", flexWrap: "wrap" },
-  fieldLabel: { fontSize: 11, fontWeight: 600, color: "#555", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10, marginTop: 18 },
-  fmtRow: { display: "flex", gap: 10 },
-  fmtBtn: { flex: 1, padding: "10px 0", borderRadius: 10, border: "1px solid #222", fontSize: 14, fontWeight: 600, fontFamily: "'Inter', sans-serif", color: "#888", transition: "all 0.15s", display: "flex", alignItems: "center", justifyContent: "center" },
+  topicRow: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 10px", borderRadius: 6, width: "100%", textAlign: "left", borderLeft: "2px solid transparent", transition: "all 0.12s", fontFamily: "'Inter', sans-serif", background: "transparent" },
+  topicLabel: { fontSize: 13, color: "#c6d4df" },
+  topicCat: { fontSize: 11, color: "#4a6178", fontStyle: "italic" },
+  selectedBadge: { display: "flex", alignItems: "center", gap: 8, marginTop: 12, background: "#131a21", borderRadius: 8, padding: "8px 12px", border: "1px solid #2a3a4a", flexWrap: "wrap" },
+  fieldLabel: { fontSize: 10, fontWeight: 600, color: "#4a6178", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 10, marginTop: 18 },
+  fmtRow: { display: "flex", gap: 8 },
+  fmtBtn: { flex: 1, padding: "10px 0", borderRadius: 8, border: "1px solid #2a3a4a", fontSize: 13, fontWeight: 600, fontFamily: "'Inter', sans-serif", color: "#8ba3b4", transition: "all 0.15s", display: "flex", alignItems: "center", justifyContent: "center" },
   langGrid: { display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8 },
-  langBtn: { display: "flex", flexDirection: "column", alignItems: "center", gap: 4, padding: "10px 4px", borderRadius: 10, border: "1.5px solid #222", fontSize: 11, fontFamily: "'Inter', sans-serif", color: "#888", transition: "all 0.15s", background: "#0f0f0f" },
-  connectBtn: { marginTop: 20, width: "100%", padding: "15px 0", background: "#fff", color: "#0a0a0a", borderRadius: 12, fontSize: 15, fontWeight: 700, fontFamily: "'Syne', sans-serif", letterSpacing: "0.02em", transition: "all 0.15s", cursor: "pointer" },
-  hint: { textAlign: "center", fontSize: 12, color: "#444", marginTop: 10 },
-  divider: { height: 1, background: "#1a1a1a", margin: "20px 0" },
-  camPreview: { width: "100%", aspectRatio: "16/9", background: "#0a0a0a", borderRadius: 12, overflow: "hidden", border: "1px solid #222", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12 },
+  langBtn: { display: "flex", flexDirection: "column", alignItems: "center", gap: 4, padding: "10px 4px", borderRadius: 8, border: "1.5px solid #2a3a4a", fontSize: 11, fontFamily: "'Inter', sans-serif", color: "#8ba3b4", transition: "all 0.15s", background: "#131a21" },
+  connectBtn: { marginTop: 20, width: "100%", padding: "13px 0", background: "#c6d4df", color: "#0a0a0a", borderRadius: 8, fontSize: 14, fontWeight: 700, fontFamily: "'Rajdhani', sans-serif", letterSpacing: "1px", transition: "all 0.15s", cursor: "pointer" },
+  hint: { textAlign: "center", fontSize: 11, color: "#4a6178", marginTop: 8 },
+  divider: { height: 1, background: "#1b2838", margin: "20px 0" },
+  camPreview: { width: "100%", aspectRatio: "16/9", background: "#131a21", borderRadius: 8, overflow: "hidden", border: "1px solid #2a3a4a", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12 },
   video: { width: "100%", height: "100%", objectFit: "cover" },
   camOff: { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" },
   toggleRow: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 0" },
-  select: { width: "100%", marginTop: 10, padding: "9px 12px", background: "#0a0a0a", border: "1px solid #222", borderRadius: 10, color: "#ccc", fontSize: 13, fontFamily: "'Inter', sans-serif" },
-  textInput: { width: "100%", padding: "10px 14px", borderRadius: 10, border: "1px solid #222", fontSize: 13, fontFamily: "'Inter', sans-serif", background: "#0a0a0a", color: "#e0e0e0" },
-  hashtagAdd: { padding: "4px 12px", borderRadius: 8, background: "#1a1a1a", fontSize: 12, fontWeight: 600, fontFamily: "'Inter', sans-serif", color: "#888", transition: "all 0.15s" },
-  hashtagPill: { display: "flex", alignItems: "center", padding: "4px 10px", background: "#1a1a1a", borderRadius: 20, fontSize: 13, color: "#ccc", border: "1px solid #2a2a2a" },
-  finalBtn: { marginTop: 24, width: "100%", padding: "15px 0", background: "#fff", color: "#0a0a0a", borderRadius: 12, fontSize: 15, fontWeight: 700, fontFamily: "'Syne', sans-serif", letterSpacing: "0.02em", transition: "all 0.15s", cursor: "pointer" },
-  roomCard: { background: "#111", borderRadius: 12, padding: 16, border: "1px solid #1e1e1e", transition: "all 0.15s", cursor: "pointer" },
-  roomTag: { fontSize: 11, color: "#e63946", background: "#1a0a0b", padding: "2px 8px", borderRadius: 20 },
-  joinBtn: { padding: "6px 14px", borderRadius: 8, border: "1px solid #333", fontSize: 12, fontWeight: 600, color: "#888", fontFamily: "'Inter',sans-serif", transition: "all 0.15s" },
-  judgeBtn: { padding: "6px 10px", borderRadius: 8, border: "1px solid #444", fontSize: 12, fontWeight: 600, color: "#888", fontFamily: "'Inter',sans-serif", transition: "all 0.15s" },
-  roomContainer: { display: "flex", flexDirection: "column", height: "calc(100vh - 130px)", background: "#111", borderRadius: 16, border: "1px solid #1e1e1e", overflow: "hidden", position: "relative" },
-  roomHeader: { padding: "16px 20px", borderBottom: "1px solid #1a1a1a", display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0 },
-  chatArea: { flex: 1, overflowY: "auto", padding: "16px 20px", display: "flex", flexDirection: "column", gap: 12 },
+  select: { width: "100%", marginTop: 10, padding: "8px 12px", background: "#131a21", border: "1px solid #2a3a4a", borderRadius: 8, color: "#c6d4df", fontSize: 13, fontFamily: "'Inter', sans-serif" },
+  textInput: { width: "100%", padding: "10px 14px", borderRadius: 8, border: "1px solid #2a3a4a", fontSize: 13, fontFamily: "'Inter', sans-serif", background: "#131a21", color: "#c6d4df" },
+  finalBtn: { marginTop: 20, width: "100%", padding: "14px 0", background: "#c6d4df", color: "#0a0a0a", borderRadius: 8, fontSize: 14, fontWeight: 700, fontFamily: "'Rajdhani', sans-serif", letterSpacing: "1px", transition: "all 0.15s", cursor: "pointer" },
+  roomCard: { background: "#1b2838", borderRadius: 10, padding: 16, border: "1px solid #2a3a4a", transition: "all 0.15s" },
+  roomTag: { fontSize: 10, color: "#e63946", background: "#2a1520", padding: "2px 8px", borderRadius: 10, border: "1px solid #3a2030" },
+  joinBtn: { padding: "5px 14px", borderRadius: 6, border: "1px solid #2a3a4a", fontSize: 12, fontWeight: 600, color: "#8ba3b4", fontFamily: "'Inter',sans-serif", transition: "all 0.15s" },
+  judgeBtn: { padding: "5px 9px", borderRadius: 6, border: "1px solid #2a3a4a", fontSize: 12, fontWeight: 600, color: "#8ba3b4", fontFamily: "'Inter',sans-serif", transition: "all 0.15s", display: "flex", alignItems: "center" },
+  roomContainer: { display: "flex", flexDirection: "column", height: "calc(100vh - 130px)", background: "#1b2838", borderRadius: 12, border: "1px solid #2a3a4a", overflow: "hidden", position: "relative" },
+  roomHeader: { padding: "14px 18px", borderBottom: "1px solid #1b2838", display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0, background: "#131a21" },
+  chatArea: { flex: 1, overflowY: "auto", padding: "16px 18px", display: "flex", flexDirection: "column", gap: 10 },
   msgRow: { display: "flex", gap: 8, alignItems: "flex-end" },
-  msgBubble: { display: "flex", flexDirection: "column", padding: "8px 12px", borderRadius: 12, maxWidth: "70%" },
-  chatInput: { padding: "12px 20px", borderTop: "1px solid #1a1a1a", display: "flex", gap: 10, flexShrink: 0 },
-  chatInputField: { flex: 1, background: "#0a0a0a", border: "1px solid #222", borderRadius: 10, padding: "10px 14px", fontSize: 14, color: "#e0e0e0", fontFamily: "'Inter',sans-serif" },
-  sendBtn: { padding: "10px 20px", background: "#e63946", color: "#fff", borderRadius: 10, fontSize: 14, fontWeight: 600, fontFamily: "'Syne',sans-serif", transition: "background 0.15s", cursor: "pointer" },
+  msgBubble: { display: "flex", flexDirection: "column", padding: "7px 12px", borderRadius: 10, maxWidth: "70%" },
+  chatInput: { padding: "10px 16px", borderTop: "1px solid #1b2838", display: "flex", gap: 8, flexShrink: 0, background: "#131a21" },
+  chatInputField: { flex: 1, background: "#1b2838", border: "1px solid #2a3a4a", borderRadius: 8, padding: "9px 14px", fontSize: 14, color: "#c6d4df", fontFamily: "'Inter',sans-serif" },
+  sendBtn: { padding: "9px 18px", background: "#e63946", color: "#fff", borderRadius: 8, fontSize: 13, fontWeight: 600, fontFamily: "'Inter',sans-serif", transition: "background 0.15s", cursor: "pointer" },
+  iconBtn: { display: "flex", alignItems: "center", padding: "7px 10px", background: "#1b2838", color: "#8ba3b4", borderRadius: 6, fontSize: 13, border: "1px solid #2a3a4a", cursor: "pointer", transition: "all 0.15s", fontFamily: "'Inter',sans-serif" },
 };
