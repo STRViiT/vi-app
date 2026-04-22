@@ -875,6 +875,7 @@ const [aiLoading, setAiLoading] = useState(false);
 async function searchWithAI() {
   if (!aiSearch.trim() || rooms.length === 0) return;
   setAiLoading(true);
+  console.log("searchWithAI called", aiSearch, rooms.length);
   try {
     const roomList = rooms.map((r, i) => `${i}: "${r.title}"`).join(", ");
     const res = await fetch("/api/ai", {
@@ -885,10 +886,12 @@ async function searchWithAI() {
       })
     });
     const data = await res.json();
+    console.log("AI response:", data);
     const text = data.content[0].text.replace(/```json|```/g, "").trim();
     const indices = JSON.parse(text);
+    console.log("Parsed indices:", indices);
     setAiResults(indices.map(i => rooms[i]?.id).filter(Boolean));
-  } catch { setAiResults([]); }
+  } catch (e) { console.error("AI error:", e); setAiResults([]); }
   setAiLoading(false);
 }
   return (
