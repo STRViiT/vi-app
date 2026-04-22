@@ -1019,9 +1019,6 @@ const display = aiFiltered ? aiFiltered : (filtered.length > 0 ? filtered : room
       })()}
     </div>
   );
-  const [aiSearch, setAiSearch] = useState("");
-const [aiResults, setAiResults] = useState(null);
-const [aiLoading, setAiLoading] = useState(false);
 
 async function searchWithAI() {
   if (!aiSearch.trim()) return;
