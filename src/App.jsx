@@ -885,9 +885,10 @@ async function searchWithAI() {
         messages: [{ role: "user", content: `Here are debate rooms: [${roomList}]. User wants: "${aiSearch}". Return ONLY a JSON array of index numbers that match, sorted by relevance. Example: [0,2,3]. If none match, return [].` }]
       })
     });
-    const data = await res.json();
-    console.log("AI response:", data);
-    const text = data.content[0].text.replace(/```json|```/g, "").trim();
+const data = await res.json();
+console.log("AI response:", data);
+if (data.error) { console.error("API error:", data.error); setAiResults([]); setAiLoading(false); return; }
+const text = data.content[0].text.replace(/```json|```/g, "").trim();
     const indices = JSON.parse(text);
     console.log("Parsed indices:", indices);
     setAiResults(indices.map(i => rooms[i]?.id).filter(Boolean));
