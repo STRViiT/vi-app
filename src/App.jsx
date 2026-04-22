@@ -873,25 +873,21 @@ const [aiResults, setAiResults] = useState(null);
 const [aiLoading, setAiLoading] = useState(false);
 
 async function searchWithAI() {
-  if (!aiSearch.trim()) return;
+  if (!aiSearch.trim() || rooms.length === 0) return;
   setAiLoading(true);
   try {
-    const roomTitles = rooms.map(r => ({ id: r.id, title: r.title, hashtags: r.hashtags }));
+    const roomList = rooms.map((r, i) => `${i}: "${r.title}"`).join(", ");
     const res = await fetch("/api/ai", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 1000,
-        messages: [{ role: "user", content: `Given these debate rooms: ${JSON.stringify(roomTitles)}\n\nUser wants to debate about: "${aiSearch}"\n\nReturn ONLY a JSON array of room IDs (strings) that are most relevant, sorted by relevance. If none match, return empty array [].` }]
+        messages: [{ role: "user", content: `Here are debate rooms: [${roomList}]. User wants: "${aiSearch}". Return ONLY a JSON array of index numbers that match, sorted by relevance. Example: [0,2,3]. If none match, return [].` }]
       })
     });
     const data = await res.json();
     const text = data.content[0].text.replace(/```json|```/g, "").trim();
-    const ids = JSON.parse(text);
-console.log("AI returned IDs:", ids);
-console.log("Room IDs:", rooms.map(r => r.id));
-setAiResults(ids);
+    const indices = JSON.parse(text);
+    setAiResults(indices.map(i => rooms[i]?.id).filter(Boolean));
   } catch { setAiResults([]); }
   setAiLoading(false);
 }
