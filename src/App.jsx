@@ -889,7 +889,9 @@ async function searchWithAI() {
     const data = await res.json();
     const text = data.content[0].text.replace(/```json|```/g, "").trim();
     const ids = JSON.parse(text);
-    setAiResults(ids);
+console.log("AI returned IDs:", ids);
+console.log("Room IDs:", rooms.map(r => r.id));
+setAiResults(ids);
   } catch { setAiResults([]); }
   setAiLoading(false);
 }
