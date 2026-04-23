@@ -160,14 +160,18 @@ const Icons = {
   ),
   Coin: () => (
     <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
-      <circle cx="8" cy="8" r="6" stroke="#f5a623" strokeWidth="1.4"/>
-      <text x="8" y="12" textAnchor="middle" fontSize="8" fill="#f5a623" fontWeight="700">S</text>
+      <path d="M10.5 5.5C10.5 4.1 9.4 3 8 3c-1.4 0-2.5 1-2.5 2.2 0 1.3 1 1.8 2.5 2.3 1.5.5 2.5 1.1 2.5 2.3C10.5 11 9.4 12 8 12c-1.4 0-2.5-1-2.5-2.3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" fill="none"/>
+      <line x1="8" y1="1.5" x2="8" y2="14.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+      <line x1="6" y1="4" x2="10" y2="4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+      <line x1="6" y1="11.5" x2="10" y2="11.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
     </svg>
   ),
   Diamond: () => (
     <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
-      <path d="M8 2L14 7l-6 7L2 7z" stroke="#9b59b6" strokeWidth="1.4" fill="none" strokeLinejoin="round"/>
-      <path d="M2 7h12M5 2l-3 5M11 2l3 5M5 2l3 5M11 2l-3 5" stroke="#9b59b6" strokeWidth="1" strokeLinecap="round"/>
+      <path d="M5 2.5h4.5C11.4 2.5 13 4 13 7.5S11.4 13 9.5 13H5V2.5z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" fill="none"/>
+      <line x1="7" y1="1" x2="7" y2="15" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+      <line x1="4.5" y1="5" x2="9.5" y2="5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+      <line x1="4.5" y1="10.5" x2="10" y2="10.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
     </svg>
   ),
   Home: () => (
@@ -190,15 +194,16 @@ const Icons = {
   ),
   Shop: () => (
     <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
-      <path d="M2 2h2l2.5 7h5L14 4H5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-      <circle cx="7" cy="13.5" r="1" fill="currentColor"/>
-      <circle cx="11" cy="13.5" r="1" fill="currentColor"/>
+      <path d="M2 2.5h12l-1.5 8H3.5L2 2.5z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" fill="none"/>
+      <path d="M5.5 2.5C5.5 1.1 6.6 0 8 0s2.5 1.1 2.5 2.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" fill="none"/>
+      <circle cx="6" cy="12.5" r="1" fill="currentColor"/>
+      <circle cx="10" cy="12.5" r="1" fill="currentColor"/>
     </svg>
   ),
   Settings: () => (
     <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
-      <circle cx="8" cy="8" r="2.5" stroke="currentColor" strokeWidth="1.4" fill="none"/>
-      <path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2M3.2 3.2l1.4 1.4M11.4 11.4l1.4 1.4M3.2 12.8l1.4-1.4M11.4 4.6l1.4-1.4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+      <path d="M8 10.5A2.5 2.5 0 108 5.5a2.5 2.5 0 000 5z" stroke="currentColor" strokeWidth="1.3" fill="none"/>
+      <path d="M9.3 1.2l.5 1.6c.3.1.7.3 1 .5l1.6-.5 1.3 2.2-1.2 1.1c0 .3.1.6.1.9s0 .6-.1.9l1.2 1.1-1.3 2.2-1.6-.5c-.3.2-.6.4-1 .5l-.5 1.6H6.7l-.5-1.6a4 4 0 01-1-.5l-1.6.5-1.3-2.2 1.2-1.1c0-.3-.1-.6-.1-.9s0-.6.1-.9L2.3 5.5l1.3-2.2 1.6.5c.3-.2.6-.4 1-.5l.5-1.6h2.6z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" fill="none"/>
     </svg>
   ),
   Mic: (p) => (
@@ -327,62 +332,62 @@ function PlayerProfilePopup({ userId, onClose }) {
   return (
     <div ref={ref} style={{
       position: "fixed", top: "50%", left: "50%", transform: "translate(-50%,-50%)",
-      background: "#131a21", border: "1px solid #2a3a4a", borderRadius: 12, padding: 0,
+      background: "#0a0a0a", border: "1px solid #222", borderRadius: 12, padding: 0,
       zIndex: 1000, width: 340, boxShadow: "0 20px 60px rgba(0,0,0,0.8)",
       overflow: "hidden", fontFamily: "'Inter',sans-serif"
     }}>
       {/* Steam-style banner */}
-      <div style={{ background: "linear-gradient(135deg,#1b2838,#2a475e)", padding: "20px 20px 0", position: "relative" }}>
-        <button onClick={onClose} style={{ position: "absolute", top: 12, right: 12, color: "#8ba3b4", background: "none", cursor: "pointer" }}>
+      <div style={{ background: "linear-gradient(135deg,#111,#1a1a1a)", padding: "20px 20px 0", position: "relative" }}>
+        <button onClick={onClose} style={{ position: "absolute", top: 12, right: 12, color: "#888", background: "none", cursor: "pointer" }}>
           <Icons.Close />
         </button>
         <div style={{ display: "flex", gap: 14, alignItems: "flex-end", paddingBottom: 0 }}>
           {data?.avatar_url
-            ? <img src={data.avatar_url} style={{ width: 64, height: 64, borderRadius: 4, border: "3px solid #66c0f4", flexShrink: 0 }} alt="" />
-            : <div style={{ width: 64, height: 64, borderRadius: 4, background: "#2a475e", border: "3px solid #66c0f4", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26, flexShrink: 0 }}>?</div>
+            ? <img src={data.avatar_url} style={{ width: 64, height: 64, borderRadius: 4, border: "3px solid #e63946", flexShrink: 0 }} alt="" />
+            : <div style={{ width: 64, height: 64, borderRadius: 4, background: "#222", border: "3px solid #e63946", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26, flexShrink: 0 }}>?</div>
           }
           <div style={{ paddingBottom: 14 }}>
             <p style={{ fontSize: 18, fontWeight: 700, color: "#fff", letterSpacing: "0.5px" }}>{data?.username || "Anonymous"}</p>
             <div style={{ display: "flex", gap: 6, marginTop: 4 }}>
-              <span style={{ fontSize: 11, background: "#c6d4df22", color: "#66c0f4", padding: "2px 8px", borderRadius: 3, border: "1px solid #66c0f455" }}>
+              <span style={{ fontSize: 11, background: "#e6394611", color: "#e63946", padding: "2px 8px", borderRadius: 3, border: "1px solid #e6394633" }}>
                 {winRate > 60 ? "Expert" : winRate > 40 ? "Regular" : "Newcomer"}
               </span>
-              {winRate > 0 && <span style={{ fontSize: 11, color: "#8ba3b4" }}>{winRate}% WR</span>}
+              {winRate > 0 && <span style={{ fontSize: 11, color: "#888" }}>{winRate}% WR</span>}
             </div>
           </div>
         </div>
       </div>
       {/* Stats bar */}
-      <div style={{ background: "#1b2838", padding: "12px 20px", borderBottom: "1px solid #2a3a4a", display: "flex", gap: 0 }}>
+      <div style={{ background: "#111", padding: "12px 20px", borderBottom: "1px solid #222", display: "flex", gap: 0 }}>
         {[
           { icon: <Icons.Trophy />, val: data?.wins || 0, label: "Wins", color: "#e63946" },
-          { icon: <Icons.Skull />, val: data?.losses || 0, label: "Losses", color: "#8ba3b4" },
+          { icon: <Icons.Skull />, val: data?.losses || 0, label: "Losses", color: "#888" },
           { icon: <Icons.Coin />, val: data?.sigs || 0, label: "Sigs", color: "#f5a623" },
           { icon: <Icons.Diamond />, val: data?.deps || 0, label: "Deps", color: "#9b59b6" },
         ].map((s, i) => (
-          <div key={i} style={{ flex: 1, textAlign: "center", padding: "6px 0", borderRight: i < 3 ? "1px solid #2a3a4a" : "none" }}>
+          <div key={i} style={{ flex: 1, textAlign: "center", padding: "6px 0", borderRight: i < 3 ? "1px solid #222" : "none" }}>
             <div style={{ display: "flex", justifyContent: "center", marginBottom: 3 }}>{s.icon}</div>
             <p style={{ fontSize: 16, fontWeight: 700, color: s.color, fontFamily: "'Inter',sans-serif" }}>{s.val}</p>
-            <p style={{ fontSize: 10, color: "#8ba3b4", textTransform: "uppercase", letterSpacing: "0.06em" }}>{s.label}</p>
+            <p style={{ fontSize: 10, color: "#888", textTransform: "uppercase", letterSpacing: "0.06em" }}>{s.label}</p>
           </div>
         ))}
       </div>
       {/* Recent debates */}
-      <div style={{ background: "#131a21", padding: "12px 20px", maxHeight: 180, overflowY: "auto" }}>
-        <p style={{ fontSize: 11, color: "#8ba3b4", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Recent Debates</p>
+      <div style={{ background: "#0a0a0a", padding: "12px 20px", maxHeight: 180, overflowY: "auto" }}>
+        <p style={{ fontSize: 11, color: "#888", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Recent Debates</p>
         {history.length === 0
-          ? <p style={{ fontSize: 12, color: "#4a6178" }}>No debates yet.</p>
+          ? <p style={{ fontSize: 12, color: "#555" }}>No debates yet.</p>
           : history.slice(0, 6).map(h => (
             <div key={h.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "5px 0", borderBottom: "1px solid #1e2d3d" }}>
-              <span style={{ fontSize: 12, color: "#c6d4df", flex: 1, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis", maxWidth: 200 }}>{h.topic || "Open Debate"}</span>
+              <span style={{ fontSize: 12, color: "#ccc", flex: 1, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis", maxWidth: 200 }}>{h.topic || "Open Debate"}</span>
               <span style={{ fontSize: 11, fontWeight: 600, color: h.result === "win" ? "#4caf50" : "#666", marginLeft: 10 }}>{h.result === "win" ? "W" : "L"}</span>
             </div>
           ))
         }
       </div>
       {/* Open on new page */}
-      <div style={{ background: "#1b2838", padding: "12px 20px", display: "flex", justifyContent: "flex-end" }}>
-        <button onClick={() => window.open(`/profile/${userId}`, "_blank")} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "#66c0f4", background: "none", cursor: "pointer", fontFamily: "'Inter',sans-serif" }}>
+      <div style={{ background: "#111", padding: "12px 20px", display: "flex", justifyContent: "flex-end" }}>
+        <button onClick={() => window.open(`/profile/${userId}`, "_blank")} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "#e63946", background: "none", cursor: "pointer", fontFamily: "'Inter',sans-serif" }}>
           <Icons.ExternalLink /> Open full profile
         </button>
       </div>
@@ -474,38 +479,38 @@ export default function App() {
   return (
     <div style={S.root}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
         ::-webkit-scrollbar { width: 3px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #2a3a4a; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #222; border-radius: 4px; }
         input:focus { outline: none; }
         button { cursor: pointer; border: none; background: none; font-family: inherit; }
 
         .chip:hover { background: #fff !important; color: #0a0a0a !important; }
         .chip-sel { background: #fff !important; color: #0a0a0a !important; }
-        .topic-row:hover { background: #1a2634 !important; }
-        .topic-row-sel { background: #1a2634 !important; border-left: 2px solid #e63946 !important; }
-        .fmt-btn:hover { background: #1a2634 !important; border-color: #3a5268 !important; }
+        .topic-row:hover { background: #1a1a1a !important; }
+        .topic-row-sel { background: #1c1c1c !important; border-left: 2px solid #e63946 !important; }
+        .fmt-btn:hover { background: #1a1a1a !important; border-color: #555 !important; }
         .fmt-sel { background: #fff !important; color: #0a0a0a !important; border-color: #fff !important; }
-        .dur-btn:hover { background: #1a2634 !important; border-color: #3a5268 !important; }
+        .dur-btn:hover { background: #1a1a1a !important; border-color: #555 !important; }
         .dur-sel { background: #e63946 !important; color: #fff !important; border-color: #e63946 !important; }
-        .lang-btn:hover { border-color: #3a5268 !important; background: #1a2634 !important; }
-        .lang-sel { border-color: #e63946 !important; background: #2a1520 !important; color: #e63946 !important; }
-        .connect-btn:hover { background: #e63946 !important; color: #fff !important; transform: translateY(-1px); }
+        .lang-btn:hover { border-color: #555 !important; background: #1a1a1a !important; }
+        .lang-sel { border-color: #e63946 !important; background: #1a0a0b !important; color: #e63946 !important; }
+        .connect-btn:hover { background: #e63946 !important; transform: translateY(-1px); }
         .hashtag-pill:hover { border-color: #e63946 !important; color: #e63946 !important; cursor: pointer; }
-        .hashtag-pill-active { border-color: #e63946 !important; color: #e63946 !important; background: #2a1520 !important; }
+        .hashtag-pill-active { border-color: #e63946 !important; color: #e63946 !important; background: #1a0a0b !important; }
         .nav-item { transition: all 0.15s; position: relative; }
-        .nav-item:hover .nav-label { color: #c6d4df !important; }
-        .nav-item:hover .nav-icon { color: #c6d4df !important; }
+        .nav-item:hover .nav-label { color: #fff !important; }
+        .nav-item:hover .nav-icon { color: #fff !important; }
         .nav-sel .nav-label { color: #fff !important; }
         .nav-sel .nav-icon { color: #e63946 !important; }
         .nav-sel::after { content: ''; position: absolute; bottom: -16px; left: 50%; transform: translateX(-50%); width: 20px; height: 2px; background: #e63946; border-radius: 2px; }
-        .signin-btn:hover { background: #c6d4df !important; }
-        .signout-btn:hover { color: #e63946 !important; }
-        .profile-avatar { border-radius: 4px; width: 34px; height: 34px; object-fit: cover; border: 2px solid #2a475e; cursor: pointer; transition: border-color 0.15s; }
-        .profile-avatar:hover { border-color: #66c0f4 !important; }
-        .room-card:hover { border-color: #2a3a4a !important; background: #131a21 !important; }
+        .signin-btn:hover { background: #f0f0f0 !important; }
+        .signout-btn:hover { color: #ff6b6b !important; }
+        .profile-avatar { border-radius: 50%; width: 32px; height: 32px; object-fit: cover; border: 2px solid #333; cursor: pointer; transition: border-color 0.15s; }
+        .profile-avatar:hover { border-color: #e63946 !important; }
+        .room-card:hover { border-color: #333 !important; background: #161616 !important; }
         .join-btn:hover { background: #e63946 !important; color: #fff !important; border-color: #e63946 !important; }
         .judge-btn:hover { background: #f5a623 !important; color: #000 !important; border-color: #f5a623 !important; }
         .send-btn:hover { background: #c0303a !important; }
@@ -514,7 +519,7 @@ export default function App() {
         .vote-btn:hover { opacity: 0.85; }
         .timer-urgent { animation: pulse 1s infinite; }
         .save-btn:hover { background: #c0303a !important; }
-        .player-name-btn:hover { color: #66c0f4 !important; text-decoration: underline; cursor: pointer; }
+        .player-name-btn:hover { color: #e63946 !important; text-decoration: underline; cursor: pointer; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         @keyframes msgIn { from { opacity: 0; transform: translateY(8px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
         .msg-animate { animation: msgIn 0.18s ease-out; }
@@ -526,10 +531,15 @@ export default function App() {
         .slide-down { animation: slideDown 0.2s ease-out; }
         @media (max-width: 768px) {
           .mobile-grid { grid-template-columns: 1fr !important; }
-          .mobile-header { padding: 12px 16px !important; flex-wrap: wrap; gap: 8px; }
-          .mobile-main { padding: 16px 12px !important; }
-          .mobile-nav { gap: 16px !important; }
           .mobile-hide { display: none !important; }
+          header { padding: 0 10px !important; }
+          header nav { gap: 6px !important; }
+          .nav-label { display: none !important; }
+          header nav button { padding: 6px 8px !important; min-width: 32px; justify-content: center; }
+          header nav::-webkit-scrollbar { display: none; }
+          .user-stats { display: none !important; }
+          .signin-mobile { display: inline !important; }
+          main { padding: 12px 10px !important; }
         }
       `}</style>
 
@@ -544,7 +554,7 @@ export default function App() {
         {/* Nav */}
         <nav style={S.nav}>
           {screen === "room" ? (
-            <button className="nav-item" style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 13, color: "#8ba3b4", fontFamily: "'Inter',sans-serif", padding: "6px 10px", background: "#1b2838", borderRadius: 6, border: "1px solid #2a3a4a" }}
+            <button className="nav-item" style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 13, color: "#888", fontFamily: "'Inter',sans-serif", padding: "6px 10px", background: "#111", borderRadius: 6, border: "1px solid #222" }}
               onClick={async () => {
                 if (currentRoom && user) {
                   await supabase.from("room_members").delete().eq("room_id", currentRoom.id).eq("user_id", user.id);
@@ -563,10 +573,10 @@ export default function App() {
               <button key={id} className={`nav-item ${screen === id ? "nav-sel" : ""}`}
                 style={{ display: "flex", alignItems: "center", gap: 7, padding: "6px 2px", background: "none", fontFamily: "'Inter',sans-serif" }}
                 onClick={() => setScreen(id)}>
-                <span className="nav-icon" style={{ color: screen === id ? "#e63946" : "#8ba3b4", display: "flex", transition: "color 0.15s" }}>
+                <span className="nav-icon" style={{ color: screen === id ? "#e63946" : "#888", display: "flex", transition: "color 0.15s" }}>
                   <Icon />
                 </span>
-                <span className="nav-label" style={{ fontSize: 13, fontWeight: 500, color: screen === id ? "#fff" : "#8ba3b4", transition: "color 0.15s" }}>
+                <span className="nav-label" style={{ fontSize: 13, fontWeight: 500, color: screen === id ? "#fff" : "#888", transition: "color 0.15s" }}>
                   {label}
                 </span>
               </button>
@@ -575,38 +585,39 @@ export default function App() {
         </nav>
 
         {/* User area */}
+        <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
         {user ? (
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <>
             {profile?.avatar_url && (
               <img src={profile.avatar_url} className="profile-avatar" alt="avatar" onClick={() => setScreen("profile")} />
             )}
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", cursor: "pointer" }} onClick={() => setScreen("profile")}>
-              <span style={{ fontSize: 13, color: "#c6d4df", fontWeight: 600, fontFamily: "'Inter',sans-serif" }}>
-                {profile?.username || user.email}
+            <div className="user-stats" style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", cursor: "pointer" }} onClick={() => setScreen("profile")}>
+              <span style={{ fontSize: 12, color: "#fff", fontWeight: 600, fontFamily: "'Inter',sans-serif", maxWidth: 100, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                {profile?.username || user.email?.split("@")[0]}
               </span>
-              {/* Stats — basic clean font */}
-              <div style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 2 }}>
-                <span style={{ display: "flex", alignItems: "center", gap: 3, fontSize: 11, color: "#e63946", fontFamily: "'Inter',sans-serif" }}>
-                  <Icons.Trophy /> {profile?.wins || 0}W
+              <div style={{ display: "flex", gap: 6, alignItems: "center", marginTop: 1 }}>
+                <span style={{ display: "flex", alignItems: "center", gap: 2, fontSize: 10, color: "#e63946", fontFamily: "'Inter',sans-serif" }}>
+                  <Icons.Trophy /> {profile?.wins || 0}
                 </span>
-                <span style={{ display: "flex", alignItems: "center", gap: 3, fontSize: 11, color: "#666", fontFamily: "'Inter',sans-serif" }}>
-                  <Icons.Skull /> {profile?.losses || 0}L
+                <span style={{ display: "flex", alignItems: "center", gap: 2, fontSize: 10, color: "#555", fontFamily: "'Inter',sans-serif" }}>
+                  <Icons.Skull /> {profile?.losses || 0}
                 </span>
-                <span style={{ display: "flex", alignItems: "center", gap: 3, fontSize: 11, color: "#f5a623", fontFamily: "'Inter',sans-serif" }}>
+                <span style={{ display: "flex", alignItems: "center", gap: 2, fontSize: 10, color: "#f5a623", fontFamily: "'Inter',sans-serif" }}>
                   <Icons.Coin /> {profile?.sigs || 0}
-                </span>
-                <span style={{ display: "flex", alignItems: "center", gap: 3, fontSize: 11, color: "#9b59b6", fontFamily: "'Inter',sans-serif" }}>
-                  <Icons.Diamond /> {profile?.deps || 0}
                 </span>
               </div>
             </div>
-            <button className="signout-btn" onClick={signOut} style={{ fontSize: 12, color: "#4a6178", fontFamily: "'Inter',sans-serif", transition: "color 0.15s", padding: "0 4px" }}>Sign out</button>
-          </div>
+            <button className="signout-btn" onClick={signOut} style={{ fontSize: 11, color: "#555", fontFamily: "'Inter',sans-serif", transition: "color 0.15s", flexShrink: 0 }}>
+              <span className="user-stats">Sign out</span>
+            </button>
+          </>
         ) : (
-          <button className="signin-btn" onClick={signInWithGoogle} style={{ padding: "8px 18px", background: "#c6d4df", color: "#0a0a0a", borderRadius: 6, fontSize: 13, fontWeight: 600, fontFamily: "'Inter',sans-serif", transition: "background 0.15s" }}>
-            Sign in with Google
+          <button className="signin-btn" onClick={signInWithGoogle} style={{ padding: "7px 14px", background: "#fff", color: "#0a0a0a", borderRadius: 8, fontSize: 12, fontWeight: 600, fontFamily: "'Inter',sans-serif", whiteSpace: "nowrap", flexShrink: 0 }}>
+            <span className="user-stats">Sign in with Google</span>
+            <span className="signin-mobile" style={{ display: "none" }}>Sign in</span>
           </button>
         )}
+        </div>
       </header>
 
       <main style={S.main}>
@@ -660,44 +671,44 @@ function ProfileScreen({ user, profile, setProfile }) {
   const level = Math.floor(totalDebates / 5) + 1;
   const levelProgress = (totalDebates % 5) / 5 * 100;
   const rankLabel = winRate >= 70 ? "Grandmaster" : winRate >= 55 ? "Diamond" : winRate >= 45 ? "Gold" : winRate >= 35 ? "Silver" : "Bronze";
-  const rankColor = winRate >= 70 ? "#f5a623" : winRate >= 55 ? "#66c0f4" : winRate >= 45 ? "#f5a623" : winRate >= 35 ? "#aaa" : "#cd7f32";
+  const rankColor = winRate >= 70 ? "#f5a623" : winRate >= 55 ? "#e63946" : winRate >= 45 ? "#f5a623" : winRate >= 35 ? "#aaa" : "#cd7f32";
 
   return (
     <div style={{ maxWidth: 860, margin: "0 auto", width: "100%", fontFamily: "'Inter',sans-serif" }}>
       {/* Steam-style profile banner */}
-      <div style={{ background: "linear-gradient(160deg, #1b2838 0%, #2a475e 50%, #1b2838 100%)", borderRadius: "12px 12px 0 0", padding: "32px 32px 0", border: "1px solid #2a3a4a", borderBottom: "none", position: "relative", overflow: "hidden" }}>
+      <div style={{ background: "linear-gradient(160deg, #111 0%, #1a1a1a 50%, #111 100%)", borderRadius: "12px 12px 0 0", padding: "32px 32px 0", border: "1px solid #222", borderBottom: "none", position: "relative", overflow: "hidden" }}>
         {/* Decorative grid lines */}
         <div style={{ position: "absolute", inset: 0, backgroundImage: "repeating-linear-gradient(0deg,transparent,transparent 40px,#ffffff08 40px,#ffffff08 41px),repeating-linear-gradient(90deg,transparent,transparent 40px,#ffffff08 40px,#ffffff08 41px)", pointerEvents: "none" }} />
         <div style={{ display: "flex", gap: 24, alignItems: "flex-end", position: "relative" }}>
           {/* Avatar */}
           <div style={{ flexShrink: 0 }}>
             {profile?.avatar_url
-              ? <img src={profile.avatar_url} style={{ width: 96, height: 96, borderRadius: 6, border: "3px solid #66c0f4", display: "block" }} alt="avatar" />
-              : <div style={{ width: 96, height: 96, borderRadius: 6, background: "#2a475e", border: "3px solid #66c0f4", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 40 }}>?</div>
+              ? <img src={profile.avatar_url} style={{ width: 96, height: 96, borderRadius: 6, border: "3px solid #e63946", display: "block" }} alt="avatar" />
+              : <div style={{ width: 96, height: 96, borderRadius: 6, background: "#222", border: "3px solid #e63946", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 40 }}>?</div>
             }
             {/* Online indicator */}
-            <div style={{ width: 12, height: 12, borderRadius: "50%", background: "#4caf50", border: "2px solid #1b2838", marginTop: -6, marginLeft: 82 }} />
+            <div style={{ width: 12, height: 12, borderRadius: "50%", background: "#4caf50", border: "2px solid #111", marginTop: -6, marginLeft: 82 }} />
           </div>
           <div style={{ paddingBottom: 20, flex: 1 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
               <h1 style={{ fontSize: 28, fontWeight: 700, color: "#fff", letterSpacing: "-0.5px" }}>{profile?.username || "Anonymous"}</h1>
               <span style={{ fontSize: 11, background: rankColor + "22", color: rankColor, padding: "3px 10px", borderRadius: 4, border: `1px solid ${rankColor}55`, fontWeight: 600, letterSpacing: "0.06em" }}>{rankLabel}</span>
             </div>
-            <p style={{ fontSize: 12, color: "#8ba3b4", marginTop: 4 }}>{user.email}</p>
+            <p style={{ fontSize: 12, color: "#888", marginTop: 4 }}>{user.email}</p>
             {/* Level bar */}
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 12 }}>
-              <span style={{ fontSize: 11, color: "#66c0f4", fontWeight: 600 }}>Lvl {level}</span>
-              <div style={{ flex: 1, height: 6, background: "#2a475e", borderRadius: 3, maxWidth: 180 }}>
+              <span style={{ fontSize: 11, color: "#e63946", fontWeight: 600 }}>Lvl {level}</span>
+              <div style={{ flex: 1, height: 6, background: "#222", borderRadius: 3, maxWidth: 180 }}>
                 <div style={{ height: "100%", width: `${levelProgress}%`, background: "linear-gradient(90deg,#e63946,#f5a623)", borderRadius: 3, transition: "width 0.5s" }} />
               </div>
-              <span style={{ fontSize: 10, color: "#4a6178" }}>{totalDebates % 5}/5 to Lvl {level + 1}</span>
+              <span style={{ fontSize: 10, color: "#555" }}>{totalDebates % 5}/5 to Lvl {level + 1}</span>
             </div>
           </div>
         </div>
         {/* Tab bar */}
         <div style={{ display: "flex", gap: 0, marginTop: 16, position: "relative" }}>
           {["overview", "history", "settings"].map(tab => (
-            <button key={tab} onClick={() => setActiveTab(tab)} style={{ padding: "10px 20px", fontSize: 13, fontWeight: 500, color: activeTab === tab ? "#fff" : "#8ba3b4", background: activeTab === tab ? "#131a21" : "transparent", borderBottom: activeTab === tab ? "2px solid #e63946" : "2px solid transparent", fontFamily: "'Inter',sans-serif", transition: "all 0.15s", textTransform: "capitalize" }}>
+            <button key={tab} onClick={() => setActiveTab(tab)} style={{ padding: "10px 20px", fontSize: 13, fontWeight: 500, color: activeTab === tab ? "#fff" : "#888", background: activeTab === tab ? "#0a0a0a" : "transparent", borderBottom: activeTab === tab ? "2px solid #e63946" : "2px solid transparent", fontFamily: "'Inter',sans-serif", transition: "all 0.15s", textTransform: "capitalize" }}>
               {tab}
             </button>
           ))}
@@ -705,38 +716,38 @@ function ProfileScreen({ user, profile, setProfile }) {
       </div>
 
       {/* Tab content */}
-      <div style={{ background: "#131a21", border: "1px solid #2a3a4a", borderTop: "none", borderRadius: "0 0 12px 12px", padding: 28 }}>
+      <div style={{ background: "#0a0a0a", border: "1px solid #222", borderTop: "none", borderRadius: "0 0 16px 16px", padding: 28 }}>
         {activeTab === "overview" && (
           <div>
             {/* Stats grid */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12, marginBottom: 28 }}>
               {[
                 { icon: <Icons.Trophy />, val: profile?.wins || 0, label: "Wins", color: "#e63946", bg: "#2a1520" },
-                { icon: <Icons.Skull />, val: profile?.losses || 0, label: "Losses", color: "#8ba3b4", bg: "#1b2838" },
+                { icon: <Icons.Skull />, val: profile?.losses || 0, label: "Losses", color: "#888", bg: "#111" },
                 { icon: <Icons.Coin />, val: profile?.sigs || 0, label: "Sigs", color: "#f5a623", bg: "#241f0f" },
                 { icon: <Icons.Diamond />, val: profile?.deps || 0, label: "Deps", color: "#9b59b6", bg: "#1e1228" },
               ].map(stat => (
-                <div key={stat.label} style={{ background: stat.bg, borderRadius: 8, padding: "16px 12px", textAlign: "center", border: "1px solid #2a3a4a" }}>
+                <div key={stat.label} style={{ background: stat.bg, borderRadius: 8, padding: "16px 12px", textAlign: "center", border: "1px solid #222" }}>
                   <div style={{ display: "flex", justifyContent: "center", marginBottom: 6 }}>{stat.icon}</div>
                   <p style={{ fontSize: 24, fontWeight: 700, color: stat.color, fontFamily: "'Inter',sans-serif" }}>{stat.val}</p>
-                  <p style={{ fontSize: 10, color: "#4a6178", marginTop: 4, textTransform: "uppercase", letterSpacing: "0.08em" }}>{stat.label}</p>
+                  <p style={{ fontSize: 10, color: "#555", marginTop: 4, textTransform: "uppercase", letterSpacing: "0.08em" }}>{stat.label}</p>
                 </div>
               ))}
             </div>
             {/* Win rate bar */}
             {totalDebates > 0 && (
-              <div style={{ background: "#1b2838", borderRadius: 8, padding: "16px 20px", border: "1px solid #2a3a4a", marginBottom: 20 }}>
+              <div style={{ background: "#111", borderRadius: 8, padding: "16px 20px", border: "1px solid #222", marginBottom: 20 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-                  <span style={{ fontSize: 12, color: "#8ba3b4", fontWeight: 600 }}>Win Rate</span>
+                  <span style={{ fontSize: 12, color: "#888", fontWeight: 600 }}>Win Rate</span>
                   <span style={{ fontSize: 18, fontWeight: 700, color: winRate >= 50 ? "#4caf50" : "#e63946", fontFamily: "'Inter',sans-serif" }}>{winRate}%</span>
                 </div>
-                <div style={{ height: 8, background: "#2a3a4a", borderRadius: 4 }}>
+                <div style={{ height: 8, background: "#222", borderRadius: 4 }}>
                   <div style={{ height: "100%", width: `${winRate}%`, background: winRate >= 50 ? "linear-gradient(90deg,#4caf50,#66bb6a)" : "linear-gradient(90deg,#e63946,#ef5350)", borderRadius: 4, transition: "width 0.5s" }} />
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6 }}>
-                  <span style={{ fontSize: 10, color: "#4a6178" }}>{profile?.wins || 0} wins</span>
-                  <span style={{ fontSize: 10, color: "#4a6178" }}>{totalDebates} total</span>
-                  <span style={{ fontSize: 10, color: "#4a6178" }}>{profile?.losses || 0} losses</span>
+                  <span style={{ fontSize: 10, color: "#555" }}>{profile?.wins || 0} wins</span>
+                  <span style={{ fontSize: 10, color: "#555" }}>{totalDebates} total</span>
+                  <span style={{ fontSize: 10, color: "#555" }}>{profile?.losses || 0} losses</span>
                 </div>
               </div>
             )}
@@ -744,14 +755,14 @@ function ProfileScreen({ user, profile, setProfile }) {
         )}
         {activeTab === "history" && (
           <div>
-            <p style={{ fontSize: 11, color: "#8ba3b4", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 16 }}>Debate History ({history.length})</p>
+            <p style={{ fontSize: 11, color: "#888", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 16 }}>Debate History ({history.length})</p>
             {history.length === 0
-              ? <p style={{ fontSize: 13, color: "#4a6178", padding: "12px 0" }}>No debates yet.</p>
+              ? <p style={{ fontSize: 13, color: "#555", padding: "12px 0" }}>No debates yet.</p>
               : (
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   {history.map(h => (
-                    <div key={h.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", background: "#1b2838", borderRadius: 8, border: "1px solid #2a3a4a" }}>
-                      <span style={{ fontSize: 13, color: "#c6d4df" }}>{h.topic || "Open Debate"}</span>
+                    <div key={h.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", background: "#111", borderRadius: 8, border: "1px solid #222" }}>
+                      <span style={{ fontSize: 13, color: "#ccc" }}>{h.topic || "Open Debate"}</span>
                       <span style={{ fontSize: 12, color: h.result === "win" ? "#4caf50" : "#e63946", fontWeight: 600, background: h.result === "win" ? "#0d2a0d" : "#2a0d0d", padding: "2px 10px", borderRadius: 4 }}>
                         {h.result === "win" ? "WIN" : "LOSS"}
                       </span>
@@ -764,7 +775,7 @@ function ProfileScreen({ user, profile, setProfile }) {
         )}
         {activeTab === "settings" && (
           <div>
-            <p style={{ fontSize: 11, color: "#8ba3b4", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 16 }}>Username</p>
+            <p style={{ fontSize: 11, color: "#888", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 16 }}>Username</p>
             <div style={{ display: "flex", gap: 10 }}>
               <input style={{ ...S.textInput, flex: 1 }} value={username} onChange={e => setUsername(e.target.value)} placeholder="Enter username (max 15)" maxLength={15} onKeyDown={e => e.key === "Enter" && saveUsername()} />
               <button className="save-btn" onClick={saveUsername} disabled={saving} style={{ padding: "10px 20px", background: saved ? "#4caf50" : "#e63946", color: "#fff", borderRadius: 8, fontSize: 13, fontWeight: 600, fontFamily: "'Inter',sans-serif", cursor: "pointer", transition: "background 0.2s", minWidth: 70 }}>
@@ -799,7 +810,7 @@ function Timer({ duration, startedAt }) {
   const secs = timeLeft % 60;
   const isUrgent = timeLeft < 60;
   return (
-    <span className={isUrgent ? "timer-urgent" : ""} style={{ fontFamily: "'Rajdhani',sans-serif", fontSize: 20, fontWeight: 700, color: isUrgent ? "#e63946" : "#c6d4df", letterSpacing: "2px" }}>
+    <span className={isUrgent ? "timer-urgent" : ""} style={{ fontFamily: "'Syne',sans-serif", fontSize: 20, fontWeight: 700, color: isUrgent ? "#e63946" : "#ccc", letterSpacing: "2px" }}>
       {timeLeft === 0 ? "TIME'S UP" : `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`}
     </span>
   );
@@ -819,44 +830,44 @@ function EndScreen({ room, debaters, votes, user, onBack }) {
   return (
     <div style={{ maxWidth: 500, margin: "0 auto", width: "100%", padding: "40px 20px" }}>
       <div className="fade-up" style={{ ...S.card, textAlign: "center" }}>
-        <h2 style={{ fontFamily: "'Rajdhani',sans-serif", fontSize: 32, fontWeight: 700, color: "#fff", marginBottom: 8, letterSpacing: "1px" }}>DEBATE OVER</h2>
-        <p style={{ fontSize: 13, color: "#8ba3b4", marginBottom: 28 }}>{room.title}</p>
+        <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: 32, fontWeight: 700, color: "#fff", marginBottom: 8, letterSpacing: "1px" }}>DEBATE OVER</h2>
+        <p style={{ fontSize: 13, color: "#888", marginBottom: 28 }}>{room.title}</p>
         {votes.length > 0 && winner && (
           <div className="fade-up" style={{ marginBottom: 28 }}>
             <p style={{ fontSize: 11, color: "#f5a623", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 8 }}>Winner</p>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12 }}>
-              {winner.profiles?.avatar_url ? <img src={winner.profiles.avatar_url} style={{ width: 52, height: 52, borderRadius: 4, border: "3px solid #f5a623" }} alt="" /> : <div style={{ width: 52, height: 52, borderRadius: 4, background: "#2a3a4a", border: "3px solid #f5a623", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24 }}>?</div>}
+              {winner.profiles?.avatar_url ? <img src={winner.profiles.avatar_url} style={{ width: 52, height: 52, borderRadius: 4, border: "3px solid #f5a623" }} alt="" /> : <div style={{ width: 52, height: 52, borderRadius: 4, background: "#222", border: "3px solid #f5a623", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24 }}>?</div>}
               <div>
-                <p style={{ fontSize: 22, fontWeight: 700, color: "#fff", fontFamily: "'Rajdhani',sans-serif", letterSpacing: "0.5px" }}>{winner.profiles?.username || "Anonymous"}</p>
+                <p style={{ fontSize: 22, fontWeight: 700, color: "#fff", fontFamily: "'Syne',sans-serif", letterSpacing: "0.5px" }}>{winner.profiles?.username || "Anonymous"}</p>
                 <p style={{ fontSize: 13, color: "#f5a623", display: "flex", alignItems: "center", gap: 4 }}><Icons.Scale /> {voteCount[winner.user_id] || 0} votes</p>
               </div>
             </div>
           </div>
         )}
-        {votes.length === 0 && <p style={{ fontSize: 14, color: "#8ba3b4", marginBottom: 28 }}>No judges voted in this debate.</p>}
+        {votes.length === 0 && <p style={{ fontSize: 14, color: "#888", marginBottom: 28 }}>No judges voted in this debate.</p>}
         <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 28 }}>
           {sorted.map((m, i) => (
-            <div key={m.user_id} className="fade-up" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", background: m.user_id === user?.id ? "#1b2838" : "#131a21", borderRadius: 8, border: `1px solid ${i === 0 && votes.length > 0 ? "#f5a623" : "#2a3a4a"}`, animationDelay: `${i * 0.15}s` }}>
+            <div key={m.user_id} className="fade-up" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", background: m.user_id === user?.id ? "#111" : "#0a0a0a", borderRadius: 8, border: `1px solid ${i === 0 && votes.length > 0 ? "#f5a623" : "#222"}`, animationDelay: `${i * 0.15}s` }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                {m.profiles?.avatar_url ? <img src={m.profiles.avatar_url} style={{ width: 32, height: 32, borderRadius: 4 }} alt="" /> : <div style={{ width: 32, height: 32, borderRadius: 4, background: "#2a3a4a", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>?</div>}
+                {m.profiles?.avatar_url ? <img src={m.profiles.avatar_url} style={{ width: 32, height: 32, borderRadius: 4 }} alt="" /> : <div style={{ width: 32, height: 32, borderRadius: 4, background: "#222", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>?</div>}
                 <div>
-                  <p style={{ fontSize: 14, color: "#c6d4df", fontWeight: 600 }}>{m.profiles?.username || "Anonymous"} {m.user_id === user?.id && <span style={{ fontSize: 10, color: "#4a6178" }}>(you)</span>}</p>
-                  <p style={{ fontSize: 11, color: "#8ba3b4" }}>{m.is_host ? "HOST" : "Debater"}</p>
+                  <p style={{ fontSize: 14, color: "#ccc", fontWeight: 600 }}>{m.profiles?.username || "Anonymous"} {m.user_id === user?.id && <span style={{ fontSize: 10, color: "#555" }}>(you)</span>}</p>
+                  <p style={{ fontSize: 11, color: "#888" }}>{m.is_host ? "HOST" : "Debater"}</p>
                 </div>
               </div>
               <div style={{ textAlign: "right" }}>
-                <p style={{ fontSize: 22, fontWeight: 700, color: i === 0 && votes.length > 0 ? "#f5a623" : "#4a6178", fontFamily: "'Rajdhani',sans-serif" }}>{voteCount[m.user_id] || 0}</p>
-                <p style={{ fontSize: 10, color: "#4a6178" }}>votes</p>
+                <p style={{ fontSize: 22, fontWeight: 700, color: i === 0 && votes.length > 0 ? "#f5a623" : "#555", fontFamily: "'Syne',sans-serif" }}>{voteCount[m.user_id] || 0}</p>
+                <p style={{ fontSize: 10, color: "#555" }}>votes</p>
               </div>
             </div>
           ))}
         </div>
         {mysigs > 0 && coinAnim && (
           <div className="coin-animate" style={{ marginBottom: 24, padding: "16px 20px", background: "#241f0f", borderRadius: 8, border: "1px solid #f5a623" }}>
-            <p style={{ fontSize: 32, fontWeight: 700, color: "#f5a623", fontFamily: "'Rajdhani',sans-serif", letterSpacing: "1px" }}>+{mysigs} SIGS</p>
+            <p style={{ fontSize: 32, fontWeight: 700, color: "#f5a623", fontFamily: "'Syne',sans-serif", letterSpacing: "1px" }}>+{mysigs} SIGS</p>
           </div>
         )}
-        <button onClick={onBack} style={{ width: "100%", padding: "14px 0", background: "#e63946", color: "#fff", borderRadius: 8, fontSize: 15, fontWeight: 700, fontFamily: "'Rajdhani',sans-serif", cursor: "pointer", letterSpacing: "1px" }}>
+        <button onClick={onBack} style={{ width: "100%", padding: "14px 0", background: "#e63946", color: "#fff", borderRadius: 8, fontSize: 15, fontWeight: 700, fontFamily: "'Syne',sans-serif", cursor: "pointer", letterSpacing: "1px" }}>
           BACK TO HOME
         </button>
       </div>
@@ -1016,41 +1027,41 @@ function RoomScreen({ room, user, profile, myRole, setProfile, onViewProfile }) 
     <div style={S.roomContainer}>
       <div style={S.roomHeader}>
         <div>
-          <h2 style={{ fontFamily: "'Rajdhani',sans-serif", fontSize: 20, fontWeight: 700, color: "#c6d4df", letterSpacing: "0.5px", display: "flex", alignItems: "center", gap: 10 }}>
+          <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: 20, fontWeight: 700, color: "#ccc", letterSpacing: "0.5px", display: "flex", alignItems: "center", gap: 10 }}>
             {room.title}
             {room.is_adult_only && <span style={{ fontSize: 10, background: "#e63946", color: "#fff", padding: "2px 8px", borderRadius: 4, fontFamily: "'Inter',sans-serif", letterSpacing: "0.05em" }}>18+</span>}
             {room.host_mode && <span style={{ fontSize: 10, background: "#e63946", color: "#fff", padding: "2px 8px", borderRadius: 4, fontFamily: "'Inter',sans-serif" }}>HOST</span>}
             {isJudge && <span style={{ fontSize: 10, background: "#f5a623", color: "#000", padding: "2px 8px", borderRadius: 4, fontFamily: "'Inter',sans-serif", display: "flex", alignItems: "center", gap: 4 }}><Icons.Scale /> Judge</span>}
           </h2>
-          <p style={{ fontSize: 11, color: "#4a6178", marginTop: 2 }}>{room.format} · {durationLabel} · {debaters.length} debaters · {judges.length} judges</p>
+          <p style={{ fontSize: 11, color: "#555", marginTop: 2 }}>{room.format} · {durationLabel} · {debaters.length} debaters · {judges.length} judges</p>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <button onClick={() => setShowMembers(!showMembers)} style={{ ...S.iconBtn, background: showMembers ? "#2a3a4a" : "#1b2838" }}>
+          <button onClick={() => setShowMembers(!showMembers)} style={{ ...S.iconBtn, background: showMembers ? "#222" : "#111" }}>
             <Icons.Users /> <span style={{ fontSize: 12, marginLeft: 4 }}>{members.length}</span>
           </button>
           {timerStarted && <Timer duration={room.duration} startedAt={timerStarted} />}
           {!isJudge && (
-            <button onClick={() => setMicOn(!micOn)} style={{ ...S.iconBtn, background: micOn ? "#e63946" : "#1b2838", color: micOn ? "#fff" : "#8ba3b4" }}>
+            <button onClick={() => setMicOn(!micOn)} style={{ ...S.iconBtn, background: micOn ? "#e63946" : "#111", color: micOn ? "#fff" : "#888" }}>
               <Icons.Mic off={!micOn} />
             </button>
           )}
           {!isJudge && (
-            <button onClick={() => { setCamOn(!camOn); if (!callActive) toggleCall(); }} style={{ ...S.iconBtn, background: camOn ? "#e63946" : "#1b2838", color: camOn ? "#fff" : "#8ba3b4" }}>
+            <button onClick={() => { setCamOn(!camOn); if (!callActive) toggleCall(); }} style={{ ...S.iconBtn, background: camOn ? "#e63946" : "#111", color: camOn ? "#fff" : "#888" }}>
               <Icons.Camera off={!camOn} />
             </button>
           )}
           {isJudge && (
-            <button onClick={toggleCall} style={{ ...S.iconBtn, background: callActive ? "#2a3a4a" : "#1b2838", gap: 6 }}>
+            <button onClick={toggleCall} style={{ ...S.iconBtn, background: callActive ? "#222" : "#111", gap: 6 }}>
               <Icons.Eye /> <span style={{ fontSize: 12 }}>{callActive ? "Watching" : "Watch"}</span>
             </button>
           )}
           {isCreator && !debateStarted && (
-            <button className="start-debate-btn" onClick={startDebate} style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", background: debaters.length >= 2 ? "#1a3a1a" : "#1b2838", color: debaters.length >= 2 ? "#4caf50" : "#4a6178", borderRadius: 6, fontSize: 12, fontWeight: 600, border: `1px solid ${debaters.length >= 2 ? "#4caf50" : "#2a3a4a"}`, cursor: debaters.length >= 2 ? "pointer" : "default", fontFamily: "'Inter',sans-serif", transition: "background 0.15s" }}>
+            <button className="start-debate-btn" onClick={startDebate} style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", background: debaters.length >= 2 ? "#1a3a1a" : "#111", color: debaters.length >= 2 ? "#4caf50" : "#555", borderRadius: 6, fontSize: 12, fontWeight: 600, border: `1px solid ${debaters.length >= 2 ? "#4caf50" : "#222"}`, cursor: debaters.length >= 2 ? "pointer" : "default", fontFamily: "'Inter',sans-serif", transition: "background 0.15s" }}>
               <Icons.Play /> {debaters.length >= 2 ? "Start" : `Start (${debaters.length}/2)`}
             </button>
           )}
           {!isJudge && debateStarted && (
-            <button onClick={voteEnd} style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", background: wantsEnd ? "#2a3a4a" : "#2a1520", color: wantsEnd ? "#4a6178" : "#e63946", borderRadius: 6, fontSize: 12, fontWeight: 600, border: "1px solid #e63946", cursor: wantsEnd ? "default" : "pointer", fontFamily: "'Inter',sans-serif" }}>
+            <button onClick={voteEnd} style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", background: wantsEnd ? "#222" : "#2a1520", color: wantsEnd ? "#555" : "#e63946", borderRadius: 6, fontSize: 12, fontWeight: 600, border: "1px solid #e63946", cursor: wantsEnd ? "default" : "pointer", fontFamily: "'Inter',sans-serif" }}>
               <Icons.Flag /> {wantsEnd ? "Waiting…" : "End"}
             </button>
           )}
@@ -1059,23 +1070,23 @@ function RoomScreen({ room, user, profile, myRole, setProfile, onViewProfile }) 
 
       {/* Players popup */}
       {showMembers && (
-        <div className="slide-down" style={{ position: "absolute", top: 64, right: 16, background: "#131a21", border: "1px solid #2a3a4a", borderRadius: 10, padding: 16, zIndex: 20, minWidth: 220, boxShadow: "0 12px 40px rgba(0,0,0,0.7)" }}>
+        <div className="slide-down" style={{ position: "absolute", top: 64, right: 16, background: "#0a0a0a", border: "1px solid #222", borderRadius: 10, padding: 16, zIndex: 20, minWidth: 220, boxShadow: "0 12px 40px rgba(0,0,0,0.7)" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-            <span style={{ fontSize: 12, fontWeight: 600, color: "#c6d4df", textTransform: "uppercase", letterSpacing: "0.08em" }}>Players</span>
-            <button onClick={() => setShowMembers(false)} style={{ color: "#4a6178" }}><Icons.Close /></button>
+            <span style={{ fontSize: 12, fontWeight: 600, color: "#ccc", textTransform: "uppercase", letterSpacing: "0.08em" }}>Players</span>
+            <button onClick={() => setShowMembers(false)} style={{ color: "#555" }}><Icons.Close /></button>
           </div>
           {members.map(m => (
-            <div key={m.user_id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "7px 0", borderBottom: "1px solid #1b2838" }}>
-              {m.profiles?.avatar_url ? <img src={m.profiles.avatar_url} style={{ width: 28, height: 28, borderRadius: 4, flexShrink: 0 }} alt="" /> : <div style={{ width: 28, height: 28, borderRadius: 4, background: "#2a3a4a", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, flexShrink: 0 }}>?</div>}
+            <div key={m.user_id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "7px 0", borderBottom: "1px solid #1a1a1a" }}>
+              {m.profiles?.avatar_url ? <img src={m.profiles.avatar_url} style={{ width: 28, height: 28, borderRadius: 4, flexShrink: 0 }} alt="" /> : <div style={{ width: 28, height: 28, borderRadius: 4, background: "#222", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, flexShrink: 0 }}>?</div>}
               <div style={{ flex: 1, minWidth: 0 }}>
-                <button className="player-name-btn" onClick={() => onViewProfile && onViewProfile(m.user_id)} style={{ fontSize: 13, color: "#c6d4df", fontWeight: 500, fontFamily: "'Inter',sans-serif", textAlign: "left", transition: "color 0.15s", display: "block", maxWidth: "100%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                <button className="player-name-btn" onClick={() => onViewProfile && onViewProfile(m.user_id)} style={{ fontSize: 13, color: "#ccc", fontWeight: 500, fontFamily: "'Inter',sans-serif", textAlign: "left", transition: "color 0.15s", display: "block", maxWidth: "100%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                   {m.profiles?.username || "Anonymous"}
                 </button>
-                <p style={{ fontSize: 10, color: m.role === "judge" ? "#f5a623" : "#4a6178" }}>
+                <p style={{ fontSize: 10, color: m.role === "judge" ? "#f5a623" : "#555" }}>
                   {m.role}{m.is_host && <span style={{ marginLeft: 6, fontSize: 9, background: "#e63946", color: "#fff", padding: "1px 5px", borderRadius: 3 }}>HOST</span>}
                 </p>
               </div>
-              {m.user_id === user?.id && <span style={{ fontSize: 10, color: "#4a6178" }}>you</span>}
+              {m.user_id === user?.id && <span style={{ fontSize: 10, color: "#555" }}>you</span>}
             </div>
           ))}
         </div>
@@ -1083,11 +1094,11 @@ function RoomScreen({ room, user, profile, myRole, setProfile, onViewProfile }) 
 
       {/* Judge voting panel */}
       {isJudge && debaters.length > 0 && (
-        <div style={{ padding: "10px 20px", borderBottom: "1px solid #1b2838", background: "#131a21", display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+        <div style={{ padding: "10px 20px", borderBottom: "1px solid #1a1a1a", background: "#0a0a0a", display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
           <span style={{ fontSize: 11, color: "#f5a623", fontWeight: 600, display: "flex", alignItems: "center", gap: 5 }}><Icons.Scale /> Vote for winner:</span>
           {debaters.map(m => (
             <button key={m.user_id} className="vote-btn" onClick={() => castVote(m.user_id)} disabled={!!myVote}
-              style={{ padding: "5px 14px", borderRadius: 6, fontSize: 12, fontWeight: 600, background: myVote === m.user_id ? "#f5a623" : myVote ? "#1b2838" : "#2a3a4a", color: myVote === m.user_id ? "#000" : myVote ? "#4a6178" : "#c6d4df", border: `1px solid ${myVote === m.user_id ? "#f5a623" : "#2a3a4a"}`, cursor: myVote ? "default" : "pointer", transition: "all 0.15s", display: "flex", alignItems: "center", gap: 6, fontFamily: "'Inter',sans-serif" }}>
+              style={{ padding: "5px 14px", borderRadius: 6, fontSize: 12, fontWeight: 600, background: myVote === m.user_id ? "#f5a623" : myVote ? "#111" : "#222", color: myVote === m.user_id ? "#000" : myVote ? "#555" : "#ccc", border: `1px solid ${myVote === m.user_id ? "#f5a623" : "#222"}`, cursor: myVote ? "default" : "pointer", transition: "all 0.15s", display: "flex", alignItems: "center", gap: 6, fontFamily: "'Inter',sans-serif" }}>
               {m.profiles?.avatar_url && <img src={m.profiles.avatar_url} style={{ width: 18, height: 18, borderRadius: 3 }} alt="" />}
               <button className="player-name-btn" onClick={(e) => { e.stopPropagation(); onViewProfile && onViewProfile(m.user_id); }} style={{ color: "inherit", fontSize: 12, fontFamily: "'Inter',sans-serif" }}>
                 {m.profiles?.username || "Debater"}
@@ -1101,28 +1112,28 @@ function RoomScreen({ room, user, profile, myRole, setProfile, onViewProfile }) 
 
       {/* Waiting room with kick */}
       {isCreator && (!debateStarted || room.host_mode) && (
-        <div style={{ padding: "8px 20px", borderBottom: "1px solid #1b2838", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-          <span style={{ fontSize: 11, color: "#4a6178" }}>Waiting room:</span>
+        <div style={{ padding: "8px 20px", borderBottom: "1px solid #1a1a1a", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+          <span style={{ fontSize: 11, color: "#555" }}>Waiting room:</span>
           {members.filter(m => m.user_id !== user.id).map(m => (
-            <div key={m.user_id} style={{ display: "flex", alignItems: "center", gap: 6, background: "#1b2838", borderRadius: 6, padding: "3px 10px 3px 6px", border: "1px solid #2a3a4a" }}>
+            <div key={m.user_id} style={{ display: "flex", alignItems: "center", gap: 6, background: "#111", borderRadius: 6, padding: "3px 10px 3px 6px", border: "1px solid #222" }}>
               {m.profiles?.avatar_url && <img src={m.profiles.avatar_url} style={{ width: 18, height: 18, borderRadius: 3 }} alt="" />}
-              <button className="player-name-btn" onClick={() => onViewProfile && onViewProfile(m.user_id)} style={{ fontSize: 12, color: "#c6d4df", fontFamily: "'Inter',sans-serif", transition: "color 0.15s" }}>
+              <button className="player-name-btn" onClick={() => onViewProfile && onViewProfile(m.user_id)} style={{ fontSize: 12, color: "#ccc", fontFamily: "'Inter',sans-serif", transition: "color 0.15s" }}>
                 {m.profiles?.username || "User"}
               </button>
-              <span style={{ fontSize: 10, color: "#4a6178" }}>{m.role}</span>
-              <button className="kick-btn" onClick={() => kickMember(m.user_id)} style={{ display: "flex", alignItems: "center", color: "#4a6178", padding: "1px 4px", borderRadius: 4, border: "1px solid #2a3a4a", transition: "all 0.15s" }}><Icons.Kick /></button>
+              <span style={{ fontSize: 10, color: "#555" }}>{m.role}</span>
+              <button className="kick-btn" onClick={() => kickMember(m.user_id)} style={{ display: "flex", alignItems: "center", color: "#555", padding: "1px 4px", borderRadius: 4, border: "1px solid #222", transition: "all 0.15s" }}><Icons.Kick /></button>
             </div>
           ))}
-          {members.length < 2 && <span style={{ fontSize: 11, color: "#2a3a4a" }}>Waiting for opponent…</span>}
+          {members.length < 2 && <span style={{ fontSize: 11, color: "#222" }}>Waiting for opponent…</span>}
         </div>
       )}
 
       {/* Votes display */}
       {!isJudge && votes.length > 0 && (
-        <div style={{ padding: "7px 20px", borderBottom: "1px solid #1b2838", display: "flex", alignItems: "center", gap: 12 }}>
-          <span style={{ fontSize: 11, color: "#4a6178", display: "flex", alignItems: "center", gap: 4 }}><Icons.Scale /> Votes:</span>
+        <div style={{ padding: "7px 20px", borderBottom: "1px solid #1a1a1a", display: "flex", alignItems: "center", gap: 12 }}>
+          <span style={{ fontSize: 11, color: "#555", display: "flex", alignItems: "center", gap: 4 }}><Icons.Scale /> Votes:</span>
           {debaters.map(m => (
-            <span key={m.user_id} style={{ fontSize: 12, color: "#8ba3b4" }}>
+            <span key={m.user_id} style={{ fontSize: 12, color: "#888" }}>
               {m.profiles?.username || "Debater"}: <strong style={{ color: "#f5a623" }}>{voteCount[m.user_id] || 0}</strong>
             </span>
           ))}
@@ -1131,7 +1142,7 @@ function RoomScreen({ room, user, profile, myRole, setProfile, onViewProfile }) 
 
       <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
         {callActive && livekitToken && livekitUrl && (
-          <div style={{ width: "55%", borderRight: "1px solid #1b2838", overflow: "hidden" }}>
+          <div style={{ width: "55%", borderRight: "1px solid #1a1a1a", overflow: "hidden" }}>
             <LiveKitRoom token={livekitToken} serverUrl={livekitUrl} video={camOn && !isJudge} audio={micOn && !isJudge} onDisconnected={() => setCallActive(false)} style={{ height: "100%" }}>
               <VideoConference />
             </LiveKitRoom>
@@ -1139,15 +1150,15 @@ function RoomScreen({ room, user, profile, myRole, setProfile, onViewProfile }) 
         )}
         <div style={{ display: "flex", flexDirection: "column", flex: 1, overflow: "hidden" }}>
           <div style={S.chatArea}>
-            {isJudge && <div style={{ textAlign: "center", padding: "7px 14px", background: "#131a21", borderRadius: 6, fontSize: 11, color: "#f5a623", marginBottom: 8, border: "1px solid #2a1500" }}>Judge mode — watch and vote only</div>}
+            {isJudge && <div style={{ textAlign: "center", padding: "7px 14px", background: "#0a0a0a", borderRadius: 6, fontSize: 11, color: "#f5a623", marginBottom: 8, border: "1px solid #2a1500" }}>Judge mode — watch and vote only</div>}
             {!debateStarted && !isJudge && <div style={{ textAlign: "center", padding: "7px 14px", background: "#0d2a0d", borderRadius: 6, fontSize: 11, color: "#4caf50", marginBottom: 8, border: "1px solid #1a3a1a" }}>Waiting for host to start…</div>}
-            {messages.length === 0 && <div style={{ textAlign: "center", color: "#2a3a4a", fontSize: 13, marginTop: 20 }}>No messages yet.</div>}
+            {messages.length === 0 && <div style={{ textAlign: "center", color: "#222", fontSize: 13, marginTop: 20 }}>No messages yet.</div>}
             {messages.map(msg => (
               <div key={msg.id} className="msg-animate" style={{ ...S.msgRow, flexDirection: msg.user_id === user?.id ? "row-reverse" : "row" }}>
                 {msg.profiles?.avatar_url && <img src={msg.profiles.avatar_url} style={{ width: 26, height: 26, borderRadius: 4, flexShrink: 0 }} alt="" />}
-                <div style={{ ...S.msgBubble, background: msg.user_id === user?.id ? "#e63946" : "#1b2838" }}>
+                <div style={{ ...S.msgBubble, background: msg.user_id === user?.id ? "#e63946" : "#111" }}>
                   {msg.user_id !== user?.id && (
-                    <button className="player-name-btn" onClick={() => onViewProfile && onViewProfile(msg.user_id)} style={{ fontSize: 10, color: "#8ba3b4", marginBottom: 2, fontFamily: "'Inter',sans-serif", textAlign: "left", transition: "color 0.15s" }}>
+                    <button className="player-name-btn" onClick={() => onViewProfile && onViewProfile(msg.user_id)} style={{ fontSize: 10, color: "#888", marginBottom: 2, fontFamily: "'Inter',sans-serif", textAlign: "left", transition: "color 0.15s" }}>
                       {msg.profiles?.username || "Anonymous"}
                     </button>
                   )}
@@ -1230,8 +1241,8 @@ function HomeScreen({ search, setSearch, selectedCategory, setSelectedCategory, 
           {selectedTopic && (
             <div style={S.selectedBadge}>
               <span style={{ color: "#e63946" }}><Icons.Play /></span>
-              <span style={{ fontWeight: 600, fontSize: 13, color: "#c6d4df" }}>{selectedTopic.label}</span>
-              <button style={{ marginLeft: "auto", color: "#4a6178" }} onClick={() => setSelectedTopic(null)}><Icons.Close /></button>
+              <span style={{ fontWeight: 600, fontSize: 13, color: "#ccc" }}>{selectedTopic.label}</span>
+              <button style={{ marginLeft: "auto", color: "#555" }} onClick={() => setSelectedTopic(null)}><Icons.Close /></button>
             </div>
           )}
         </div>
@@ -1263,16 +1274,16 @@ function HomeScreen({ search, setSearch, selectedCategory, setSelectedCategory, 
               </button>
             ))}
           </div>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 18, padding: "10px 14px", background: "#0f1923", borderRadius: 8, border: `1px solid ${isAdultOnly ? "#e63946" : "#2a3a4a"}` }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 18, padding: "10px 14px", background: "#0f1923", borderRadius: 8, border: `1px solid ${isAdultOnly ? "#e63946" : "#222"}` }}>
             <div>
-              <p style={{ fontSize: 13, color: isAdultOnly ? "#e63946" : "#8ba3b4", fontWeight: 600 }}>18+ Only</p>
-              <p style={{ fontSize: 11, color: "#4a6178", marginTop: 2 }}>Restrict room to adults</p>
+              <p style={{ fontSize: 13, color: isAdultOnly ? "#e63946" : "#888", fontWeight: 600 }}>18+ Only</p>
+              <p style={{ fontSize: 11, color: "#555", marginTop: 2 }}>Restrict room to adults</p>
             </div>
             <Toggle value={isAdultOnly} onChange={setIsAdultOnly} />
           </div>
-          <button onClick={() => { setSelectedTopic(null); setSelectedFormat("1v1"); setSelectedDuration(40); setSelectedLang("en"); setIsAdultOnly(false); }} style={{ width: "100%", padding: "9px 0", background: "transparent", color: "#4a6178", borderRadius: 8, fontSize: 12, border: "1px solid #2a3a4a", marginTop: 12, cursor: "pointer", fontFamily: "'Inter',sans-serif" }}>Reset Filters</button>
+          <button onClick={() => { setSelectedTopic(null); setSelectedFormat("1v1"); setSelectedDuration(40); setSelectedLang("en"); setIsAdultOnly(false); }} style={{ width: "100%", padding: "9px 0", background: "transparent", color: "#555", borderRadius: 8, fontSize: 12, border: "1px solid #222", marginTop: 12, cursor: "pointer", fontFamily: "'Inter',sans-serif" }}>Reset Filters</button>
           <button className="connect-btn" style={S.connectBtn} onClick={findDebate}>Find Debate</button>
-          <p style={S.hint}>{selectedTopic ? <>Debating: <strong style={{ color: "#c6d4df" }}>{selectedTopic.label}</strong></> : "No topic selected — any topic"}</p>
+          <p style={S.hint}>{selectedTopic ? <>Debating: <strong style={{ color: "#ccc" }}>{selectedTopic.label}</strong></> : "No topic selected — any topic"}</p>
         </div>
       </div>
 
@@ -1282,17 +1293,17 @@ function HomeScreen({ search, setSearch, selectedCategory, setSelectedCategory, 
         <div style={S.searchBox}>
           <span style={S.searchIcon}><Icons.Sparkle /></span>
           <input style={S.searchInput} placeholder="What do you want to debate about?" value={aiSearch} onChange={e => setAiSearch(e.target.value)} onKeyDown={e => e.key === "Enter" && searchWithAI()} />
-          <button onClick={searchWithAI} style={{ padding: "4px 14px", borderRadius: 6, background: aiLoading ? "#2a3a4a" : "#e63946", color: "#fff", fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "'Inter',sans-serif" }}>
+          <button onClick={searchWithAI} style={{ padding: "4px 14px", borderRadius: 6, background: aiLoading ? "#222" : "#e63946", color: "#fff", fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "'Inter',sans-serif" }}>
             {aiLoading ? "…" : "Search"}
           </button>
         </div>
-        {aiResults !== null && aiResults.length === 0 && <p style={{ fontSize: 12, color: "#4a6178", marginTop: 8 }}>No matching rooms found.</p>}
+        {aiResults !== null && aiResults.length === 0 && <p style={{ fontSize: 12, color: "#555", marginTop: 8 }}>No matching rooms found.</p>}
       </div>
 
       {/* Hashtag filter strip */}
       {allHashtags.length > 0 && (
         <div style={{ marginTop: 16, display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-          <span style={{ fontSize: 11, color: "#4a6178", display: "flex", alignItems: "center", gap: 4 }}><Icons.Hash /> Filter:</span>
+          <span style={{ fontSize: 11, color: "#555", display: "flex", alignItems: "center", gap: 4 }}><Icons.Hash /> Filter:</span>
           {hashtagFilter && (
             <button onClick={() => setHashtagFilter(null)} style={{ display: "flex", alignItems: "center", gap: 4, padding: "3px 10px", borderRadius: 20, border: "1px solid #e63946", background: "#2a1520", color: "#e63946", fontSize: 11, cursor: "pointer", fontFamily: "'Inter',sans-serif" }}>
               <Icons.Close /> Clear
@@ -1301,7 +1312,7 @@ function HomeScreen({ search, setSearch, selectedCategory, setSelectedCategory, 
           {allHashtags.map(tag => (
             <button key={tag} className={`hashtag-pill ${hashtagFilter === tag ? "hashtag-pill-active" : ""}`}
               onClick={() => setHashtagFilter(hashtagFilter === tag ? null : tag)}
-              style={{ padding: "3px 10px", borderRadius: 20, border: "1px solid #2a3a4a", background: "#1b2838", color: "#8ba3b4", fontSize: 11, fontFamily: "'Inter',sans-serif", transition: "all 0.15s" }}>
+              style={{ padding: "3px 10px", borderRadius: 20, border: "1px solid #222", background: "#111", color: "#888", fontSize: 11, fontFamily: "'Inter',sans-serif", transition: "all 0.15s" }}>
               #{tag}
             </button>
           ))}
@@ -1326,14 +1337,14 @@ function HomeScreen({ search, setSearch, selectedCategory, setSelectedCategory, 
             <h2 style={{ ...S.cardTitle, marginBottom: 16 }}>
               Active Rooms
               {hashtagFilter && <span style={{ fontSize: 12, color: "#e63946", fontWeight: 400, marginLeft: 10 }}>#{hashtagFilter}</span>}
-              {!hashtagFilter && filtered.length > 0 && filtered.length < rooms.length && <span style={{ fontSize: 13, color: "#4a6178", fontWeight: 400, marginLeft: 10 }}>{filtered.length} matching</span>}
+              {!hashtagFilter && filtered.length > 0 && filtered.length < rooms.length && <span style={{ fontSize: 13, color: "#555", fontWeight: 400, marginLeft: 10 }}>{filtered.length} matching</span>}
             </h2>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 12 }}>
               {display.map(room => (
                 <div key={room.id} className="room-card" style={{ ...S.roomCard }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <p style={{ fontSize: 14, fontWeight: 600, color: "#c6d4df", marginBottom: 4, display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+                      <p style={{ fontSize: 14, fontWeight: 600, color: "#ccc", marginBottom: 4, display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
                         {room.title}
                         {room.is_adult_only && <span style={{ fontSize: 10, background: "#e63946", color: "#fff", padding: "1px 6px", borderRadius: 4 }}>18+</span>}
                         {room.host_mode && <span style={{ fontSize: 10, background: "#e63946", color: "#fff", padding: "1px 6px", borderRadius: 4 }}>HOST</span>}
@@ -1344,17 +1355,17 @@ function HomeScreen({ search, setSearch, selectedCategory, setSelectedCategory, 
                         <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginTop: 6 }}>
                           {room.hashtags.map(tag => (
                             <button key={tag} onClick={(e) => { e.stopPropagation(); setHashtagFilter(hashtagFilter === tag ? null : tag); }}
-                              style={{ fontSize: 10, color: hashtagFilter === tag ? "#e63946" : "#4a6178", background: hashtagFilter === tag ? "#2a1520" : "transparent", border: `1px solid ${hashtagFilter === tag ? "#e63946" : "#2a3a4a"}`, padding: "1px 6px", borderRadius: 10, cursor: "pointer", fontFamily: "'Inter',sans-serif", transition: "all 0.15s" }}>
+                              style={{ fontSize: 10, color: hashtagFilter === tag ? "#e63946" : "#555", background: hashtagFilter === tag ? "#2a1520" : "transparent", border: `1px solid ${hashtagFilter === tag ? "#e63946" : "#222"}`, padding: "1px 6px", borderRadius: 10, cursor: "pointer", fontFamily: "'Inter',sans-serif", transition: "all 0.15s" }}>
                               #{tag}
                             </button>
                           ))}
                         </div>
                       )}
                     </div>
-                    <span style={{ fontSize: 11, color: room.status === "active" ? "#4caf50" : "#4a6178", whiteSpace: "nowrap", marginLeft: 8 }}>{room.status === "active" ? "● Live" : "waiting"}</span>
+                    <span style={{ fontSize: 11, color: room.status === "active" ? "#4caf50" : "#555", whiteSpace: "nowrap", marginLeft: 8 }}>{room.status === "active" ? "● Live" : "waiting"}</span>
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 12 }}>
-                    <span style={{ fontSize: 11, color: "#4a6178" }}>{room.format} · {DURATIONS.find(d => d.id === room.duration)?.label || "Standard"}</span>
+                    <span style={{ fontSize: 11, color: "#555" }}>{room.format} · {DURATIONS.find(d => d.id === room.duration)?.label || "Standard"}</span>
                     <div style={{ display: "flex", gap: 6 }}>
                       <button className="join-btn" style={S.joinBtn} onClick={() => joinRoom(room, "debater")}>Join</button>
                       <button className="judge-btn" style={S.judgeBtn} onClick={() => joinRoom(room, "judge")} title="Join as Judge">
@@ -1423,14 +1434,14 @@ function SettingsScreen({ settingsLang, setSettingsLang, camEnabled, setCamEnabl
         <p style={S.fieldLabel}>Camera Preview</p>
         <div style={S.camPreview}>
           {camEnabled && !camError ? <video ref={videoRef} autoPlay muted playsInline style={S.video} /> : (
-            <div style={S.camOff}><span style={{ color: "#4a6178", fontSize: 13, marginTop: 8 }}>{camError ? "Not available" : "Off"}</span></div>
+            <div style={S.camOff}><span style={{ color: "#555", fontSize: 13, marginTop: 8 }}>{camError ? "Not available" : "Off"}</span></div>
           )}
         </div>
-        <div style={S.toggleRow}><span style={{ fontSize: 14, color: "#c6d4df" }}>Enable Camera</span><Toggle value={camEnabled} onChange={setCamEnabled} /></div>
+        <div style={S.toggleRow}><span style={{ fontSize: 14, color: "#ccc" }}>Enable Camera</span><Toggle value={camEnabled} onChange={setCamEnabled} /></div>
         {devices.video.length > 0 && <select style={S.select} value={selectedCam} onChange={e => setSelectedCam(e.target.value)}>{devices.video.map(d => <option key={d.deviceId} value={d.deviceId}>{d.label || "Camera"}</option>)}</select>}
         <div style={S.divider} />
         <p style={S.fieldLabel}>Microphone</p>
-        <div style={S.toggleRow}><span style={{ fontSize: 14, color: "#c6d4df" }}>Enable Microphone</span><Toggle value={micEnabled} onChange={setMicEnabled} /></div>
+        <div style={S.toggleRow}><span style={{ fontSize: 14, color: "#ccc" }}>Enable Microphone</span><Toggle value={micEnabled} onChange={setMicEnabled} /></div>
         {devices.audio.length > 0 && <select style={S.select} value={selectedMic} onChange={e => setSelectedMic(e.target.value)}>{devices.audio.map(d => <option key={d.deviceId} value={d.deviceId}>{d.label || "Microphone"}</option>)}</select>}
       </div>
     </div>
@@ -1439,7 +1450,7 @@ function SettingsScreen({ settingsLang, setSettingsLang, camEnabled, setCamEnabl
 
 function Toggle({ value, onChange }) {
   return (
-    <button onClick={() => onChange(!value)} style={{ width: 44, height: 24, borderRadius: 12, background: value ? "#e63946" : "#2a3a4a", position: "relative", flexShrink: 0, transition: "background 0.2s" }}>
+    <button onClick={() => onChange(!value)} style={{ width: 44, height: 24, borderRadius: 12, background: value ? "#e63946" : "#222", position: "relative", flexShrink: 0, transition: "background 0.2s" }}>
       <span style={{ position: "absolute", top: 3, left: value ? 22 : 3, width: 18, height: 18, borderRadius: "50%", background: "#fff", boxShadow: "0 1px 4px rgba(0,0,0,0.4)", transition: "left 0.2s" }} />
     </button>
   );
@@ -1508,17 +1519,17 @@ function CreateScreen({ roomTopic, setRoomTopic, user, onCreated }) {
             </button>
           ))}
         </div>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 18, padding: "10px 14px", background: "#0f1923", borderRadius: 8, border: `1px solid ${adultOnly ? "#e63946" : "#2a3a4a"}` }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 18, padding: "10px 14px", background: "#0f1923", borderRadius: 8, border: `1px solid ${adultOnly ? "#e63946" : "#222"}` }}>
           <div>
-            <p style={{ fontSize: 13, color: adultOnly ? "#e63946" : "#8ba3b4", fontWeight: 600 }}>18+ Only</p>
-            <p style={{ fontSize: 11, color: "#4a6178", marginTop: 2 }}>You can kick underage players before starting</p>
+            <p style={{ fontSize: 13, color: adultOnly ? "#e63946" : "#888", fontWeight: 600 }}>18+ Only</p>
+            <p style={{ fontSize: 11, color: "#555", marginTop: 2 }}>You can kick underage players before starting</p>
           </div>
           <Toggle value={adultOnly} onChange={setAdultOnly} />
         </div>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 12, padding: "10px 14px", background: "#0f1923", borderRadius: 8, border: `1px solid ${hostMode ? "#e63946" : "#2a3a4a"}` }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 12, padding: "10px 14px", background: "#0f1923", borderRadius: 8, border: `1px solid ${hostMode ? "#e63946" : "#222"}` }}>
           <div>
-            <p style={{ fontSize: 13, color: hostMode ? "#e63946" : "#8ba3b4", fontWeight: 600 }}>Host Mode</p>
-            <p style={{ fontSize: 11, color: "#4a6178", marginTop: 2 }}>Streamer-style: kick & swap opponents anytime</p>
+            <p style={{ fontSize: 13, color: hostMode ? "#e63946" : "#888", fontWeight: 600 }}>Host Mode</p>
+            <p style={{ fontSize: 11, color: "#555", marginTop: 2 }}>Streamer-style: kick & swap opponents anytime</p>
           </div>
           <Toggle value={hostMode} onChange={setHostMode} />
         </div>
@@ -1543,11 +1554,11 @@ function CreateScreen({ roomTopic, setRoomTopic, user, onCreated }) {
         {selectedTopic && (
           <div style={S.selectedBadge}>
             <span style={{ color: "#e63946" }}><Icons.Play /></span>
-            <span style={{ fontWeight: 600, fontSize: 13, color: "#c6d4df" }}>{selectedTopic.label}</span>
-            <button style={{ marginLeft: "auto", color: "#4a6178" }} onClick={() => setSelectedTopic(null)}><Icons.Close /></button>
+            <span style={{ fontWeight: 600, fontSize: 13, color: "#ccc" }}>{selectedTopic.label}</span>
+            <button style={{ marginLeft: "auto", color: "#555" }} onClick={() => setSelectedTopic(null)}><Icons.Close /></button>
           </div>
         )}
-        <p style={{ fontSize: 11, color: "#4a6178", marginTop: 12 }}>AI-generated hashtags will be added automatically to help players find your room.</p>
+        <p style={{ fontSize: 11, color: "#555", marginTop: 12 }}>AI-generated hashtags will be added automatically to help players find your room.</p>
       </div>
       <button className="final-btn" style={S.finalBtn} onClick={createRoom} disabled={creating}>{creating ? "Creating…" : "Create Room"}</button>
     </div>
@@ -1608,26 +1619,26 @@ function LoungeScreen({ user, profile }) {
           <p style={S.fieldLabel}>Max Members</p>
           <div style={{ display: "flex", gap: 8 }}>
             {[2, 5, 10].map(n => (
-              <button key={n} onClick={() => setMaxMembers(n)} style={{ flex: 1, padding: "10px 0", borderRadius: 8, border: `1px solid ${maxMembers === n ? "#c6d4df" : "#2a3a4a"}`, background: maxMembers === n ? "#c6d4df" : "transparent", color: maxMembers === n ? "#0a0a0a" : "#8ba3b4", fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "'Inter',sans-serif" }}>{n}</button>
+              <button key={n} onClick={() => setMaxMembers(n)} style={{ flex: 1, padding: "10px 0", borderRadius: 8, border: `1px solid ${maxMembers === n ? "#ccc" : "#222"}`, background: maxMembers === n ? "#ccc" : "transparent", color: maxMembers === n ? "#0a0a0a" : "#888", fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "'Inter',sans-serif" }}>{n}</button>
             ))}
           </div>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 18, padding: "10px 14px", background: "#0f1923", borderRadius: 8, border: `1px solid ${isPrivate ? "#f5a623" : "#2a3a4a"}` }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 18, padding: "10px 14px", background: "#0f1923", borderRadius: 8, border: `1px solid ${isPrivate ? "#f5a623" : "#222"}` }}>
             <div>
-              <p style={{ fontSize: 13, color: isPrivate ? "#f5a623" : "#8ba3b4", fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}><Icons.Lock /> Private</p>
-              <p style={{ fontSize: 11, color: "#4a6178", marginTop: 2 }}>Only invite-link access</p>
+              <p style={{ fontSize: 13, color: isPrivate ? "#f5a623" : "#888", fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}><Icons.Lock /> Private</p>
+              <p style={{ fontSize: 11, color: "#555", marginTop: 2 }}>Only invite-link access</p>
             </div>
             <Toggle value={isPrivate} onChange={setIsPrivate} />
           </div>
-          <button onClick={createLounge} disabled={creating} style={{ marginTop: 20, width: "100%", padding: "13px 0", background: "#c6d4df", color: "#0a0a0a", borderRadius: 8, fontSize: 14, fontWeight: 700, fontFamily: "'Rajdhani',sans-serif", cursor: "pointer", letterSpacing: "0.5px" }}>{creating ? "Creating…" : "Create Lounge"}</button>
+          <button onClick={createLounge} disabled={creating} style={{ marginTop: 20, width: "100%", padding: "13px 0", background: "#ccc", color: "#0a0a0a", borderRadius: 8, fontSize: 14, fontWeight: 700, fontFamily: "'Syne',sans-serif", cursor: "pointer", letterSpacing: "0.5px" }}>{creating ? "Creating…" : "Create Lounge"}</button>
         </div>
         <div style={S.card}>
           <h2 style={S.cardTitle}>About Lounge</h2>
-          <p style={{ fontSize: 13, color: "#8ba3b4", lineHeight: 1.7, marginTop: 8 }}>Lounges are calm discussion rooms — no debates, no judges, no timers. Just open conversation.</p>
+          <p style={{ fontSize: 13, color: "#888", lineHeight: 1.7, marginTop: 8 }}>Lounges are calm discussion rooms — no debates, no judges, no timers. Just open conversation.</p>
           <div style={{ marginTop: 20, display: "flex", flexDirection: "column", gap: 10 }}>
             {[["Free-form chat", Icons.Send], ["Voice & video", Icons.Camera], ["Private rooms with invite link", Icons.Lock], ["Up to 10 members", Icons.Users]].map(([text, Icon]) => (
               <div key={text} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <span style={{ color: "#4a6178" }}><Icon /></span>
-                <span style={{ fontSize: 13, color: "#c6d4df" }}>{text}</span>
+                <span style={{ color: "#555" }}><Icon /></span>
+                <span style={{ fontSize: 13, color: "#ccc" }}>{text}</span>
               </div>
             ))}
           </div>
@@ -1640,11 +1651,11 @@ function LoungeScreen({ user, profile }) {
             {rooms.map(room => (
               <div key={room.id} className="room-card" style={S.roomCard}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                  <p style={{ fontSize: 14, fontWeight: 600, color: "#c6d4df" }}>{room.title}</p>
-                  <span style={{ fontSize: 11, color: "#4a6178", display: "flex", alignItems: "center", gap: 4 }}><Icons.Users /> {room.max_members || 10}</span>
+                  <p style={{ fontSize: 14, fontWeight: 600, color: "#ccc" }}>{room.title}</p>
+                  <span style={{ fontSize: 11, color: "#555", display: "flex", alignItems: "center", gap: 4 }}><Icons.Users /> {room.max_members || 10}</span>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 12 }}>
-                  <span style={{ fontSize: 11, color: "#4a6178" }}>discussion</span>
+                  <span style={{ fontSize: 11, color: "#555" }}>discussion</span>
                   <button className="join-btn" style={S.joinBtn} onClick={() => joinLounge(room)}>Join</button>
                 </div>
               </div>
@@ -1720,42 +1731,42 @@ function LoungeRoom({ room, user, profile, onBack }) {
             <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
               <input style={{ ...S.chatInputField, fontSize: 15, fontWeight: 600, flex: 1 }} value={newTitle} onChange={e => setNewTitle(e.target.value)} onKeyDown={e => e.key === "Enter" && updateTitle()} autoFocus />
               <button onClick={updateTitle} style={{ padding: "6px 14px", background: "#e63946", color: "#fff", borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "'Inter',sans-serif" }}>Save</button>
-              <button onClick={() => setEditingTitle(false)} style={{ padding: "6px 10px", color: "#4a6178", borderRadius: 6, fontSize: 12, cursor: "pointer" }}><Icons.Close /></button>
+              <button onClick={() => setEditingTitle(false)} style={{ padding: "6px 10px", color: "#555", borderRadius: 6, fontSize: 12, cursor: "pointer" }}><Icons.Close /></button>
             </div>
           ) : (
-            <h2 style={{ fontFamily: "'Rajdhani',sans-serif", fontSize: 20, fontWeight: 700, color: "#c6d4df", letterSpacing: "0.5px", display: "flex", alignItems: "center", gap: 8 }}>
+            <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: 20, fontWeight: 700, color: "#ccc", letterSpacing: "0.5px", display: "flex", alignItems: "center", gap: 8 }}>
               {currentTitle}
               <span style={{ fontSize: 10, background: "#0d2a0d", color: "#4caf50", padding: "2px 8px", borderRadius: 4, fontFamily: "'Inter',sans-serif" }}>lounge</span>
-              {isCreator && <button onClick={() => setEditingTitle(true)} style={{ color: "#4a6178", cursor: "pointer" }}><Icons.Edit /></button>}
+              {isCreator && <button onClick={() => setEditingTitle(true)} style={{ color: "#555", cursor: "pointer" }}><Icons.Edit /></button>}
             </h2>
           )}
-          <p style={{ fontSize: 11, color: "#4a6178", marginTop: 2 }}>{members.length} members</p>
+          <p style={{ fontSize: 11, color: "#555", marginTop: 2 }}>{members.length} members</p>
         </div>
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
           {room.is_private && room.invite_code && <span style={{ fontSize: 11, color: "#f5a623", background: "#241f0f", padding: "3px 10px", borderRadius: 6, border: "1px solid #f5a623", display: "flex", alignItems: "center", gap: 4 }}><Icons.Lock /> {room.invite_code}</span>}
-          <button onClick={() => setShowMembers(!showMembers)} style={{ ...S.iconBtn, background: showMembers ? "#2a3a4a" : "#1b2838" }}>
+          <button onClick={() => setShowMembers(!showMembers)} style={{ ...S.iconBtn, background: showMembers ? "#222" : "#111" }}>
             <Icons.Users /> <span style={{ fontSize: 12, marginLeft: 4 }}>{members.length}</span>
           </button>
-          <button onClick={() => setMicOn(!micOn)} style={{ ...S.iconBtn, background: micOn ? "#e63946" : "#1b2838", color: micOn ? "#fff" : "#8ba3b4" }}><Icons.Mic off={!micOn} /></button>
-          <button onClick={() => { setCamOn(!camOn); if (!callActive) toggleCall(); }} style={{ ...S.iconBtn, background: camOn ? "#e63946" : "#1b2838", color: camOn ? "#fff" : "#8ba3b4" }}><Icons.Camera off={!camOn} /></button>
+          <button onClick={() => setMicOn(!micOn)} style={{ ...S.iconBtn, background: micOn ? "#e63946" : "#111", color: micOn ? "#fff" : "#888" }}><Icons.Mic off={!micOn} /></button>
+          <button onClick={() => { setCamOn(!camOn); if (!callActive) toggleCall(); }} style={{ ...S.iconBtn, background: camOn ? "#e63946" : "#111", color: camOn ? "#fff" : "#888" }}><Icons.Camera off={!camOn} /></button>
           <button onClick={onBack} style={{ ...S.iconBtn, gap: 6 }}><Icons.Back /> <span style={{ fontSize: 12 }}>Leave</span></button>
         </div>
       </div>
 
       {showMembers && (
-        <div className="slide-down" style={{ position: "absolute", top: 64, right: 16, background: "#131a21", border: "1px solid #2a3a4a", borderRadius: 10, padding: 16, zIndex: 20, minWidth: 200, boxShadow: "0 12px 40px rgba(0,0,0,0.7)" }}>
+        <div className="slide-down" style={{ position: "absolute", top: 64, right: 16, background: "#0a0a0a", border: "1px solid #222", borderRadius: 10, padding: 16, zIndex: 20, minWidth: 200, boxShadow: "0 12px 40px rgba(0,0,0,0.7)" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-            <span style={{ fontSize: 12, fontWeight: 600, color: "#c6d4df", textTransform: "uppercase", letterSpacing: "0.08em" }}>Members</span>
-            <button onClick={() => setShowMembers(false)} style={{ color: "#4a6178" }}><Icons.Close /></button>
+            <span style={{ fontSize: 12, fontWeight: 600, color: "#ccc", textTransform: "uppercase", letterSpacing: "0.08em" }}>Members</span>
+            <button onClick={() => setShowMembers(false)} style={{ color: "#555" }}><Icons.Close /></button>
           </div>
           {members.map(m => (
-            <div key={m.user_id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 0", borderBottom: "1px solid #1b2838" }}>
-              {m.profiles?.avatar_url ? <img src={m.profiles.avatar_url} style={{ width: 28, height: 28, borderRadius: 4 }} alt="" /> : <div style={{ width: 28, height: 28, borderRadius: 4, background: "#2a3a4a", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>?</div>}
+            <div key={m.user_id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 0", borderBottom: "1px solid #1a1a1a" }}>
+              {m.profiles?.avatar_url ? <img src={m.profiles.avatar_url} style={{ width: 28, height: 28, borderRadius: 4 }} alt="" /> : <div style={{ width: 28, height: 28, borderRadius: 4, background: "#222", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>?</div>}
               <div>
-                <p style={{ fontSize: 13, color: "#c6d4df", fontWeight: 500 }}>{m.profiles?.username || "Anonymous"}</p>
-                <p style={{ fontSize: 11, color: "#4a6178" }}>{m.role}</p>
+                <p style={{ fontSize: 13, color: "#ccc", fontWeight: 500 }}>{m.profiles?.username || "Anonymous"}</p>
+                <p style={{ fontSize: 11, color: "#555" }}>{m.role}</p>
               </div>
-              {m.user_id === user?.id && <span style={{ marginLeft: "auto", fontSize: 10, color: "#4a6178" }}>you</span>}
+              {m.user_id === user?.id && <span style={{ marginLeft: "auto", fontSize: 10, color: "#555" }}>you</span>}
             </div>
           ))}
         </div>
@@ -1763,18 +1774,18 @@ function LoungeRoom({ room, user, profile, onBack }) {
 
       <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
         {callActive && livekitToken && livekitUrl && (
-          <div style={{ width: "55%", borderRight: "1px solid #1b2838", overflow: "hidden" }}>
+          <div style={{ width: "55%", borderRight: "1px solid #1a1a1a", overflow: "hidden" }}>
             <LiveKitRoom token={livekitToken} serverUrl={livekitUrl} video={camOn} audio={micOn} onDisconnected={() => setCallActive(false)} style={{ height: "100%" }}><VideoConference /></LiveKitRoom>
           </div>
         )}
         <div style={{ display: "flex", flexDirection: "column", flex: 1, overflow: "hidden" }}>
           <div style={S.chatArea}>
-            {messages.length === 0 && <div style={{ textAlign: "center", color: "#2a3a4a", fontSize: 13, marginTop: 20 }}>No messages yet.</div>}
+            {messages.length === 0 && <div style={{ textAlign: "center", color: "#222", fontSize: 13, marginTop: 20 }}>No messages yet.</div>}
             {messages.map(msg => (
               <div key={msg.id} className="msg-animate" style={{ ...S.msgRow, flexDirection: msg.user_id === user?.id ? "row-reverse" : "row" }}>
                 {msg.profiles?.avatar_url && <img src={msg.profiles.avatar_url} style={{ width: 26, height: 26, borderRadius: 4, flexShrink: 0 }} alt="" />}
-                <div style={{ ...S.msgBubble, background: msg.user_id === user?.id ? "#1a4a2a" : "#1b2838" }}>
-                  {msg.user_id !== user?.id && <span style={{ fontSize: 10, color: "#8ba3b4", marginBottom: 2 }}>{msg.profiles?.username || "Anonymous"}</span>}
+                <div style={{ ...S.msgBubble, background: msg.user_id === user?.id ? "#1a4a2a" : "#111" }}>
+                  {msg.user_id !== user?.id && <span style={{ fontSize: 10, color: "#888", marginBottom: 2 }}>{msg.profiles?.username || "Anonymous"}</span>}
                   <span style={{ fontSize: 14, color: "#fff" }}>{msg.content}</span>
                 </div>
               </div>
@@ -1823,8 +1834,8 @@ function ShopScreen({ user, profile, setProfile }) {
           <span style={{ fontSize: 13, color: "#9b59b6", fontWeight: 600, display: "flex", alignItems: "center", gap: 5 }}><Icons.Diamond /> {profile?.deps || 0} Deps</span>
         </div>
         <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
-          <button onClick={() => setTab("sigs")} style={{ flex: 1, padding: "10px 0", borderRadius: 8, border: `1px solid ${tab === "sigs" ? "#f5a623" : "#2a3a4a"}`, background: tab === "sigs" ? "#241f0f" : "transparent", color: tab === "sigs" ? "#f5a623" : "#8ba3b4", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "'Inter',sans-serif", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}><Icons.Coin /> Sigs Shop</button>
-          <button onClick={() => setTab("deps")} style={{ flex: 1, padding: "10px 0", borderRadius: 8, border: `1px solid ${tab === "deps" ? "#9b59b6" : "#2a3a4a"}`, background: tab === "deps" ? "#1e1228" : "transparent", color: tab === "deps" ? "#9b59b6" : "#8ba3b4", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "'Inter',sans-serif", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}><Icons.Diamond /> Deps Shop</button>
+          <button onClick={() => setTab("sigs")} style={{ flex: 1, padding: "10px 0", borderRadius: 8, border: `1px solid ${tab === "sigs" ? "#f5a623" : "#222"}`, background: tab === "sigs" ? "#241f0f" : "transparent", color: tab === "sigs" ? "#f5a623" : "#888", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "'Inter',sans-serif", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}><Icons.Coin /> Sigs Shop</button>
+          <button onClick={() => setTab("deps")} style={{ flex: 1, padding: "10px 0", borderRadius: 8, border: `1px solid ${tab === "deps" ? "#9b59b6" : "#222"}`, background: tab === "deps" ? "#1e1228" : "transparent", color: tab === "deps" ? "#9b59b6" : "#888", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "'Inter',sans-serif", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}><Icons.Diamond /> Deps Shop</button>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {items.map(item => {
@@ -1833,12 +1844,12 @@ function ShopScreen({ user, profile, setProfile }) {
             const balance = currency === "sigs" ? (profile?.sigs || 0) : (profile?.deps || 0);
             const canAfford = balance >= item.price;
             return (
-              <div key={item.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 16px", background: "#0f1923", borderRadius: 8, border: `1px solid ${isOwned ? "#4caf50" : "#2a3a4a"}` }}>
+              <div key={item.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 16px", background: "#0f1923", borderRadius: 8, border: `1px solid ${isOwned ? "#4caf50" : "#222"}` }}>
                 <div>
-                  <p style={{ fontSize: 14, fontWeight: 600, color: "#c6d4df" }}>{item.name}</p>
-                  <p style={{ fontSize: 12, color: "#4a6178", marginTop: 2 }}>{item.desc}</p>
+                  <p style={{ fontSize: 14, fontWeight: 600, color: "#ccc" }}>{item.name}</p>
+                  <p style={{ fontSize: 12, color: "#555", marginTop: 2 }}>{item.desc}</p>
                 </div>
-                <button onClick={() => !isOwned && buyItem(item, currency)} disabled={isOwned || buying === item.id} style={{ padding: "8px 18px", borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: isOwned ? "default" : "pointer", background: isOwned ? "#0d2a0d" : canAfford ? (tab === "sigs" ? "#241f0f" : "#1e1228") : "#1b2838", color: isOwned ? "#4caf50" : canAfford ? (tab === "sigs" ? "#f5a623" : "#9b59b6") : "#4a6178", border: `1px solid ${isOwned ? "#4caf50" : canAfford ? (tab === "sigs" ? "#f5a623" : "#9b59b6") : "#2a3a4a"}`, fontFamily: "'Inter',sans-serif", transition: "all 0.15s", display: "flex", alignItems: "center", gap: 5 }}>
+                <button onClick={() => !isOwned && buyItem(item, currency)} disabled={isOwned || buying === item.id} style={{ padding: "8px 18px", borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: isOwned ? "default" : "pointer", background: isOwned ? "#0d2a0d" : canAfford ? (tab === "sigs" ? "#241f0f" : "#1e1228") : "#111", color: isOwned ? "#4caf50" : canAfford ? (tab === "sigs" ? "#f5a623" : "#9b59b6") : "#555", border: `1px solid ${isOwned ? "#4caf50" : canAfford ? (tab === "sigs" ? "#f5a623" : "#9b59b6") : "#222"}`, fontFamily: "'Inter',sans-serif", transition: "all 0.15s", display: "flex", alignItems: "center", gap: 5 }}>
                   {isOwned ? "Owned" : buying === item.id ? "…" : <>{tab === "sigs" ? <Icons.Coin /> : <Icons.Diamond />} {item.price}</>}
                 </button>
               </div>
@@ -1850,60 +1861,60 @@ function ShopScreen({ user, profile, setProfile }) {
   );
 }
 
-// ---- STYLES ----
+// ---- STYLES — original palette restored ----
 const S = {
-  root: { minHeight: "100vh", background: "#0e1521", width: "100%", fontFamily: "'Inter', sans-serif", color: "#c6d4df" },
+  root: { minHeight: "100vh", background: "#0a0a0a", width: "100%", fontFamily: "'Inter', sans-serif", color: "#e0e0e0", overflowX: "hidden" },
   header: {
     display: "flex", alignItems: "center", justifyContent: "space-between",
-    padding: "0 24px", height: 56, flexWrap: "wrap", gap: 8,
-    borderBottom: "1px solid #1b2838",
-    background: "linear-gradient(180deg, #1b2838 0%, #131a21 100%)",
-    position: "sticky", top: 0, zIndex: 10,
-    boxShadow: "0 2px 8px rgba(0,0,0,0.4)"
+    padding: "0 16px", height: 52, flexWrap: "nowrap", gap: 8, minWidth: 0,
+    borderBottom: "1px solid #1a1a1a",
+    background: "#0a0a0a",
+    position: "sticky", top: 0, zIndex: 100,
+    WebkitBackdropFilter: "blur(8px)",
   },
   logo: { display: "flex", alignItems: "center" },
-  logoVi: { fontFamily: "'Rajdhani', sans-serif", fontSize: 28, fontWeight: 700, color: "#fff", letterSpacing: "2px" },
-  nav: { display: "flex", gap: 20, alignItems: "center" },
+  logoVi: { fontFamily: "'Syne', sans-serif", fontSize: 26, fontWeight: 800, color: "#fff", letterSpacing: "-1px" },
+  nav: { display: "flex", gap: 16, alignItems: "center", overflowX: "auto", scrollbarWidth: "none", msOverflowStyle: "none", flex: 1, justifyContent: "center", minWidth: 0 },
   main: { padding: "24px 16px", maxWidth: 980, margin: "0 auto", width: "100%" },
   grid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20 },
-  card: { background: "#1b2838", borderRadius: 12, padding: 24, border: "1px solid #2a3a4a" },
-  cardTitle: { fontFamily: "'Rajdhani', sans-serif", fontSize: 22, fontWeight: 700, color: "#c6d4df", marginBottom: 18, letterSpacing: "0.5px" },
-  searchBox: { display: "flex", alignItems: "center", gap: 8, background: "#131a21", borderRadius: 8, padding: "8px 12px", border: "1px solid #2a3a4a", marginBottom: 12 },
-  searchIcon: { color: "#4a6178", display: "flex", alignItems: "center" },
-  searchInput: { background: "none", border: "none", fontSize: 13, color: "#c6d4df", flex: 1, fontFamily: "'Inter', sans-serif" },
+  card: { background: "#111", borderRadius: 16, padding: 24, border: "1px solid #1e1e1e" },
+  cardTitle: { fontFamily: "'Syne', sans-serif", fontSize: 22, fontWeight: 700, color: "#fff", marginBottom: 18, letterSpacing: "-0.5px" },
+  searchBox: { display: "flex", alignItems: "center", gap: 8, background: "#0a0a0a", borderRadius: 10, padding: "9px 12px", border: "1px solid #222", marginBottom: 12 },
+  searchIcon: { color: "#444", display: "flex", alignItems: "center" },
+  searchInput: { background: "none", border: "none", fontSize: 13, color: "#e0e0e0", flex: 1, fontFamily: "'Inter', sans-serif" },
   chips: { display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 12 },
-  chip: { fontSize: 11, padding: "4px 10px", borderRadius: 20, background: "#131a21", color: "#8ba3b4", fontFamily: "'Inter', sans-serif", fontWeight: 500, transition: "all 0.15s", border: "1px solid #2a3a4a" },
+  chip: { fontSize: 11, padding: "4px 10px", borderRadius: 20, background: "#1a1a1a", color: "#888", fontFamily: "'Inter', sans-serif", fontWeight: 500, transition: "all 0.15s" },
   topicScroll: { overflowY: "auto", maxHeight: 220, display: "flex", flexDirection: "column" },
-  topicRow: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 10px", borderRadius: 6, width: "100%", textAlign: "left", borderLeft: "2px solid transparent", transition: "all 0.12s", fontFamily: "'Inter', sans-serif", background: "transparent" },
-  topicLabel: { fontSize: 13, color: "#c6d4df" },
-  topicCat: { fontSize: 11, color: "#4a6178", fontStyle: "italic" },
-  selectedBadge: { display: "flex", alignItems: "center", gap: 8, marginTop: 12, background: "#131a21", borderRadius: 8, padding: "8px 12px", border: "1px solid #2a3a4a", flexWrap: "wrap" },
-  fieldLabel: { fontSize: 10, fontWeight: 600, color: "#4a6178", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 10, marginTop: 18 },
-  fmtRow: { display: "flex", gap: 8 },
-  fmtBtn: { flex: 1, padding: "10px 0", borderRadius: 8, border: "1px solid #2a3a4a", fontSize: 13, fontWeight: 600, fontFamily: "'Inter', sans-serif", color: "#8ba3b4", transition: "all 0.15s", display: "flex", alignItems: "center", justifyContent: "center" },
+  topicRow: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "9px 10px", borderRadius: 8, width: "100%", textAlign: "left", borderLeft: "2px solid transparent", transition: "all 0.12s", fontFamily: "'Inter', sans-serif", background: "transparent" },
+  topicLabel: { fontSize: 13, color: "#ccc" },
+  topicCat: { fontSize: 11, color: "#444", fontStyle: "italic" },
+  selectedBadge: { display: "flex", alignItems: "center", gap: 8, marginTop: 12, background: "#161616", borderRadius: 10, padding: "8px 12px", border: "1px solid #222", flexWrap: "wrap" },
+  fieldLabel: { fontSize: 11, fontWeight: 600, color: "#555", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10, marginTop: 18 },
+  fmtRow: { display: "flex", gap: 10 },
+  fmtBtn: { flex: 1, padding: "10px 0", borderRadius: 10, border: "1px solid #222", fontSize: 14, fontWeight: 600, fontFamily: "'Inter', sans-serif", color: "#888", transition: "all 0.15s", display: "flex", alignItems: "center", justifyContent: "center" },
   langGrid: { display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8 },
-  langBtn: { display: "flex", flexDirection: "column", alignItems: "center", gap: 4, padding: "10px 4px", borderRadius: 8, border: "1.5px solid #2a3a4a", fontSize: 11, fontFamily: "'Inter', sans-serif", color: "#8ba3b4", transition: "all 0.15s", background: "#131a21" },
-  connectBtn: { marginTop: 20, width: "100%", padding: "13px 0", background: "#c6d4df", color: "#0a0a0a", borderRadius: 8, fontSize: 14, fontWeight: 700, fontFamily: "'Rajdhani', sans-serif", letterSpacing: "1px", transition: "all 0.15s", cursor: "pointer" },
-  hint: { textAlign: "center", fontSize: 11, color: "#4a6178", marginTop: 8 },
-  divider: { height: 1, background: "#1b2838", margin: "20px 0" },
-  camPreview: { width: "100%", aspectRatio: "16/9", background: "#131a21", borderRadius: 8, overflow: "hidden", border: "1px solid #2a3a4a", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12 },
+  langBtn: { display: "flex", flexDirection: "column", alignItems: "center", gap: 4, padding: "10px 4px", borderRadius: 10, border: "1.5px solid #222", fontSize: 11, fontFamily: "'Inter', sans-serif", color: "#888", transition: "all 0.15s", background: "#0f0f0f" },
+  connectBtn: { marginTop: 20, width: "100%", padding: "15px 0", background: "#fff", color: "#0a0a0a", borderRadius: 12, fontSize: 15, fontWeight: 700, fontFamily: "'Syne', sans-serif", letterSpacing: "0.02em", transition: "all 0.15s", cursor: "pointer" },
+  hint: { textAlign: "center", fontSize: 12, color: "#444", marginTop: 10 },
+  divider: { height: 1, background: "#1a1a1a", margin: "20px 0" },
+  camPreview: { width: "100%", aspectRatio: "16/9", background: "#0a0a0a", borderRadius: 12, overflow: "hidden", border: "1px solid #222", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12 },
   video: { width: "100%", height: "100%", objectFit: "cover" },
   camOff: { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" },
   toggleRow: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 0" },
-  select: { width: "100%", marginTop: 10, padding: "8px 12px", background: "#131a21", border: "1px solid #2a3a4a", borderRadius: 8, color: "#c6d4df", fontSize: 13, fontFamily: "'Inter', sans-serif" },
-  textInput: { width: "100%", padding: "10px 14px", borderRadius: 8, border: "1px solid #2a3a4a", fontSize: 13, fontFamily: "'Inter', sans-serif", background: "#131a21", color: "#c6d4df" },
-  finalBtn: { marginTop: 20, width: "100%", padding: "14px 0", background: "#c6d4df", color: "#0a0a0a", borderRadius: 8, fontSize: 14, fontWeight: 700, fontFamily: "'Rajdhani', sans-serif", letterSpacing: "1px", transition: "all 0.15s", cursor: "pointer" },
-  roomCard: { background: "#1b2838", borderRadius: 10, padding: 16, border: "1px solid #2a3a4a", transition: "all 0.15s" },
-  roomTag: { fontSize: 10, color: "#e63946", background: "#2a1520", padding: "2px 8px", borderRadius: 10, border: "1px solid #3a2030" },
-  joinBtn: { padding: "5px 14px", borderRadius: 6, border: "1px solid #2a3a4a", fontSize: 12, fontWeight: 600, color: "#8ba3b4", fontFamily: "'Inter',sans-serif", transition: "all 0.15s" },
-  judgeBtn: { padding: "5px 9px", borderRadius: 6, border: "1px solid #2a3a4a", fontSize: 12, fontWeight: 600, color: "#8ba3b4", fontFamily: "'Inter',sans-serif", transition: "all 0.15s", display: "flex", alignItems: "center" },
-  roomContainer: { display: "flex", flexDirection: "column", height: "calc(100vh - 130px)", background: "#1b2838", borderRadius: 12, border: "1px solid #2a3a4a", overflow: "hidden", position: "relative" },
-  roomHeader: { padding: "14px 18px", borderBottom: "1px solid #1b2838", display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0, background: "#131a21" },
-  chatArea: { flex: 1, overflowY: "auto", padding: "16px 18px", display: "flex", flexDirection: "column", gap: 10 },
+  select: { width: "100%", marginTop: 10, padding: "9px 12px", background: "#0a0a0a", border: "1px solid #222", borderRadius: 10, color: "#ccc", fontSize: 13, fontFamily: "'Inter', sans-serif" },
+  textInput: { width: "100%", padding: "10px 14px", borderRadius: 10, border: "1px solid #222", fontSize: 13, fontFamily: "'Inter', sans-serif", background: "#0a0a0a", color: "#e0e0e0" },
+  finalBtn: { marginTop: 24, width: "100%", padding: "15px 0", background: "#fff", color: "#0a0a0a", borderRadius: 12, fontSize: 15, fontWeight: 700, fontFamily: "'Syne', sans-serif", letterSpacing: "0.02em", transition: "all 0.15s", cursor: "pointer" },
+  roomCard: { background: "#111", borderRadius: 12, padding: 16, border: "1px solid #1e1e1e", transition: "all 0.15s", cursor: "pointer" },
+  roomTag: { fontSize: 11, color: "#e63946", background: "#1a0a0b", padding: "2px 8px", borderRadius: 20 },
+  joinBtn: { padding: "6px 14px", borderRadius: 8, border: "1px solid #333", fontSize: 12, fontWeight: 600, color: "#888", fontFamily: "'Inter',sans-serif", transition: "all 0.15s" },
+  judgeBtn: { padding: "6px 10px", borderRadius: 8, border: "1px solid #444", fontSize: 12, fontWeight: 600, color: "#888", fontFamily: "'Inter',sans-serif", transition: "all 0.15s", display: "flex", alignItems: "center" },
+  roomContainer: { display: "flex", flexDirection: "column", height: "calc(100vh - 130px)", background: "#111", borderRadius: 16, border: "1px solid #1e1e1e", overflow: "hidden", position: "relative" },
+  roomHeader: { padding: "16px 20px", borderBottom: "1px solid #1a1a1a", display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0 },
+  chatArea: { flex: 1, overflowY: "auto", padding: "16px 20px", display: "flex", flexDirection: "column", gap: 12 },
   msgRow: { display: "flex", gap: 8, alignItems: "flex-end" },
-  msgBubble: { display: "flex", flexDirection: "column", padding: "7px 12px", borderRadius: 10, maxWidth: "70%" },
-  chatInput: { padding: "10px 16px", borderTop: "1px solid #1b2838", display: "flex", gap: 8, flexShrink: 0, background: "#131a21" },
-  chatInputField: { flex: 1, background: "#1b2838", border: "1px solid #2a3a4a", borderRadius: 8, padding: "9px 14px", fontSize: 14, color: "#c6d4df", fontFamily: "'Inter',sans-serif" },
-  sendBtn: { padding: "9px 18px", background: "#e63946", color: "#fff", borderRadius: 8, fontSize: 13, fontWeight: 600, fontFamily: "'Inter',sans-serif", transition: "background 0.15s", cursor: "pointer" },
-  iconBtn: { display: "flex", alignItems: "center", padding: "7px 10px", background: "#1b2838", color: "#8ba3b4", borderRadius: 6, fontSize: 13, border: "1px solid #2a3a4a", cursor: "pointer", transition: "all 0.15s", fontFamily: "'Inter',sans-serif" },
+  msgBubble: { display: "flex", flexDirection: "column", padding: "8px 12px", borderRadius: 12, maxWidth: "70%" },
+  chatInput: { padding: "12px 20px", borderTop: "1px solid #1a1a1a", display: "flex", gap: 10, flexShrink: 0 },
+  chatInputField: { flex: 1, background: "#0a0a0a", border: "1px solid #222", borderRadius: 10, padding: "10px 14px", fontSize: 14, color: "#e0e0e0", fontFamily: "'Inter',sans-serif" },
+  sendBtn: { padding: "10px 20px", background: "#e63946", color: "#fff", borderRadius: 10, fontSize: 14, fontWeight: 600, fontFamily: "'Syne',sans-serif", transition: "background 0.15s", cursor: "pointer" },
+  iconBtn: { display: "flex", alignItems: "center", padding: "8px 12px", background: "#1a1a1a", color: "#888", borderRadius: 8, fontSize: 13, border: "1px solid #333", cursor: "pointer", transition: "all 0.15s", fontFamily: "'Inter',sans-serif" },
 };
