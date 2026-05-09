@@ -1917,5 +1917,4 @@ const S = {
   chatInputField: { flex: 1, background: "#0a0a0a", border: "1px solid #222", borderRadius: 10, padding: "10px 14px", fontSize: 14, color: "#e0e0e0", fontFamily: "'Inter',sans-serif" },
   sendBtn: { padding: "10px 20px", background: "#e63946", color: "#fff", borderRadius: 10, fontSize: 14, fontWeight: 600, fontFamily: "'Syne',sans-serif", transition: "background 0.15s", cursor: "pointer" },
   iconBtn: { display: "flex", alignItems: "center", padding: "8px 12px", background: "#1a1a1a", color: "#888", borderRadius: 8, fontSize: 13, border: "1px solid #333", cursor: "pointer", transition: "all 0.15s", fontFamily: "'Inter',sans-serif" },
-};/ /   f o r c e   r e b u i l d  
- 
+};
